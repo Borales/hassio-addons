@@ -17,4 +17,5 @@ COPY --from=onePassword /usr/local/bin /usr/local/bin
 COPY run.sh /
 RUN chmod a+x /run.sh
 
+EXPOSE 8000
 CMD ["/run.sh"]

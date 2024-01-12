@@ -1,0 +1,4 @@
+configuration:
+  token:
+    name: 1password Service Token
+    description: Your 1password service token
