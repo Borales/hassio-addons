@@ -1,4 +1,12 @@
 configuration:
-  token:
-    name: 1password Service Token
-    description: Your 1password service token
+  serviceAccountToken:
+    name: 1password Service Account Token
+    description: Your 1password service account token
+  checkIntervalMin:
+    name: Check Interval (minutes)
+    description: How often to check for the updates (0 to disable, max up to 180)
+  allowAutoRestart:
+    name: Allow Auto Restart HA when secrets are updated
+  logLevel:
+    name: Log Level
+    description: Log level for the addon

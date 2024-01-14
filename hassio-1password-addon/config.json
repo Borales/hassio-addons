@@ -8,7 +8,15 @@
   "init": false,
   "startup": "services",
   "schema": {
-    "token": "password"
+    "serviceAccountToken": "password",
+    "checkIntervalMin": "int(0,180)",
+    "allowAutoRestart": "bool",
+    "logLevel": "list(debug|info|error)"
+  },
+  "options": {
+    "allowAutoRestart": true,
+    "checkIntervalMin": 10,
+    "logLevel": "info"
   },
   "map": ["homeassistant_config:rw"],
   "panel_icon": "mdi:onepassword",
