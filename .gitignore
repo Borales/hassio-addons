@@ -1,1 +1,4 @@
-node_modules
+hassio-1password-addon/web/node_modules
+hassio-1password-addon/web/.next
+hassio-1password-addon/web/store.db*
+.env

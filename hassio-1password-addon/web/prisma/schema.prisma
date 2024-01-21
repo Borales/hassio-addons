@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("OP_DB_URL")
+}
+
+// Home Assistant Secrets
+model Secret {
+  id        String  @id
+  reference String?
+  itemId    String? @map("item_id")
+
+  item Item? @relation(fields: [itemId], references: [id], onDelete: SetNull)
+
+  @@map("ha_secrets")
+}
+
+// 1Password Item
+model Item {
+  id             String   @id
+  title          String
+  vaultId        String?  @map("vault_id")
+  category       String
+  additionalInfo String?  @map("additional_information")
+  createdAt      DateTime @map("created_at")
+  updatedAt      DateTime @map("updated_at")
+  icon           String?
+  urls           String? // JSON
+  fields         String? // JSON
+
+  vault  Vault?   @relation(fields: [vaultId], references: [id], onDelete: SetNull)
+  Secret Secret[]
+
+  @@map("op_items")
+}
+
+// 1Password Vault
+model Vault {
+  id   String @id
+  name String
+
+  items Item[]
+
+  @@map("op_vaults")
+}
+
+model Setting {
+  id        String   @id
+  value     String
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  @@map("settings")
+}
