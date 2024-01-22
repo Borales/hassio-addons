@@ -1,4 +1,6 @@
-import { item, read } from "@1password/op-js";
+import { item, read, Item } from "@1password/op-js";
+
+export type { Item as OpClientItem };
 
 export class OnePasswordClient {
   constructor() {}
@@ -6,21 +8,21 @@ export class OnePasswordClient {
   /**
    * Get an item by its ID.
    */
-  async getItem(id: string, vault: string) {
+  getItem(id: string, vault: string) {
     return item.get(id, { vault });
   }
 
   /**
    * Get all items.
    */
-  async getItems() {
+  getItems() {
     return item.list();
   }
 
   /**
    * Read an item by its reference ID.
    */
-  async readItemByReference(referenceId: string) {
+  readItemByReference(referenceId: string) {
     return read.parse(referenceId);
   }
 }
