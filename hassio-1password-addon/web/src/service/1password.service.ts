@@ -112,6 +112,10 @@ export class OnePasswordService {
     });
   }
 
+  async getItem(id: string, vaultId: string) {
+    return this.db.item.findUnique({ where: { id, vaultId } });
+  }
+
   /**
    * Get all vaults.
    */
