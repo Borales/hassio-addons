@@ -1,6 +1,10 @@
 import type { CodegenConfig } from '@graphql-codegen/cli';
 import { DateTimeResolver } from 'graphql-scalars';
 
+const scalars = {
+  DateTime: DateTimeResolver.extensions.codegenScalarType
+};
+
 const config: CodegenConfig = {
   overwrite: true,
   schema: './src/schema.graphql',
@@ -10,18 +14,12 @@ const config: CodegenConfig = {
   generates: {
     'src/gql/': {
       preset: 'client',
-      config: {
-        scalars: {
-          DateTime: DateTimeResolver.extensions.codegenScalarType
-        }
-      }
+      config: { scalars }
     },
     'src/gql/operations.ts': {
       documents: './src/gql/**/*.graphql',
       config: {
-        scalars: {
-          DateTime: DateTimeResolver.extensions.codegenScalarType
-        },
+        scalars,
         exposeQueryKeys: true,
         legacyMode: false,
         reactQueryVersion: 5,
