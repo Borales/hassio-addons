@@ -105,8 +105,9 @@ export class OnePasswordService {
   /**
    * Get all items.
    */
-  async getItems() {
+  async getItems(vaultId?: string) {
     return this.db.item.findMany({
+      where: vaultId ? { vaultId } : {},
       include: { vault: true },
       orderBy: { updatedAt: 'desc' }
     });
