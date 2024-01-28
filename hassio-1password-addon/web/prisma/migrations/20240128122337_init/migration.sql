@@ -15,7 +15,6 @@ CREATE TABLE "op_items" (
     "additional_information" TEXT,
     "created_at" DATETIME NOT NULL,
     "updated_at" DATETIME NOT NULL,
-    "icon" TEXT,
     "urls" TEXT,
     "fields" TEXT,
     CONSTRAINT "op_items_vault_id_fkey" FOREIGN KEY ("vault_id") REFERENCES "op_vaults" ("id") ON DELETE SET NULL ON UPDATE CASCADE
