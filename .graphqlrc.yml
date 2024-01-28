@@ -1,0 +1,2 @@
+schema: "hassio-1password-addon/web/src/schema.graphql"
+documents: "hassio-1password-addon/web/src/**/*.{graphql,js,ts,jsx,tsx}"

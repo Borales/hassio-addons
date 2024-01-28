@@ -1,0 +1,3 @@
+mutation SyncEntries($force: Boolean) {
+  sync(force: $force)
+}

@@ -4,12 +4,14 @@
   "private": true,
   "scripts": {
     "build": "next build",
+    "codegen": "graphql-codegen --config codegen.ts",
     "db:reset": "prisma migrate reset",
     "db:seed": "prisma db seed",
     "dev": "next dev -p 8000",
     "lint": "next lint",
     "migration:dev": "prisma migrate dev",
     "migration:prod": "prisma migrate deploy",
+    "postinstall": "yarn codegen",
     "prettier": "prettier --check ./src",
     "prisma:generate": "prisma generate",
     "start": "next start -p 8000"
@@ -22,6 +24,7 @@
     "@tanstack/react-query": "^5.17.15",
     "framer-motion": "^10.18.0",
     "graphql": "^16.8.1",
+    "graphql-request": "^6.1.0",
     "graphql-scalars": "^1.22.4",
     "graphql-tag": "^2.12.6",
     "graphql-yoga": "^5.1.1",
@@ -32,6 +35,11 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/client-preset": "^4.1.0",
+    "@graphql-codegen/typescript": "^4.0.1",
+    "@graphql-codegen/typescript-react-query": "^6.0.0",
+    "@graphql-codegen/typescript-resolvers": "^4.0.1",
     "@react-aria/ssr": "^3.9.1",
     "@react-aria/visually-hidden": "^3.8.8",
     "@types/node": "^20.11.0",
