@@ -1,13 +1,13 @@
 import {
   onePasswordClient,
   OnePasswordClient,
-  OpClientItem,
-} from "./client/1password";
-import { prisma, PrismaType, OpVault, HaSecret, OpItem } from "./client/db";
+  OpClientItem
+} from './client/1password';
+import { HaSecret, OpItem, OpVault, prisma, PrismaType } from './client/db';
 
-export type { OpVault, HaSecret, OpItem };
+export type { HaSecret, OpItem, OpVault };
 
-const NEXT_UPDATE_KEY = "nextUpdate";
+const NEXT_UPDATE_KEY = 'nextUpdate';
 
 export class OnePasswordService {
   constructor(
@@ -48,22 +48,22 @@ export class OnePasswordService {
               vault: {
                 connectOrCreate: {
                   where: { id: item.vault.id },
-                  create: { id: item.vault.id, name: item.vault.name },
-                },
-              },
+                  create: { id: item.vault.id, name: item.vault.name }
+                }
+              }
             },
-            update: this.convertOpToDbSecret(item),
+            update: this.convertOpToDbSecret(item)
           });
         })
       );
 
       // Clean up any items that no longer accessible in 1Password.
       await this.db.item.deleteMany({
-        where: { NOT: { id: { in: syncedItemIds } } },
+        where: { NOT: { id: { in: syncedItemIds } } }
       });
       // Clean up any vaults that no longer accessible in 1Password.
       await this.db.vault.deleteMany({
-        where: { NOT: { id: { in: syncedVaultIds } } },
+        where: { NOT: { id: { in: syncedVaultIds } } }
       });
 
       await this.updateNextSync();
@@ -77,7 +77,7 @@ export class OnePasswordService {
    */
   async isSyncNeeded() {
     const nextUpdate = await this.db.setting.findUnique({
-      where: { id: NEXT_UPDATE_KEY },
+      where: { id: NEXT_UPDATE_KEY }
     });
 
     if (!nextUpdate) {
@@ -98,7 +98,7 @@ export class OnePasswordService {
     await this.db.setting.upsert({
       where: { id: NEXT_UPDATE_KEY },
       create: { id: NEXT_UPDATE_KEY, value: nextUpdateDate },
-      update: { value: nextUpdateDate },
+      update: { value: nextUpdateDate }
     });
   }
 
@@ -108,7 +108,7 @@ export class OnePasswordService {
   async getItems() {
     return this.db.item.findMany({
       include: { vault: true },
-      orderBy: { updatedAt: "desc" },
+      orderBy: { updatedAt: 'desc' }
     });
   }
 
@@ -132,7 +132,7 @@ export class OnePasswordService {
 
   protected convertOpToDbSecret(
     item: OpClientItem
-  ): Omit<OpItem, "vaultId" | "icon"> {
+  ): Omit<OpItem, 'vaultId' | 'icon'> {
     return {
       id: item.id,
       title: item.title,
@@ -141,7 +141,7 @@ export class OnePasswordService {
       urls: JSON.stringify(item.urls),
       fields: JSON.stringify(item.fields),
       createdAt: new Date(item.created_at),
-      updatedAt: new Date(item.updated_at),
+      updatedAt: new Date(item.updated_at)
     };
   }
 }

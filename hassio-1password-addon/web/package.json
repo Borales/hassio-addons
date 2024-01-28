@@ -3,15 +3,16 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 8000",
     "build": "next build",
-    "start": "next start -p 8000",
-    "lint": "next lint",
     "db:reset": "prisma migrate reset",
     "db:seed": "prisma db seed",
-    "prisma:generate": "prisma generate",
+    "dev": "next dev -p 8000",
+    "lint": "next lint",
     "migration:dev": "prisma migrate dev",
-    "migration:prod": "prisma migrate deploy"
+    "migration:prod": "prisma migrate deploy",
+    "prettier": "prettier --check ./src",
+    "prisma:generate": "prisma generate",
+    "start": "next start -p 8000"
   },
   "dependencies": {
     "@1password/op-js": "^0.1.11",
@@ -32,10 +33,15 @@
     "@types/react-dom": "^18.2.18",
     "autoprefixer": "^10.4.16",
     "clsx": "^2.1.0",
-    "prisma": "^5.8.1",
     "eslint": "^8.56.0",
     "eslint-config-next": "^14.1.0",
+    "eslint-config-prettier": "^9.1.0",
     "postcss": "^8.4.33",
+    "prettier": "^3.2.4",
+    "prettier-plugin-organize-imports": "^3.2.4",
+    "prettier-plugin-package": "^1.4.0",
+    "prettier-plugin-tailwindcss": "^0.5.11",
+    "prisma": "^5.8.1",
     "tailwind-variants": "^0.1.20",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3"
