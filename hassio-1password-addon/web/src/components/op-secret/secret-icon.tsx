@@ -4,7 +4,7 @@ const hostnameToSkip = ['localhost', '.local'];
 
 type OpSecretIconProps = {
   size?: 32 | 64;
-  urls: { primary: boolean; href: string }[];
+  urls: { primary?: boolean | null; href: string }[];
 } & Pick<ImageProps, 'alt'>;
 
 export const OpSecretIcon = ({

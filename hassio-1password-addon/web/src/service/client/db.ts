@@ -3,7 +3,7 @@ import {
   Field as OpField,
   URL as OpURL
 } from '@1password/op-js';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { pagination } from 'prisma-extension-pagination';
 
 export type {
@@ -20,20 +20,7 @@ export type PrismaType = typeof prisma;
 export const prisma = new PrismaClient({
   datasources: { db: { url: db_url } }
 })
-  .$extends({
-    model: {
-      $allModels: {
-        async exists<T>(
-          this: T,
-          where: Prisma.Args<T, 'findFirst'>['where']
-        ): Promise<boolean> {
-          const context = Prisma.getExtensionContext(this);
-          const result = await (context as any).findFirst({ where });
-          return result !== null;
-        }
-      }
-    }
-  })
+  .$extends(pagination())
   .$extends({
     result: {
       item: {
@@ -49,5 +36,4 @@ export const prisma = new PrismaClient({
         }
       }
     }
-  })
-  .$extends(pagination());
+  });
