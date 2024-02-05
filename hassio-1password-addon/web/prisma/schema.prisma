@@ -9,9 +9,11 @@ datasource db {
 
 // Home Assistant Secrets
 model Secret {
-  id        String  @id
+  id        String    @id
   reference String?
-  itemId    String? @map("item_id")
+  itemId    String?   @map("item_id")
+  updatedAt DateTime? @map("updated_at")
+  isSkipped Boolean?  @default(false) @map("is_skipped")
 
   item Item? @relation(fields: [itemId], references: [id], onDelete: SetNull)
 

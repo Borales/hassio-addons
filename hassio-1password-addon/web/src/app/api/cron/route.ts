@@ -1,4 +1,5 @@
 import { onePasswordService } from '@/service/1password.service';
+import { haSecretService } from '@/service/secret.service';
 import { NextRequest } from 'next/server';
 
 export const dynamic = 'force-dynamic';
@@ -7,6 +8,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   const force = request.nextUrl.searchParams.get('force') === 'true';
-  await onePasswordService.syncEntries(force);
+  await haSecretService.syncSecrets();
+  await onePasswordService.syncItems(force);
   return Response.json({ done: true });
 }
