@@ -7,11 +7,7 @@ type OpSecretIconProps = {
   urls: { primary?: boolean | null; href: string }[];
 } & Pick<ImageProps, 'alt'>;
 
-export const OpSecretIcon = ({
-  size = 32,
-  urls,
-  ...rest
-}: OpSecretIconProps) => {
+export const OpSecretIcon = ({ size = 32, urls, alt }: OpSecretIconProps) => {
   const fallbackSrc = '/op-item.png';
   let secretSrc = fallbackSrc;
 
@@ -36,6 +32,7 @@ export const OpSecretIcon = ({
 
   return (
     <Image
+      alt={alt}
       classNames={{ wrapper: 'bg-contain' }}
       radius="sm"
       loading="lazy"
@@ -43,7 +40,6 @@ export const OpSecretIcon = ({
       height={size}
       src={secretSrc}
       fallbackSrc={fallbackSrc}
-      {...rest}
     />
   );
 };
