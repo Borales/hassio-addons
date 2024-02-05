@@ -1,9 +1,13 @@
 import '@/globals.css';
 
+import { ThemeSwitch } from '@/components/theme-switch';
 import { fontSans } from '@/config/fonts';
 import { siteConfig } from '@/config/site';
+import clsx from 'clsx';
 import { Metadata, Viewport } from 'next';
 import Image from 'next/image';
+import Link from 'next/link';
+import { Providers } from './providers';
 
 export const metadata: Metadata = {
   title: {

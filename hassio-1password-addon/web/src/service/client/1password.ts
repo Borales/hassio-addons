@@ -1,4 +1,4 @@
-import { item, read, Item } from "@1password/op-js";
+import { Item, item, read } from '@1password/op-js';
 
 export type { Item as OpClientItem };
 
