@@ -1,0 +1,6 @@
+{
+  "tailwindCSS.experimental.configFile": "./tailwind.config.js",
+  "tailwindCSS.experimental.classRegex": [
+    ["tv\\((([^()]*|\\([^()]*\\))*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  ]
+}

@@ -1,0 +1,4 @@
+bar:
+  - platform: foo
+    host: !secret bar_login
+    token: !secret bar_token
