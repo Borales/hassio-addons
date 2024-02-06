@@ -8,6 +8,7 @@ const jsonJiggle = (obj: any) => JSON.parse(JSON.stringify(obj));
 export default async function Home({ searchParams }: { searchParams: any }) {
   const page: number = Number(searchParams.page || 1);
   const activeSecretId = searchParams.secretId || '';
+  const nextUpdate = await onePasswordService.getNextUpdate();
   const [items] = await onePasswordService.getItems({
     pagination: { page, limit: 1000 }
   });
@@ -29,6 +30,13 @@ export default async function Home({ searchParams }: { searchParams: any }) {
       )}
 
       <HASecretList items={secrets} />
+
+      <p className="text-center font-mono text-xs text-default-400">
+        {nextUpdate && (
+          <>Next update: {new Date(nextUpdate).toLocaleString()}</>
+        )}
+        {!nextUpdate && <>Not synced yet</>}
+      </p>
     </>
   );
 }
