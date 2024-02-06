@@ -1,12 +1,10 @@
 import '@/globals.css';
 
-import { ThemeSwitch } from '@/components/theme-switch';
+import { Menu } from '@/components/menu';
 import { fontSans } from '@/config/fonts';
 import { siteConfig } from '@/config/site';
 import clsx from 'clsx';
 import { Metadata, Viewport } from 'next';
-import Image from 'next/image';
-import Link from 'next/link';
 import { Providers } from './providers';
 
 export const metadata: Metadata = {
@@ -84,6 +82,14 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
+        <Providers themeProps={{ attribute: 'class', defaultTheme: 'dark' }}>
+          <div className="relative flex h-screen flex-col">
+            <Menu />
+            <main className="container mx-auto max-w-7xl flex-grow p-6">
+              {children}
+            </main>
+          </div>
+        </Providers>
       </body>
     </html>
   );
