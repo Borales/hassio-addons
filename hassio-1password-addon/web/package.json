@@ -1,5 +1,6 @@
 {
   "name": "hassio-1password-addon",
+  "description": "1Password for Home Assistant",
   "version": "0.0.1",
   "private": true,
   "scripts": {
