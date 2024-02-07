@@ -1,3 +1,6 @@
 {
-  "window.title": "${activeEditorShort}${separator}hassio-1password-addon"
+  "window.title": "${activeEditorShort}${separator}hassio-1password-addon",
+  "files.associations": {
+    "*.yaml": "home-assistant"
+  }
 }

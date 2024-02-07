@@ -1,5 +1,6 @@
 import { HASecretList } from '@/components/ha-secret/secret-list';
 import { HASecretModal } from '@/components/ha-secret/secret-modal';
+import { UpdateNowBtn } from '@/components/update-now';
 import { onePasswordService } from '@/service/1password.service';
 import { haSecretService } from '@/service/secret.service';
 
@@ -31,12 +32,14 @@ export default async function Home({ searchParams }: { searchParams: any }) {
 
       <HASecretList items={secrets} />
 
-      <p className="text-center font-mono text-xs text-default-400">
+      <span className="block text-center font-mono text-xs text-default-400">
         {nextUpdate && (
           <>Next update: {new Date(nextUpdate).toLocaleString()}</>
         )}
         {!nextUpdate && <>Not synced yet</>}
-      </p>
+
+        <UpdateNowBtn />
+      </span>
     </>
   );
 }
