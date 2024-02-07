@@ -34,7 +34,7 @@ export default async function Home({ searchParams }: { searchParams: any }) {
 
       <span className="block text-center font-mono text-xs text-default-400">
         {nextUpdate && (
-          <>Next update: {new Date(nextUpdate).toLocaleString()}</>
+          <>Next automatic update: {new Date(nextUpdate).toLocaleString()}</>
         )}
         {!nextUpdate && <>Not synced yet</>}
 

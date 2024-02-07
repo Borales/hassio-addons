@@ -1,5 +1,6 @@
 import '@/globals.css';
 
+import { Footer } from '@/components/footer';
 import { Menu } from '@/components/menu';
 import { fontSans } from '@/config/fonts';
 import { siteConfig } from '@/config/site';
@@ -88,6 +89,7 @@ export default function RootLayout({
             <main className="container mx-auto max-w-7xl flex-grow p-6">
               {children}
             </main>
+            <Footer />
           </div>
         </Providers>
       </body>

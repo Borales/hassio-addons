@@ -22,7 +22,7 @@ const Submit = () => {
 
 export const UpdateNowBtn = () => {
   return (
-    <form className="ml-4 inline-block" action={forceUpdateNow}>
+    <form action={forceUpdateNow}>
       <Submit />
     </form>
   );
