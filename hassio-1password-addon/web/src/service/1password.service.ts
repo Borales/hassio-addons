@@ -1,13 +1,35 @@
+import { Field, URL } from '@1password/op-js';
+import { Prisma } from '@prisma/client';
 import {
-  onePasswordClient,
   OnePasswordClient,
-  OpClientItem
+  OpClientItem,
+  onePasswordClient
 } from './client/1password';
-import { HaSecret, OpItem, OpVault, prisma, PrismaType } from './client/db';
+import {
+  HaSecret,
+  OpVault,
+  OpItem as PrismaOpItem,
+  PrismaType,
+  prisma
+} from './client/db';
+
+type OpItem = Omit<PrismaOpItem, 'urls' | 'fields'> & {
+  urls: URL[];
+  fields: Field[];
+};
 
 export type { HaSecret, OpItem, OpVault };
 
 const NEXT_UPDATE_KEY = 'nextUpdate';
+
+type Pagination = {
+  limit: number;
+  page: number;
+};
+
+type ListParams = {
+  pagination?: Pagination;
+};
 
 export class OnePasswordService {
   constructor(
@@ -17,9 +39,34 @@ export class OnePasswordService {
   ) {}
 
   /**
-   * Sync all entries (secrets and vaults) from 1Password to the database.
+   * Sync fields of a secret from 1Password to the database
    */
-  async syncEntries(force: boolean = false) {
+  async syncItem(id: string, vaultId: string) {
+    const item = this.client.getItem(id, vaultId);
+
+    if (!item) {
+      return;
+    }
+
+    await this.db.item.upsert({
+      where: { id },
+      create: {
+        ...this.convertOpToDbSecret(item),
+        vault: {
+          connectOrCreate: {
+            where: { id: vaultId },
+            create: { id: vaultId, name: item.vault.name }
+          }
+        }
+      },
+      update: this.convertOpToDbSecret(item)
+    });
+  }
+
+  /**
+   * Sync all entries (secrets and vaults) from 1Password to the database if needed.
+   */
+  async syncItems(force: boolean = false) {
     const syncNeeded = await this.isSyncNeeded();
 
     if (!syncNeeded && !force) {
@@ -73,18 +120,27 @@ export class OnePasswordService {
   }
 
   /**
-   * Check NEXT_UPDATE_KEY to see if a sync is needed.
+   * Check if a sync is needed
    */
   async isSyncNeeded() {
-    const nextUpdate = await this.db.setting.findUnique({
-      where: { id: NEXT_UPDATE_KEY }
-    });
+    const nextUpdate = await this.getNextUpdate();
 
     if (!nextUpdate) {
       return true;
     }
 
-    return new Date() > new Date(nextUpdate.value);
+    return new Date() > new Date(nextUpdate);
+  }
+
+  /**
+   * Get the next update time from the database.
+   */
+  async getNextUpdate() {
+    const nextUpdate = await this.db.setting.findUnique({
+      where: { id: NEXT_UPDATE_KEY }
+    });
+
+    return nextUpdate?.value;
   }
 
   /**
@@ -105,12 +161,31 @@ export class OnePasswordService {
   /**
    * Get all items.
    */
-  async getItems(vaultId?: string) {
-    return this.db.item.findMany({
-      where: vaultId ? { vaultId } : {},
-      include: { vault: true },
-      orderBy: { updatedAt: 'desc' }
-    });
+  async getItems(params: ListParams & { vault?: string; search?: string }) {
+    const where: Prisma.ItemWhereInput = {};
+    if (params.vault) {
+      where.vaultId = params.vault;
+    }
+    if (params.search) {
+      where.OR = [
+        { title: { contains: params.search } },
+        { additionalInfo: { contains: params.search } },
+        { urls: { contains: params.search } },
+        { fields: { contains: params.search } }
+      ];
+    }
+
+    return this.db.item
+      .paginate({
+        where,
+        include: { vault: true },
+        orderBy: { updatedAt: 'desc' }
+      })
+      .withPages({
+        includePageCount: true,
+        limit: params.pagination?.limit || 20,
+        page: params.pagination?.page || 1
+      });
   }
 
   async getItem(id: string, vaultId: string) {
@@ -131,9 +206,12 @@ export class OnePasswordService {
     return this.db.vault.findUnique({ where: { id } });
   }
 
+  /**
+   * Convert an 1Password item to a database secret.
+   */
   protected convertOpToDbSecret(
     item: OpClientItem
-  ): Omit<OpItem, 'vaultId' | 'icon'> {
+  ): Omit<PrismaOpItem, 'vaultId'> {
     return {
       id: item.id,
       title: item.title,
