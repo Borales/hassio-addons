@@ -10,7 +10,7 @@ export default async function Home({ searchParams }: { searchParams: any }) {
   const page: number = Number(searchParams.page || 1);
   const activeSecretId = searchParams.secretId || '';
   const nextUpdate = await onePasswordService.getNextUpdate();
-  const [items] = await onePasswordService.getItems({
+  const [items] = await onePasswordService.getItemsSecurely({
     pagination: { page, limit: 1000 }
   });
   let activeSecret;

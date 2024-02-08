@@ -7,7 +7,7 @@ type OpPageProps = { searchParams: { page?: string } };
 
 export default async function OpPage({ searchParams }: OpPageProps) {
   const page: number = Number(searchParams.page || 1);
-  const [items, pagination] = await onePasswordService.getItems({
+  const [items, pagination] = await onePasswordService.getItemsSecurely({
     pagination: { page, limit: 12 }
   });
 

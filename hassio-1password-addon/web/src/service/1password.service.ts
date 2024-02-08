@@ -31,6 +31,18 @@ type ListParams = {
   pagination?: Pagination;
 };
 
+// Replace the middle part of the password with asterisks
+// leaving the first and the last X characters visible
+const maskPassword = (password: string, numChars: number = 2): string => {
+  if (!password) {
+    return password;
+  }
+  if (password.length <= 2 * numChars) {
+    return '***';
+  }
+  return `${password.slice(0, numChars)}***${password.slice(-numChars)}`;
+};
+
 export class OnePasswordService {
   constructor(
     public ttr: number,
@@ -188,6 +200,19 @@ export class OnePasswordService {
       });
   }
 
+  /**
+   * Masking all the secrets directly in the service
+   * to avoid exposing the secrets to the client-side.
+   */
+  async getItemsSecurely(
+    params: ListParams & { vault?: string; search?: string }
+  ): ReturnType<OnePasswordService['getItems']> {
+    const [items, pagination] = await this.getItems(params);
+    const secureItems = items.map((item) => this.maskSecrets(item));
+
+    return [secureItems, pagination];
+  }
+
   async getItem(id: string, vaultId: string) {
     return this.db.item.findUnique({ where: { id, vaultId } });
   }
@@ -221,6 +246,22 @@ export class OnePasswordService {
       fields: JSON.stringify(item.fields),
       createdAt: new Date(item.created_at),
       updatedAt: new Date(item.updated_at)
+    };
+  }
+
+  protected maskSecrets<T>(item: T & { fields?: Field[] }) {
+    const { fields, ...rest } = item;
+
+    const secureFields: Field[] =
+      fields?.map((field) => ({
+        ...field,
+        value:
+          field.type === 'CONCEALED' ? maskPassword(field.value) : field.value
+      })) || [];
+
+    return {
+      ...rest,
+      fields: secureFields
     };
   }
 }
