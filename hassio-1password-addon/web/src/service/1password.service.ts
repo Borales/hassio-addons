@@ -125,6 +125,8 @@ export class OnePasswordService {
         where: { NOT: { id: { in: syncedVaultIds } } }
       });
 
+      // TODO: check for updated assigned fields
+
       await this.updateNextSync();
     } catch (e) {
       console.error(e);
