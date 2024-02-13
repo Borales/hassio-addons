@@ -17,5 +17,10 @@ export const CustomTimeAgo = ({ date, locale = 'en' }: DateFormatterProps) => {
     minute: 'numeric'
   });
 
-  return <TimeAgo date={dateFormatter.format(new Date(date))} />;
+  return (
+    <TimeAgo
+      title={new Date(date).toISOString()}
+      date={dateFormatter.format(new Date(date))}
+    />
+  );
 };

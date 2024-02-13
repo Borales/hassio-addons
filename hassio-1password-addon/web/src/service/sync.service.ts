@@ -10,7 +10,7 @@ export class SyncService {
   ) {}
 
   async sync(force?: boolean) {
-    this.logger.debug('Syncing secrets');
+    this.logger.debug('Syncing HA secrets');
     await this.haSecretService.syncSecrets();
     this.logger.debug('Syncing 1Password items');
     await this.onePasswordService.syncItems(force);
