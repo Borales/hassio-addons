@@ -21,7 +21,6 @@
   "map": ["homeassistant_config:rw"],
   "panel_icon": "mdi:onepassword",
   "panel_title": "1password",
-  "panel_admin": true,
   "ingress": true,
   "ingress_port": 8000,
   "image": "ghcr.io/Borales/hassio-1password-{arch}"
