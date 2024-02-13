@@ -1439,6 +1439,16 @@
     "@react-types/shared" "^3.22.0"
     "@swc/helpers" "^0.5.0"
 
+"@react-aria/interactions@^3.21.0":
+  version "3.21.0"
+  resolved "https://registry.yarnpkg.com/@react-aria/interactions/-/interactions-3.21.0.tgz#c04f4eb59ae70b723d7be8d5f8eb4e2802087a49"
+  integrity sha512-sPuzEl4Xq/BR5gbYr2R/sDzwlX9NdJ02i8Ew2rEy2hLMlf1jAeUAdTg/G+K9baWJ8acV9fZv6h/mdV3dXGLPSg==
+  dependencies:
+    "@react-aria/ssr" "^3.9.1"
+    "@react-aria/utils" "^3.23.1"
+    "@react-types/shared" "^3.22.0"
+    "@swc/helpers" "^0.5.0"
+
 "@react-aria/label@^3.7.2", "@react-aria/label@^3.7.4":
   version "3.7.4"
   resolved "https://registry.yarnpkg.com/@react-aria/label/-/label-3.7.4.tgz#c7ba2c9d795b05da9f041eace9211d3c71b11c64"
@@ -1678,13 +1688,24 @@
     "@swc/helpers" "^0.5.0"
     clsx "^2.0.0"
 
-"@react-aria/visually-hidden@^3.8.6", "@react-aria/visually-hidden@^3.8.8":
-  version "3.8.8"
-  resolved "https://registry.yarnpkg.com/@react-aria/visually-hidden/-/visually-hidden-3.8.8.tgz#0f2a70ca21974154383080cf486caff5e7f2240f"
-  integrity sha512-Cn2PYKD4ijGDtF0+dvsh8qa4y7KTNAlkTG6h20r8Q+6UTyRNmtE2/26QEaApRF8CBiNy9/BZC/ZC4FK2OjvCoA==
+"@react-aria/utils@^3.23.1":
+  version "3.23.1"
+  resolved "https://registry.yarnpkg.com/@react-aria/utils/-/utils-3.23.1.tgz#a082a5ffb97a7b9c03d522dcedfc251af8473e44"
+  integrity sha512-iXibf9ojqdoygbvy/++v5cKLKgjc/5ZmKV8/9u/2Hkpha1cf5Td/Z+Vl42B6giUBAsuDio5kuZYfYC7Uk+t8ag==
   dependencies:
-    "@react-aria/interactions" "^3.20.1"
-    "@react-aria/utils" "^3.23.0"
+    "@react-aria/ssr" "^3.9.1"
+    "@react-stately/utils" "^3.9.0"
+    "@react-types/shared" "^3.22.0"
+    "@swc/helpers" "^0.5.0"
+    clsx "^2.0.0"
+
+"@react-aria/visually-hidden@^3.8.6", "@react-aria/visually-hidden@^3.8.8":
+  version "3.8.9"
+  resolved "https://registry.yarnpkg.com/@react-aria/visually-hidden/-/visually-hidden-3.8.9.tgz#12a1966926b06be55124979042822af5df17db2d"
+  integrity sha512-yUUj4M8YjtwzS45n0nB4bCKCYd3Dl6wmCZKAcAqZG9hMh6DUAcSp2xqYKOAzvNrtZZmAoopgMP4UC9hKlY6swQ==
+  dependencies:
+    "@react-aria/interactions" "^3.21.0"
+    "@react-aria/utils" "^3.23.1"
     "@react-types/shared" "^3.22.0"
     "@swc/helpers" "^0.5.0"
 
@@ -2062,9 +2083,9 @@
     tslib "^2.4.0"
 
 "@swc/helpers@^0.5.0":
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/@swc/helpers/-/helpers-0.5.3.tgz#98c6da1e196f5f08f977658b80d6bd941b5f294f"
-  integrity sha512-FaruWX6KdudYloq1AHD/4nU+UsMTdNE8CKyrseXWEcgjDAbvkwJg2QGPAnfIJLIWsjZOSPLOAykK6fuYp4vp4A==
+  version "0.5.6"
+  resolved "https://registry.yarnpkg.com/@swc/helpers/-/helpers-0.5.6.tgz#d16d8566b7aea2bef90d059757e2d77f48224160"
+  integrity sha512-aYX01Ke9hunpoCexYAgQucEpARGQ5w/cqHFrIR+e9gdKb1QWTsVJuTJ2ozQzIAxLyRQe/m+2RqzkyOOGiMKRQA==
   dependencies:
     tslib "^2.4.0"
 
