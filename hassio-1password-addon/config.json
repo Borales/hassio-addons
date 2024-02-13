@@ -23,5 +23,5 @@
   "panel_title": "1password",
   "ingress": true,
   "ingress_port": 8000,
-  "image": "ghcr.io/Borales/hassio-1password-{arch}"
+  "image": "ghcr.io/borales/hassio-1password-{arch}"
 }
