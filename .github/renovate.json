@@ -1,4 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", "group:definitelyTyped"]
+  "extends": ["config:recommended", "group:definitelyTyped"],
+  "labels": ["dependencies"],
+  "postUpdateOptions": ["yarnDedupeHighest"],
+  "prConcurrentLimit": 5,
+  "recreateWhen": "never",
+  "rangeStrategy": "bump",
+  "updateInternalDeps": true
 }
