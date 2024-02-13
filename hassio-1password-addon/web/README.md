@@ -1,6 +1,8 @@
 # HA 1password
 
-## TODO
+> Current status: proof of concept
+
+## Things to do next
 
 - [ ] add i18n
 - [ ] add logger
@@ -11,7 +13,9 @@
 - [ ] add approx stats for requests
 - [ ] add timeout when hitting the rate limit
 - [ ] add form loading states for all submits
-- [ ] add 1password "client" service (w/ masking secrets)
+- [ ] add proper "update at" for homepage
+- [ ] add 1password masking secrets before saving to db
+- [ ] add better design
 - [ ] make 1password item dropdowns searchable
-- [ ] documentation
-- [ ] tests?
+- [ ] proper documentation
+- [ ] tests

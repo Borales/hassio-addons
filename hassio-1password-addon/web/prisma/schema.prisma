@@ -12,7 +12,7 @@ model Secret {
   id        String    @id
   reference String?
   itemId    String?   @map("item_id")
-  updatedAt DateTime? @map("updated_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
   isSkipped Boolean?  @default(false) @map("is_skipped")
 
   item Item? @relation(fields: [itemId], references: [id], onDelete: SetNull)
@@ -33,7 +33,7 @@ model Item {
   fields         String? // JSON
 
   vault  Vault?   @relation(fields: [vaultId], references: [id], onDelete: SetNull)
-  Secret Secret[]
+  secret Secret[]
 
   @@map("op_items")
 }

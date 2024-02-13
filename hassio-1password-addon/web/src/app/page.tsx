@@ -1,3 +1,4 @@
+import { CustomTimeAgo } from '@/components/date-formatter';
 import { HASecretList } from '@/components/ha-secret/secret-list';
 import { HASecretModal } from '@/components/ha-secret/secret-modal';
 import { UpdateNowBtn } from '@/components/update-now';
@@ -34,7 +35,9 @@ export default async function Home({ searchParams }: { searchParams: any }) {
 
       <span className="block text-center font-mono text-xs text-default-400">
         {nextUpdate && (
-          <>Next automatic update: {new Date(nextUpdate).toLocaleString()}</>
+          <>
+            Next automatic update: <CustomTimeAgo date={nextUpdate} />
+          </>
         )}
         {!nextUpdate && <>Not synced yet</>}
 

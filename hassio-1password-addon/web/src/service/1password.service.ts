@@ -12,6 +12,7 @@ import {
   PrismaType,
   prisma
 } from './client/db';
+import { Logger, logger } from './client/logger';
 
 type OpItem = Omit<PrismaOpItem, 'urls' | 'fields'> & {
   urls: URL[];
@@ -45,9 +46,10 @@ const maskPassword = (password: string, numChars: number = 2): string => {
 
 export class OnePasswordService {
   constructor(
-    public ttr: number,
-    public client: OnePasswordClient,
-    public db: PrismaType
+    protected ttr: number,
+    protected client: OnePasswordClient,
+    protected db: PrismaType,
+    protected logger: Logger
   ) {}
 
   /**
@@ -60,10 +62,13 @@ export class OnePasswordService {
       return;
     }
 
+    const data = this.convertOpToDbSecret(item);
+    // TODO: mask the fields
+
     await this.db.item.upsert({
       where: { id },
       create: {
-        ...this.convertOpToDbSecret(item),
+        ...data,
         vault: {
           connectOrCreate: {
             where: { id: vaultId },
@@ -71,7 +76,7 @@ export class OnePasswordService {
           }
         }
       },
-      update: this.convertOpToDbSecret(item)
+      update: { ...data }
     });
   }
 
@@ -129,8 +134,45 @@ export class OnePasswordService {
 
       await this.updateNextSync();
     } catch (e) {
-      console.error(e);
+      this.logger.error('Error syncing items', e);
     }
+  }
+
+  /**
+   * Get items from DB that were updated after the last sync.
+   */
+  async getRecentlyUpdatedItems() {
+    const lastSync = this.getLastUpdate();
+
+    this.logger.debug(
+      'Getting recently updated items for the past %d minutes',
+      this.ttr
+    );
+
+    const items = await this.db.secret.findMany({
+      where: {
+        reference: { not: null },
+        itemId: { not: null },
+        isSkipped: false,
+        OR: [
+          { updatedAt: { gt: lastSync } },
+          { item: { updatedAt: { gt: lastSync } } }
+        ]
+      }
+    });
+
+    if (!items.length) {
+      return {};
+    }
+
+    const result: Record<string, string> = {};
+
+    items.forEach((item) => {
+      const secret = this.client.readItemByReference(item.reference as string);
+      result[item.id] = secret;
+    });
+
+    return result;
   }
 
   /**
@@ -155,6 +197,15 @@ export class OnePasswordService {
     });
 
     return nextUpdate?.value;
+  }
+
+  /**
+   * Get the last update time (approx TTR minutes ago)
+   */
+  getLastUpdate() {
+    return new Date(
+      new Date().getTime() - (this.ttr || 1) * 60000
+    ).toISOString();
   }
 
   /**
@@ -271,5 +322,6 @@ export class OnePasswordService {
 export const onePasswordService = new OnePasswordService(
   parseInt(process.env.OP_TTR as any),
   onePasswordClient,
-  prisma
+  prisma,
+  logger
 );

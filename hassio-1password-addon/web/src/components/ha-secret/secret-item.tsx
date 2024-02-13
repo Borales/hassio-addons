@@ -4,6 +4,7 @@ import { HaSecret } from '@/service/secret.service';
 import { Card, CardBody, Chip, Code, Tooltip } from '@nextui-org/react';
 import { useSearchParams } from 'next/navigation';
 import { tv } from 'tailwind-variants';
+import { CustomTimeAgo } from '../date-formatter';
 import { HASecretHideToggle } from './secret-hide-toggle';
 import { HASecretItemEdit } from './secret-item-edit';
 
@@ -53,7 +54,7 @@ export const HASecretItem = ({ item }: HASecretItemProps) => {
   const isAssigned = !!item.itemId && !item.isSkipped;
 
   return (
-    <Card radius="sm">
+    <Card radius="sm" isHoverable>
       <CardBody>
         <div className="flex items-center justify-between ">
           <Tooltip
@@ -100,7 +101,9 @@ export const HASecretItem = ({ item }: HASecretItemProps) => {
           <p className="text-xs text-default-400">
             {!item.updatedAt && 'Not updated yet'}
             {item.updatedAt && (
-              <>Updated at: {new Date(item.updatedAt).toLocaleString()}</>
+              <>
+                Updated at: <CustomTimeAgo date={item.updatedAt} />
+              </>
             )}
           </p>
         </section>

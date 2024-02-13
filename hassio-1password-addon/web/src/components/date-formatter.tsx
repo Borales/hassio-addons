@@ -1,0 +1,21 @@
+'use client';
+
+import TimeAgo from 'react-timeago';
+
+type DateFormatterProps = {
+  date: Date | string;
+  locale?: string;
+};
+
+export const CustomTimeAgo = ({ date, locale = 'en' }: DateFormatterProps) => {
+  // TODO: replace with the active language
+  const dateFormatter = new Intl.DateTimeFormat(locale, {
+    year: '2-digit',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric'
+  });
+
+  return <TimeAgo date={dateFormatter.format(new Date(date))} />;
+};
