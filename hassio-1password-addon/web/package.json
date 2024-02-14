@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@react-aria/ssr": "^3.9.1",
-    "@react-aria/visually-hidden": "^3.8.8",
+    "@react-aria/visually-hidden": "^3.8.9",
     "@types/node": "^20.11.0",
     "@types/react": "^18.2.47",
     "@types/react-dom": "^18.2.18",
