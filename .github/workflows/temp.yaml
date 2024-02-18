@@ -14,7 +14,7 @@ jobs:
     name: Initialize builds
     steps:
       - uses: actions/checkout@v4.1.1
-      - uses: actions/setup-node@4.0.2
+      - uses: actions/setup-node@v4
         with:
           node-version: "20"
       - run: yarn install
