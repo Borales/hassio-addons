@@ -13,7 +13,7 @@ export type {
   Vault as OpVault
 } from '@prisma/client';
 
-const db_url = process.env.OP_DB_URL;
+const db_url = process.env.OP_DB_URL || '';
 
 export type PrismaType = typeof prisma;
 
