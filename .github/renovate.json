@@ -9,7 +9,7 @@
   "updateInternalDeps": true,
   "packageRules": [
     {
-      "matchPackagePrefixes": ["@react-aria/*"],
+      "matchPackagePrefixes": ["@react-aria"],
       "groupName": "react-aria"
     }
   ]
