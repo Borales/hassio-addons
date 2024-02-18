@@ -13,7 +13,8 @@ COPY --from=node /usr/local/bin /usr/local/bin
 
 COPY --from=onePassword /usr/local/bin /usr/local/bin
 
-RUN apk add --no-cache libc6-compat yarn
+RUN apk add --no-cache libc6-compat
+RUN npm i -g yarn
 
 ENV PORT 8000
 ENV NEXT_TELEMETRY_DISABLED 1
