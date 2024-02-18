@@ -10,7 +10,6 @@ COPY --from=node /usr/local/share /usr/local/share
 COPY --from=node /usr/local/lib /usr/local/lib
 COPY --from=node /usr/local/include /usr/local/include
 COPY --from=node /usr/local/bin /usr/local/bin
-
 RUN rm /usr/local/bin/yarn*
 
 COPY --from=onePassword /usr/local/bin /usr/local/bin
