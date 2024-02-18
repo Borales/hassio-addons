@@ -22,14 +22,16 @@ ENV PORT 8000
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV NODE_ENV production
 
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nodejs
+
 # Add crontab entry for fetching a url every 5 minutes
 RUN echo "*/1 * * * * /usr/bin/curl -s -S -X GET \"http://localhost:${PORT}/api/cron\" > /dev/null" >> /etc/crontabs/root
 
 WORKDIR /app
 COPY web/ .
-RUN ls -lah
-RUN ls -lah src/
-RUN exit 1
+RUN chown -R nodejs:nodejs .
+USER nodejs
 
 RUN yarn --frozen-lockfile
 RUN yarn build
