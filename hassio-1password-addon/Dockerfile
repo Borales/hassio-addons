@@ -20,7 +20,7 @@ RUN npm install -g yarn
 
 ENV PORT 8000
 ENV NEXT_TELEMETRY_DISABLED 1
-ENV NODE_ENV production
+# ENV NODE_ENV production
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nodejs
