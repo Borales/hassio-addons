@@ -139,11 +139,18 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - run: mkdir -r web/.next
+        working-directory: ./${{ matrix.addon }}
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
           name: artifacts-${{ github.sha }}-${{ matrix.addon }}
-          # path: ./${{ matrix.addon }}/web/.next
+          path: ./${{ matrix.addon }}/web/.next
+
+      - run: |
+          ls -lah ./web/.next
+          ls -lah ./
+        working-directory: ./${{ matrix.addon }}
 
       - name: Build ${{ matrix.addon }} add-on
         if: steps.check.outputs.build_arch == 'true'
