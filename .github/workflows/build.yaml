@@ -56,8 +56,41 @@ jobs:
           else
             echo "No add-on had any monitored files changed (${{ env.MONITORED_FILES }})";
           fi
-  build:
+
+  prepare:
+    name: Prepare ${{ matrix.addon }} add-on
     needs: init
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    if: needs.init.outputs.changed == 'true'
+    strategy:
+      matrix:
+        addon: ${{ fromJson(needs.init.outputs.changed_addons) }}
+    steps:
+      - uses: actions/checkout@v4.1.1
+      - uses: actions/setup-node@v4.0.2
+        with:
+          node-version: "20"
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v4.0.0
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - run: yarn --frozen-lockfile
+      - run: yarn build
+      - uses: actions/upload-artifact@v4.3.1
+        with:
+          name: artifacts-${{ github.sha }}-${{ matrix.addon }}
+          path: ./${{ matrix.addon }}/web/.next
+
+  build:
+    needs: [init, prepare]
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -101,6 +134,12 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: artifacts-${{ github.sha }}-${{ matrix.addon }}
+          path: ./${{ matrix.addon }}/web/.next
 
       - name: Build ${{ matrix.addon }} add-on
         if: steps.check.outputs.build_arch == 'true'
