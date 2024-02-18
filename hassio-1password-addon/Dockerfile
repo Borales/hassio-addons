@@ -27,6 +27,10 @@ RUN echo "*/1 * * * * /usr/bin/curl -s -S -X GET \"http://localhost:${PORT}/api/
 
 WORKDIR /app
 COPY web/ .
+RUN ls -lah
+RUN ls -lah src/
+RUN exit 1
+
 RUN yarn --frozen-lockfile
 RUN yarn build
 RUN yarn prisma:generate

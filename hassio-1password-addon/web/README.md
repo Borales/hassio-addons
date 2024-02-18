@@ -20,3 +20,5 @@
 - [ ] proper documentation
 - [ ] tests
 - [ ] add custom triggers (like restarting another addon)
+- [ ] move yarn install before docker build (with cache)
+- [ ] don't install all deps on the runner (keep only prisma)
