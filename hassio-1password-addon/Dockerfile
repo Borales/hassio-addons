@@ -34,7 +34,7 @@ RUN echo "*/1 * * * * /usr/bin/curl -s -S -X GET \"http://localhost:${PORT}/api/
 
 WORKDIR /app
 COPY web/ .
-RUN ls -lah ./.next
+RUN ls -la ./.next
 RUN chown -R nodejs:nodejs .
 USER nodejs
 
