@@ -4,15 +4,6 @@ FROM node:20.11-alpine AS node
 FROM 1password/op:2.24.0 AS onePassword
 
 FROM $BUILD_FROM
-RUN apk add --no-cache libc6-compat yarn
-RUN apk add --no-cache --no-install-recommends yarn
-
-ENV PORT 8000
-ENV NEXT_TELEMETRY_DISABLED 1
-ENV NODE_ENV production
-
-# Add crontab entry for fetching a url every 5 minutes
-RUN echo "*/1 * * * * /usr/bin/curl -s -S -X GET \"http://localhost:${PORT}/api/cron\" > /dev/null" >> /etc/crontabs/root
 
 COPY --from=node /usr/lib /usr/lib
 COPY --from=node /usr/local/share /usr/local/share
@@ -21,6 +12,16 @@ COPY --from=node /usr/local/include /usr/local/include
 COPY --from=node /usr/local/bin /usr/local/bin
 
 COPY --from=onePassword /usr/local/bin /usr/local/bin
+
+RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache --no-install-recommends yarn
+
+ENV PORT 8000
+ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV production
+
+# Add crontab entry for fetching a url every 5 minutes
+RUN echo "*/1 * * * * /usr/bin/curl -s -S -X GET \"http://localhost:${PORT}/api/cron\" > /dev/null" >> /etc/crontabs/root
 
 WORKDIR /app
 COPY web/ .
