@@ -61,6 +61,8 @@ jobs:
     name: Prepare ${{ matrix.addon }} add-on
     needs: init
     runs-on: ubuntu-latest
+    env:
+      NEXT_TELEMETRY_DISABLED: 1
     permissions:
       contents: read
     if: needs.init.outputs.changed == 'true'
@@ -141,7 +143,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: artifacts-${{ github.sha }}-${{ matrix.addon }}
-          path: ./${{ matrix.addon }}/web/.next
+          # path: ./${{ matrix.addon }}/web/.next
 
       - name: Build ${{ matrix.addon }} add-on
         if: steps.check.outputs.build_arch == 'true'
