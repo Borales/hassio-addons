@@ -4,18 +4,17 @@ FROM node:20.11-alpine AS node
 FROM 1password/op:2.24.0 AS onePassword
 
 FROM $BUILD_FROM
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat yarn
 
-ENV PORT=8000
+ENV PORT 8000
 ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV production
 
 COPY --from=node /usr/lib /usr/lib
 COPY --from=node /usr/local/share /usr/local/share
 COPY --from=node /usr/local/lib /usr/local/lib
 COPY --from=node /usr/local/include /usr/local/include
 COPY --from=node /usr/local/bin /usr/local/bin
-
-RUN npm install -g yarn
 
 COPY --from=onePassword /usr/local/bin /usr/local/bin
 
