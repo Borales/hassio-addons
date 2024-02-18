@@ -1,0 +1,21 @@
+name: TEMP
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  init:
+    runs-on: ubuntu-latest
+    name: Initialize builds
+    steps:
+      - uses: actions/checkout@v4.1.1
+      - uses: actions/setup-node@4.0.2
+        with:
+          node-version: "20"
+      - run: yarn install
+        working-directory: ./hassio-1password-addon/web
