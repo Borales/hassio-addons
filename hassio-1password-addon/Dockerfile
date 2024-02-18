@@ -34,6 +34,7 @@ WORKDIR /app
 USER nodejs
 RUN mkdir -p /app/.next/static /app/public
 COPY --chown=nodejs:nodejs web/.next/standalone ./
+RUN ls -la /app/
 COPY --chown=nodejs:nodejs web/.next/static ./.next/static
 COPY --chown=nodejs:nodejs web/public ./public
 
