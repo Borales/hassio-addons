@@ -1,0 +1,5 @@
+Dockerfile
+.dockerignore
+web/node_modules
+web/README.md
+web/.next
