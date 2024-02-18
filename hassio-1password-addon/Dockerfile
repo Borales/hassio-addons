@@ -18,6 +18,10 @@ RUN apk add --no-cache libc6-compat
 RUN npm install -g npm
 RUN npm install -g yarn
 
+# Copy data for add-on
+COPY run.sh /
+RUN chmod a+x /run.sh
+
 ENV PORT 8000
 ENV NEXT_TELEMETRY_DISABLED 1
 # ENV NODE_ENV production
@@ -36,10 +40,6 @@ USER nodejs
 RUN yarn --frozen-lockfile
 RUN yarn build
 RUN yarn prisma:generate
-
-# Copy data for add-on
-COPY run.sh /
-RUN chmod a+x /run.sh
 
 EXPOSE $PORT
 CMD ["/run.sh"]
