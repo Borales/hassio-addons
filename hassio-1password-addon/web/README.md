@@ -19,3 +19,4 @@
 - [ ] make 1password item dropdowns searchable
 - [ ] proper documentation
 - [ ] tests
+- [ ] add custom triggers (like restarting another addon)

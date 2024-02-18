@@ -10,6 +10,9 @@ ENV PORT 8000
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV NODE_ENV production
 
+# Add crontab entry for fetching a url every 5 minutes
+RUN echo "*/1 * * * * /usr/bin/curl -s -S -X GET \"http://localhost:${PORT}/api/cron\" > /dev/null" >> /etc/crontabs/root
+
 COPY --from=node /usr/lib /usr/lib
 COPY --from=node /usr/local/share /usr/local/share
 COPY --from=node /usr/local/lib /usr/local/lib
@@ -23,9 +26,6 @@ COPY web/ .
 RUN yarn --frozen-lockfile
 RUN yarn build
 RUN yarn prisma:generate
-
-# Add crontab entry for fetching a url every 5 minutes
-RUN echo "*/1 * * * * /usr/bin/curl -s -S -X GET \"http://localhost:${PORT}/api/cron\" > /dev/null" >> /etc/crontabs/root
 
 # Copy data for add-on
 COPY run.sh /
