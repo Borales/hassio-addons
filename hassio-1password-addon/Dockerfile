@@ -5,6 +5,7 @@ FROM 1password/op:2.24.0 AS onePassword
 
 FROM $BUILD_FROM
 RUN apk add --no-cache libc6-compat yarn
+RUN apk add --no-cache --no-install-recommends yarn
 
 ENV PORT 8000
 ENV NEXT_TELEMETRY_DISABLED 1
