@@ -10,13 +10,11 @@ COPY --from=node /usr/local/share /usr/local/share
 COPY --from=node /usr/local/lib /usr/local/lib
 COPY --from=node /usr/local/include /usr/local/include
 COPY --from=node /usr/local/bin /usr/local/bin
-RUN rm /usr/local/bin/yarn*
 
 COPY --from=onePassword /usr/local/bin /usr/local/bin
 
 RUN apk add --no-cache libc6-compat
 RUN npm install -g npm
-RUN npm install -g yarn
 
 # Copy data for add-on
 COPY run.sh /
@@ -33,14 +31,10 @@ RUN adduser --system --uid 1001 nodejs
 RUN echo "*/1 * * * * /usr/bin/curl -s -S -X GET \"http://localhost:${PORT}/api/cron\" > /dev/null" >> /etc/crontabs/root
 
 WORKDIR /app
-COPY web/ .
-RUN ls -lah ./.next
-RUN chown -R nodejs:nodejs .
 USER nodejs
-
-RUN yarn --frozen-lockfile
-RUN yarn build
-RUN yarn prisma:generate
+COPY --chown=nodejs:nodejs web/.next/standalone ./
+COPY --chown=nodejs:nodejs web/.next/static ./.next/static
+COPY --chown=nodejs:nodejs web/public ./public
 
 EXPOSE $PORT
 CMD ["/run.sh"]

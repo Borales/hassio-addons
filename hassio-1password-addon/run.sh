@@ -4,7 +4,8 @@
 crond
 
 # Run Prisma migrations
-yarn --cwd /app migration:prod
+# TODO: run migrations
+# yarn --cwd /app migration:prod
 
 # run the web-app
-yarn --cwd /app start
+cd /app && node server.js
