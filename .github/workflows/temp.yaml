@@ -19,3 +19,5 @@ jobs:
           node-version: "20"
       - run: yarn install
         working-directory: ./hassio-1password-addon/web
+      - run: yarn build
+        working-directory: ./hassio-1password-addon/web
