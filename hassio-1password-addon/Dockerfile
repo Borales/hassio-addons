@@ -37,5 +37,8 @@ COPY --chown=nodejs:nodejs web/public ./public
 COPY --chown=nodejs:nodejs web/.next/static ./.next/static
 COPY --chown=nodejs:nodejs web/.next/standalone ./
 
+# Required for running migrations
+RUN npm install prisma
+
 EXPOSE $PORT
 CMD ["/run.sh"]
