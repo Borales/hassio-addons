@@ -32,6 +32,7 @@ RUN echo "*/1 * * * * /usr/bin/curl -s -S -X GET \"http://localhost:${PORT}/api/
 
 WORKDIR /app
 USER nodejs
+
 COPY --chown=nodejs:nodejs web/public ./public
 COPY --chown=nodejs:nodejs web/.next/static ./.next/static
 COPY --chown=nodejs:nodejs web/.next/standalone ./
