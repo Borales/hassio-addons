@@ -14,7 +14,10 @@ COPY --from=node /usr/local/bin /usr/local/bin
 COPY --from=onePassword /usr/local/bin /usr/local/bin
 
 RUN apk add --no-cache libc6-compat
-RUN npm install -g npm
+# "prisma" required for running migrations
+RUN npm install -g npm prisma
+# Temp
+RUN npm exec -- prisma -v
 
 # Copy data for add-on
 COPY run.sh /
@@ -36,9 +39,6 @@ USER nodejs
 COPY --chown=nodejs:nodejs web/public ./public
 COPY --chown=nodejs:nodejs web/.next/static ./.next/static
 COPY --chown=nodejs:nodejs web/.next/standalone ./
-
-# Required for running migrations
-RUN npm install prisma
 
 EXPOSE $PORT
 CMD ["/run.sh"]

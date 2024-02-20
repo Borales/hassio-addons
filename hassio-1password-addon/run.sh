@@ -4,7 +4,7 @@
 crond
 
 # Run Prisma migrations
-cd /app && npm run prisma migrate deploy
+cd /app && npm exec -- prisma migrate deploy
 
 # run the web-app
 cd /app && node server.js
