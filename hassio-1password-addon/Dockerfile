@@ -16,8 +16,6 @@ COPY --from=onePassword /usr/local/bin /usr/local/bin
 RUN apk add --no-cache libc6-compat
 # "prisma" required for running migrations
 RUN npm install -g npm prisma
-# Temp
-RUN npm exec -- prisma -v
 
 # Copy data for add-on
 COPY run.sh /
