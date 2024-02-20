@@ -37,6 +37,7 @@ USER nodejs
 COPY --chown=nodejs:nodejs web/public ./public
 COPY --chown=nodejs:nodejs web/.next/static ./.next/static
 COPY --chown=nodejs:nodejs web/.next/standalone ./
+COPY --chown=nodejs:nodejs web/prisma ./prisma
 
 EXPOSE $PORT
 CMD ["/run.sh"]
