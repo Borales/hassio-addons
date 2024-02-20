@@ -1,5 +1,2 @@
 Dockerfile
 .dockerignore
-web/node_modules
-!web/node_modules/prisma
-!web/node_modules/@prisma
