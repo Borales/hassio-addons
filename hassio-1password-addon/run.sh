@@ -18,6 +18,7 @@ APP_LOG_LEVEL="$(bashio::config 'logLevel')"
 
 # Run Prisma migrations
 bashio::log.info "Running Prisma migrations..."
+cd /app && npm exec -- prisma generate
 cd /app && OP_DB_URL=${OP_DB_URL} npm exec -- prisma migrate deploy
 
 # run the web-app
