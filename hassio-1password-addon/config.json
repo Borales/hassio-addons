@@ -9,8 +9,8 @@
   "startup": "services",
   "schema": {
     "allowAutoRestart": "bool",
-    "serviceAccountToken": "password",
     "checkIntervalMin": "int(0,180)",
+    "serviceAccountToken": "password",
     "logLevel": "list(debug|info|error)"
   },
   "options": {

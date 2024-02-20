@@ -150,7 +150,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: artifacts-${{ github.sha }}-${{ matrix.addon }}
-          path: ./${{ matrix.addon }}/web/.next
+          path: ./${{ matrix.addon }}/web/
       - name: Build ${{ matrix.addon }} add-on
         if: steps.check.outputs.build_arch == 'true'
         uses: home-assistant/builder@2024.01.0
