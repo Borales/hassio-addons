@@ -92,10 +92,11 @@ jobs:
         with:
           name: artifacts-${{ github.sha }}-${{ matrix.addon }}
           path: |
-            ./${{ matrix.addon }}/web/.next
-            ./${{ matrix.addon }}/web/node_modules/@prisma
-            ./${{ matrix.addon }}/web/node_modules/.prisma
-            ./${{ matrix.addon }}/web/node_modules/prisma
+            ./${{ matrix.addon }}/web/.next/
+            ./${{ matrix.addon }}/web/node_modules/.bin/
+            ./${{ matrix.addon }}/web/node_modules/@prisma/
+            ./${{ matrix.addon }}/web/node_modules/.prisma/
+            ./${{ matrix.addon }}/web/node_modules/prisma/
 
   build:
     needs: [init, prepare]
