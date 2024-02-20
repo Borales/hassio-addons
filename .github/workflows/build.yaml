@@ -91,7 +91,11 @@ jobs:
       - uses: actions/upload-artifact@v4.3.1
         with:
           name: artifacts-${{ github.sha }}-${{ matrix.addon }}
-          path: ./${{ matrix.addon }}/web/.next
+          path: |
+            ./${{ matrix.addon }}/web/.next
+            ./${{ matrix.addon }}/web/node_modules/@prisma
+            ./${{ matrix.addon }}/web/node_modules/.prisma
+            ./${{ matrix.addon }}/web/node_modules/prisma
 
   build:
     needs: [init, prepare]
