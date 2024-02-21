@@ -19,7 +19,7 @@
     "@1password/op-js": "^0.1.11",
     "@nextui-org/react": "^2.2.9",
     "@phosphor-icons/react": "^2.0.15",
-    "@prisma/client": "^5.10.1",
+    "@prisma/client": "^5.10.2",
     "framer-motion": "^11.0.5",
     "glob": "^10.3.10",
     "next": "^14.1.0",
@@ -50,7 +50,7 @@
     "prettier-plugin-organize-imports": "^3.2.4",
     "prettier-plugin-package": "^1.4.0",
     "prettier-plugin-tailwindcss": "^0.5.11",
-    "prisma": "^5.10.1",
+    "prisma": "^5.10.2",
     "tailwind-variants": "^0.1.20",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3"
