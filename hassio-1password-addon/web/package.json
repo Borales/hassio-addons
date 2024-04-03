@@ -18,7 +18,7 @@
   "dependencies": {
     "@1password/op-js": "^0.1.11",
     "@nextui-org/react": "^2.2.10",
-    "@phosphor-icons/react": "^2.0.15",
+    "@phosphor-icons/react": "^2.1.4",
     "@prisma/client": "^5.10.2",
     "framer-motion": "^11.0.24",
     "glob": "^10.3.10",
