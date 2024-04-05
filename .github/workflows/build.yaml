@@ -25,19 +25,7 @@ jobs:
 
       - name: Get changed files
         id: changed_files
-        uses: jitterbit/get-changed-files@v1
-
-      - name: Get changed files 2
-        id: changed_files2
         uses: tj-actions/changed-files@v44
-
-      - name: List all changed files
-        run: |
-          echo "From jitterbit/get-changed-files"
-          echo ${{ steps.changed_files.outputs.all }}
-          echo "From tj-actions/changed-files"
-          echo ${{ steps.changed_files2.outputs.all_changed_files }}
-          exit 1
 
       - name: Find add-on directories
         id: addons
@@ -48,9 +36,9 @@ jobs:
         run: |
           declare -a changed_addons
           for addon in ${{ steps.addons.outputs.addons }}; do
-            if [[ "${{ steps.changed_files.outputs.all }}" =~ $addon ]]; then
+            if [[ "${{ steps.changed_files.outputs.all_changed_files }}" =~ $addon ]]; then
               for file in ${{ env.MONITORED_FILES }}; do
-                  if [[ "${{ steps.changed_files.outputs.all }}" =~ $addon/$file ]]; then
+                  if [[ "${{ steps.changed_files.outputs.all_changed_files }}" =~ $addon/$file ]]; then
                     if [[ ! "${changed_addons[@]}" =~ $addon ]]; then
                       changed_addons+=("\"${addon}\",");
                     fi
