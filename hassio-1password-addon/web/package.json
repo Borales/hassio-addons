@@ -36,9 +36,9 @@
   "devDependencies": {
     "@react-aria/ssr": "^3.9.2",
     "@react-aria/visually-hidden": "^3.8.10",
-    "@types/node": "^20.12.3",
+    "@types/node": "^20.12.4",
     "@types/react": "^18.2.74",
-    "@types/react-dom": "^18.2.23",
+    "@types/react-dom": "^18.2.24",
     "@types/react-timeago": "^4.1.7",
     "autoprefixer": "^10.4.19",
     "clsx": "^2.1.0",
