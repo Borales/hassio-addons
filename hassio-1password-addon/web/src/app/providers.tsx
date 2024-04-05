@@ -8,7 +8,7 @@ import * as React from 'react';
 
 export interface ProvidersProps {
   children: React.ReactNode;
-  themeProps?: ThemeProviderProps;
+  themeProps?: Omit<ThemeProviderProps, 'children'>;
 }
 
 export function Providers({ children, themeProps }: ProvidersProps) {
