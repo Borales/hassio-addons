@@ -20,7 +20,7 @@
     "@nextui-org/react": "^2.2.10",
     "@phosphor-icons/react": "^2.1.4",
     "@prisma/client": "^5.10.2",
-    "framer-motion": "^11.0.24",
+    "framer-motion": "^11.0.25",
     "glob": "^10.3.10",
     "next": "^14.1.4",
     "next-themes": "^0.3.0",
