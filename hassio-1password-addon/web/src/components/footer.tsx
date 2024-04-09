@@ -6,10 +6,7 @@ import { GithubLogo } from '@phosphor-icons/react/dist/ssr';
 export const Footer = () => {
   return (
     <footer className="text-center">
-      <Link
-        href="https://github.com/Borales/hassio-1password-addon"
-        target="_blank"
-      >
+      <Link href="https://github.com/Borales/hassio-addons" target="_blank">
         <Avatar
           size="md"
           title="Visit the project on GitHub"

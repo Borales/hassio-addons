@@ -8,5 +8,5 @@ build_from:
 labels:
   org.opencontainers.image.title: "1Password for Home Assistant"
   org.opencontainers.image.description: "Sync your secrets from 1password"
-  org.opencontainers.image.source: "https://github.com/Borales/hassio-1password-addon"
+  org.opencontainers.image.source: "https://github.com/Borales/hassio-addons"
   org.opencontainers.image.licenses: "MIT License"
