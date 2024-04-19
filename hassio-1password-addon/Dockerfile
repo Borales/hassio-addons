@@ -1,7 +1,7 @@
 ARG BUILD_FROM
 
 FROM node:20.12.2-alpine AS node
-FROM 1password/op:2.26.1 AS onePassword
+FROM 1password/op:2.27.0 AS onePassword
 
 FROM $BUILD_FROM
 
