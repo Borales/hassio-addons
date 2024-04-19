@@ -31,7 +31,7 @@
     "sharp": "^0.33.3",
     "winston": "^3.13.0",
     "yaml": "^2.4.1",
-    "zod": "^3.22.4"
+    "zod": "^3.22.5"
   },
   "devDependencies": {
     "@react-aria/ssr": "^3.9.2",
