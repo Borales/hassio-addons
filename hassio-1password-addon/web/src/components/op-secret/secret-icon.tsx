@@ -20,6 +20,10 @@ export const OpSecretIcon = ({ size = 32, urls, alt }: OpSecretIconProps) => {
       secretHref = urls[0].href;
     }
 
+    if (!secretHref.startsWith('http')) {
+      secretHref = `https://${secretHref}`;
+    }
+
     const hostname = new URL(secretHref).hostname;
     const shouldBeIgnored = hostnameToSkip.find(
       (host) => hostname.includes(host) || hostname.endsWith(host)
