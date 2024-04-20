@@ -9,5 +9,6 @@
     "prettier-plugin-organize-imports",
     "prettier-plugin-package",
     "prettier-plugin-tailwindcss"
-  ]
+  ],
+  "tailwindFunctions": ["tv", "clsx"]
 }
