@@ -4331,10 +4331,10 @@ prettier@^3.2.5:
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.2.5.tgz#e52bc3090586e824964a8813b09aba6233b28368"
   integrity sha512-3/GWa9aOC0YeD7LUfvOG2NiDyhOWRvt1k+rcKhOuYnMY24iiCphgneUfJDyFXd6rZCAnuLBv6UeAULtrhT/F4A==
 
-prisma-extension-pagination@^0.7.2:
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/prisma-extension-pagination/-/prisma-extension-pagination-0.7.2.tgz#ff710671188125485e44d26ddf1a3f4328b326e0"
-  integrity sha512-CyArmWMbQ+gpKk89LTcMwTjYdA6e0IHc1vjlx/qLnYKdBerxmTISG+udNXidVvZz4n5iIJrW4NB7qq0cHTgWhA==
+prisma-extension-pagination@^0.7.3:
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/prisma-extension-pagination/-/prisma-extension-pagination-0.7.3.tgz#323cf5d60397637698d79f66006dd2d00d4f9528"
+  integrity sha512-yMwwFnFOXmM3IY71DNLwri+rdVsdyqB/i/gIX34IYHPgUpSi2qGP62kUhO+k5Wd0M9T0l9j8PczzzK3KeP2Fxg==
 
 prisma@^5.12.1:
   version "5.12.1"
