@@ -7,6 +7,9 @@
   "recreateWhen": "never",
   "rangeStrategy": "bump",
   "updateInternalDeps": true,
+  "nvm": {
+    "enabled": false
+  },
   "packageRules": [
     {
       "matchPackagePrefixes": ["@react-aria"],
