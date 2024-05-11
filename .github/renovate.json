@@ -11,6 +11,10 @@
     {
       "matchPackagePrefixes": ["@react-aria"],
       "groupName": "react-aria"
+    },
+    {
+      "matchSourceUrlPrefixes": ["https://github.com/vercel/next.js"],
+      "groupName": "nextjs-packages"
     }
   ]
 }
