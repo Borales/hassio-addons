@@ -16,7 +16,7 @@
     "start": "next start -p 8000"
   },
   "dependencies": {
-    "@1password/op-js": "^0.1.11",
+    "@1password/op-js": "^0.1.12",
     "@nextui-org/react": "^2.3.6",
     "@phosphor-icons/react": "^2.1.5",
     "@prisma/client": "^5.13.0",
