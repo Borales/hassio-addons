@@ -24,7 +24,7 @@
     "glob": "^10.3.15",
     "next": "^14.2.3",
     "next-themes": "^0.3.0",
-    "prisma-extension-pagination": "^0.7.3",
+    "prisma-extension-pagination": "^0.7.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-timeago": "^7.2.0",
