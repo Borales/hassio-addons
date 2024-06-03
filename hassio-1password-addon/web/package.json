@@ -30,7 +30,7 @@
     "react-timeago": "^7.2.0",
     "sharp": "^0.33.4",
     "winston": "^3.13.0",
-    "yaml": "^2.4.2",
+    "yaml": "^2.4.3",
     "zod": "^3.23.8"
   },
   "devDependencies": {
