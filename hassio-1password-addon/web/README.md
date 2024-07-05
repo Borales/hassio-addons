@@ -1,24 +1,24 @@
 # HA 1password
 
-> Current status: proof of concept
+> Current status: **proof of concept**
 
 ## Things to do next
 
 - [ ] add i18n
 - [ ] add logger
-- [ ] add ability to unassign a secret
+- [ ] add an ability to unassign a secret
 - [ ] add manual secret creation
-- [ ] add view page for 1password item
-- [ ] add search/filter for 1password items
+- [ ] add view page for 1Password item
+- [ ] add search/filter for 1Password items
 - [ ] add approx stats for requests
 - [ ] add timeout when hitting the rate limit
 - [ ] add form loading states for all submits
-- [ ] add proper "update at" for homepage
-- [ ] add 1password masking secrets before saving to db
+- [ ] add proper "update at" for the43homepage
+- [ ] add 1Password masking secrets before saving to db
 - [ ] add better design
-- [ ] make 1password item dropdowns searchable
+- [ ] make 1Password item dropdowns searchable
 - [ ] proper documentation
 - [ ] tests
 - [ ] add custom triggers (like restarting another addon)
 - [ ] move yarn install before docker build (with cache)
-- [ ] don't install all deps on the runner (keep only prisma)
+- [ ] don't install all dependencies on the runner (keep only Prisma)
