@@ -52,7 +52,7 @@
     "prettier-plugin-tailwindcss": "^0.6.6",
     "prisma": "^5.19.1",
     "tailwind-variants": "^0.2.1",
-    "tailwindcss": "^3.4.12",
+    "tailwindcss": "^3.4.13",
     "typescript": "^5.6.2"
   }
 }
