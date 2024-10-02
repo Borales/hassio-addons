@@ -21,7 +21,7 @@
     "@phosphor-icons/react": "^2.1.7",
     "@prisma/client": "^5.20.0",
     "framer-motion": "^11.9.0",
-    "glob": "^10.4.5",
+    "glob": "^11.0.0",
     "next": "^14.2.14",
     "next-themes": "^0.3.0",
     "prisma-extension-pagination": "^0.7.4",
