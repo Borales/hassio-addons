@@ -1,8 +1,15 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", "group:definitelyTyped"],
-  "labels": ["dependencies"],
-  "postUpdateOptions": ["yarnDedupeHighest"],
+  "extends": [
+    "config:recommended",
+    "group:definitelyTyped"
+  ],
+  "labels": [
+    "dependencies"
+  ],
+  "postUpdateOptions": [
+    "yarnDedupeHighest"
+  ],
   "prConcurrentLimit": 5,
   "recreateWhen": "never",
   "rangeStrategy": "bump",
@@ -12,12 +19,16 @@
   },
   "packageRules": [
     {
-      "matchPackagePrefixes": ["@react-aria"],
-      "groupName": "react-aria"
+      "groupName": "react-aria",
+      "matchPackageNames": [
+        "@react-aria{/,}**"
+      ]
     },
     {
-      "matchSourceUrlPrefixes": ["https://github.com/vercel/next.js"],
-      "groupName": "nextjs-packages"
+      "groupName": "nextjs-packages",
+      "matchSourceUrls": [
+        "https://github.com/vercel/next.js{/,}**"
+      ]
     }
   ]
 }
