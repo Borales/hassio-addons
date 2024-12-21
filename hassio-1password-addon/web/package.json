@@ -37,7 +37,7 @@
     "@react-aria/ssr": "^3.9.4",
     "@react-aria/visually-hidden": "^3.8.12",
     "@types/node": "^22.10.2",
-    "@types/react": "^18.3.17",
+    "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@types/react-timeago": "^4.1.7",
     "autoprefixer": "^10.4.20",
