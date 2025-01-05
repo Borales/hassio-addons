@@ -13,12 +13,12 @@
 - [ ] add approx stats for requests
 - [ ] add timeout when hitting the rate limit
 - [ ] add form loading states for all submits
-- [ ] add proper "update at" for the43homepage
+- [ ] add proper "update at" for the homepage
 - [ ] add 1Password masking secrets before saving to db
 - [ ] add better design
 - [ ] make 1Password item dropdowns searchable
 - [ ] proper documentation
 - [ ] tests
-- [ ] add custom triggers (like restarting another addon)
+- [ ] add custom events
 - [ ] move yarn install before docker build (with cache)
 - [ ] don't install all dependencies on the runner (keep only Prisma)

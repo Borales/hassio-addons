@@ -7,3 +7,4 @@ hassio-1password-addon/web/src/gql/*
 hassio-1password-addon/web/test_yaml/secrets.yaml
 
 .env
+.DS_Store
