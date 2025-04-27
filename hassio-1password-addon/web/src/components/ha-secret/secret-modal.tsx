@@ -58,7 +58,7 @@ export const HASecretModal = ({
                 fullWidth
                 autoFocus={false}
                 selectedKey={opSecretId}
-                onSelectionChange={(key: string | number) => {
+                onSelectionChange={(key) => {
                   setReference(new Set([]));
                   setOpSecretId(key || '');
                 }}
@@ -84,7 +84,9 @@ export const HASecretModal = ({
                 <>
                   <div className="flex items-center gap-2">
                     <HASecretModalFieldList
-                      onSelectionChange={setReference as any}
+                      onSelectionChange={(value) =>
+                        setReference(value as Set<string | number>)
+                      }
                       reference={reference}
                       fields={selectedOpItem.fields}
                     />
@@ -94,7 +96,7 @@ export const HASecretModal = ({
                     />
                   </div>
 
-                  {(reference as Set<any>).size > 0 && (
+                  {reference.size > 0 && (
                     <Code color="success" className="w-fit text-xs" size="sm">
                       {Array.from(reference).join(', ')}
                     </Code>
