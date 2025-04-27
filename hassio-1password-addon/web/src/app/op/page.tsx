@@ -3,9 +3,10 @@ import { onePasswordService } from '@/service/1password.service';
 
 const jsonJiggle = (obj: any) => JSON.parse(JSON.stringify(obj));
 
-type OpPageProps = { searchParams: { page?: string } };
+type OpPageProps = { searchParams: Promise<{ page?: string }> };
 
-export default async function OpPage({ searchParams }: OpPageProps) {
+export default async function OpPage(props: OpPageProps) {
+  const searchParams = await props.searchParams;
   const page: number = Number(searchParams.page || 1);
   const [items, pagination] = await onePasswordService.getItemsSecurely({
     pagination: { page, limit: 12 }

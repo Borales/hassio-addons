@@ -7,7 +7,8 @@ import { haSecretService } from '@/service/secret.service';
 
 const jsonJiggle = (obj: any) => JSON.parse(JSON.stringify(obj));
 
-export default async function Home({ searchParams }: { searchParams: any }) {
+export default async function Home(props: { searchParams: Promise<any> }) {
+  const searchParams = await props.searchParams;
   const page: number = Number(searchParams.page || 1);
   const activeSecretId = searchParams.secretId || '';
   const nextUpdate = await onePasswordService.getNextUpdate();
