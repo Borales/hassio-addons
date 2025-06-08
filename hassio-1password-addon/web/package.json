@@ -7,7 +7,7 @@
     "build": "next build",
     "db:reset": "prisma migrate reset",
     "db:seed": "prisma db seed",
-    "dev": "next dev -p 8000",
+    "dev": "next dev --turbopack -p 8000",
     "lint": "next lint",
     "migration:dev": "prisma migrate dev",
     "migration:prod": "prisma migrate deploy",
