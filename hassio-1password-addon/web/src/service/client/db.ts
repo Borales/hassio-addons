@@ -17,9 +17,7 @@ const db_url = process.env.OP_DB_URL || '';
 
 export type PrismaType = typeof prisma;
 
-export const prisma = new PrismaClient({
-  datasources: { db: { url: db_url } }
-})
+export const prisma = new PrismaClient({ datasources: { db: { url: db_url } } })
   .$extends(pagination())
   .$extends({
     result: {
