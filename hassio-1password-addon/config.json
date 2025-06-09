@@ -13,6 +13,7 @@
     "serviceAccountToken": "password",
     "logLevel": "list(debug|info|error)"
   },
+  "homeassistant_api": true,
   "options": {
     "allowAutoRestart": true,
     "checkIntervalMin": 10,

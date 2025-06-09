@@ -20,6 +20,7 @@
     "@nextui-org/react": "^2.6.11",
     "@phosphor-icons/react": "^2.1.10",
     "@prisma/client": "^6.9.0",
+    "axios": "^1.9.0",
     "framer-motion": "^11.18.2",
     "glob": "^10.4.5",
     "home-assistant-js-websocket": "^9.5.0",

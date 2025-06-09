@@ -56,7 +56,7 @@ export const HASecretItem = ({ item }: HASecretItemProps) => {
   return (
     <Card radius="sm" isHoverable>
       <CardBody>
-        <div className="flex items-center justify-between ">
+        <div className="flex items-center justify-between">
           <Tooltip
             color="default"
             isDisabled={!tooltipContent}
