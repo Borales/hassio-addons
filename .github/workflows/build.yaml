@@ -73,7 +73,7 @@ jobs:
       - uses: actions/checkout@v4.2.2
       - uses: actions/setup-node@v4.4.0
         with:
-          node-version-file: "./${{ matrix.addon }}/.nvmrc"
+          node-version-file: "./${{ matrix.addon }}/web/.nvmrc"
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
