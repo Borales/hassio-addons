@@ -1,4 +1,4 @@
-import { Image, ImageProps } from '@nextui-org/react';
+import { Image, ImageProps } from '@heroui/react';
 
 const hostnameToSkip = ['localhost', '.local'];
 

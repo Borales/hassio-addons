@@ -1,7 +1,7 @@
 'use client';
 
-import { SwitchProps, useSwitch } from '@nextui-org/switch';
-import { Moon, Sun } from '@phosphor-icons/react/dist/ssr';
+import { SwitchProps, useSwitch } from '@heroui/switch';
+import { MoonIcon, SunIcon } from '@phosphor-icons/react/dist/ssr';
 import { useIsSSR } from '@react-aria/ssr';
 import { VisuallyHidden } from '@react-aria/visually-hidden';
 import clsx from 'clsx';
@@ -71,7 +71,7 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
           )
         })}
       >
-        {!isSelected || isSSR ? <Sun size={22} /> : <Moon size={22} />}
+        {!isSelected || isSSR ? <SunIcon size={22} /> : <MoonIcon size={22} />}
       </div>
     </Component>
   );

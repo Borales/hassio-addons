@@ -1,7 +1,7 @@
 'use client';
 
 import { Field, ResponseFieldType } from '@1password/op-js';
-import { Select, SelectItem, Selection } from '@nextui-org/react';
+import { Select, SelectItem, Selection } from '@heroui/react';
 
 type HASecretModalFieldListProps = {
   reference: Set<string | number>;

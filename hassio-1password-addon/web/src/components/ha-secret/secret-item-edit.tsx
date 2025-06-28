@@ -1,7 +1,7 @@
 'use client';
 
-import { Button } from '@nextui-org/react';
-import { Pencil } from '@phosphor-icons/react/dist/ssr';
+import { Button } from '@heroui/react';
+import { PencilIcon } from '@phosphor-icons/react/dist/ssr';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -23,7 +23,7 @@ export const HASecretItemEdit = ({ secretId }: HASecretItemEditProps) => {
       scroll={false}
       className="w-8 min-w-8"
     >
-      <Pencil />
+      <PencilIcon />
     </Button>
   );
 };

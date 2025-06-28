@@ -1,7 +1,7 @@
 'use client';
 
-import { Avatar, Link } from '@nextui-org/react';
-import { GithubLogo } from '@phosphor-icons/react/dist/ssr';
+import { Avatar, Link } from '@heroui/react';
+import { GithubLogoIcon } from '@phosphor-icons/react/dist/ssr';
 
 export const Footer = () => {
   return (
@@ -11,7 +11,7 @@ export const Footer = () => {
           size="md"
           title="Visit the project on GitHub"
           className="bg-primary-900 text-default-100"
-          icon={<GithubLogo size={32} weight="fill" />}
+          icon={<GithubLogoIcon size={32} weight="fill" />}
         />
       </Link>
     </footer>

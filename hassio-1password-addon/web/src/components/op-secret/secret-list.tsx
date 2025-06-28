@@ -1,7 +1,7 @@
 'use client';
 
 import type { OpItem } from '@/service/1password.service';
-import { Listbox, ListboxItem, Pagination } from '@nextui-org/react';
+import { Listbox, ListboxItem, Pagination } from '@heroui/react';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   PageNumberCounters,
@@ -31,7 +31,7 @@ export const OpSecretList = ({
     <>
       <Listbox
         aria-label="Secrets"
-        className="gap-0 divide-y divide-default-300/50 overflow-visible rounded-medium bg-content1 p-0 shadow-small dark:divide-default-100/80"
+        className="divide-default-300/50 rounded-medium bg-content1 shadow-small dark:divide-default-100/80 gap-0 divide-y overflow-visible p-0"
         itemClasses={{
           base: 'px-3 first:rounded-t-medium last:rounded-b-medium rounded-none gap-3 h-12 data-[hover=true]:bg-default-100/80',
           description: 'text-opacity-60'

@@ -1,8 +1,8 @@
 'use client';
 
 import { refreshOpSecret } from '@/actions/refresh-op-secret';
-import { Button } from '@nextui-org/react';
-import { ArrowClockwise } from '@phosphor-icons/react/dist/ssr';
+import { Button } from '@heroui/react';
+import { ArrowClockwiseIcon } from '@phosphor-icons/react/dist/ssr';
 import { useFormStatus } from 'react-dom';
 
 const Submit = () => {
@@ -18,7 +18,7 @@ const Submit = () => {
       type="submit"
       title="Refetch fields"
     >
-      <ArrowClockwise />
+      <ArrowClockwiseIcon />
     </Button>
   );
 };

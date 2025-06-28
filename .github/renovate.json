@@ -1,13 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>Borales/renovate-config"],
+  "postUpdateOptions": ["pnpmDedupe"],
   "prConcurrentLimit": 5,
   "packageRules": [
     {
       "groupName": "react-aria",
-      "matchPackageNames": [
-        "@react-aria{/,}**"
-      ]
+      "matchPackageNames": ["@react-aria{/,}**"]
     }
   ]
 }

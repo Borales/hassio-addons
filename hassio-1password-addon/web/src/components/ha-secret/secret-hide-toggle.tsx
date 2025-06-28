@@ -1,8 +1,8 @@
 'use client';
 
 import { toggleSkipSecret } from '@/actions/toggle-skip-secret';
-import { Button } from '@nextui-org/react';
-import { Eye, EyeSlash } from '@phosphor-icons/react/dist/ssr';
+import { Button } from '@heroui/react';
+import { EyeIcon, EyeSlashIcon } from '@phosphor-icons/react/dist/ssr';
 
 type HASecretHideToggleProps = {
   secretId: string;
@@ -24,7 +24,7 @@ export const HASecretHideToggle = ({
         className="w-8 min-w-8"
         title={isSkipped ? 'Show' : 'Hide'}
       >
-        {isSkipped ? <Eye /> : <EyeSlash />}
+        {isSkipped ? <EyeIcon /> : <EyeSlashIcon />}
       </Button>
     </form>
   );

@@ -1,7 +1,7 @@
 'use client';
 
 import { HaSecret } from '@/service/secret.service';
-import { Card, CardBody, Chip, Code, Tooltip } from '@nextui-org/react';
+import { Card, CardBody, Chip, Code, Tooltip } from '@heroui/react';
 import { useSearchParams } from 'next/navigation';
 import { tv } from 'tailwind-variants';
 import { CustomTimeAgo } from '../date-formatter';
@@ -96,9 +96,9 @@ export const HASecretItem = ({ item }: HASecretItemProps) => {
           )}
 
           {!item.reference && (
-            <p className="text-sm text-default-500">Unassigned </p>
+            <p className="text-default-500 text-sm">Unassigned </p>
           )}
-          <p className="text-xs text-default-400">
+          <p className="text-default-400 text-xs">
             {!item.updatedAt && 'Not updated yet'}
             {item.updatedAt && (
               <>
