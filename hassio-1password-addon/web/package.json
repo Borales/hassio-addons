@@ -39,7 +39,7 @@
   "devDependencies": {
     "@react-aria/ssr": "^3.9.9",
     "@react-aria/visually-hidden": "^3.8.25",
-    "@types/node": "^22.15.33",
+    "@types/node": "^22.15.34",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",
     "@types/react-timeago": "^4.1.7",
