@@ -33,8 +33,7 @@
     "react-timeago": "^8.2.0",
     "sharp": "^0.34.2",
     "winston": "^3.17.0",
-    "yaml": "^2.8.0",
-    "zod": "^3.25.73"
+    "yaml": "^2.8.0"
   },
   "devDependencies": {
     "@react-aria/ssr": "^3.9.9",
