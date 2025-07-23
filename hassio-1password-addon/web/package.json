@@ -36,8 +36,8 @@
     "yaml": "^2.8.0"
   },
   "devDependencies": {
-    "@react-aria/ssr": "^3.9.9",
-    "@react-aria/visually-hidden": "^3.8.25",
+    "@react-aria/ssr": "^3.9.10",
+    "@react-aria/visually-hidden": "^3.8.26",
     "@types/node": "^22.16.5",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
