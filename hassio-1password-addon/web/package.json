@@ -40,7 +40,7 @@
     "@react-aria/visually-hidden": "^3.8.25",
     "@types/node": "^22.18.0",
     "@types/react": "^19.1.12",
-    "@types/react-dom": "^19.1.8",
+    "@types/react-dom": "^19.1.9",
     "@types/react-timeago": "^4.1.7",
     "autoprefixer": "^10.4.21",
     "clsx": "^2.1.1",
