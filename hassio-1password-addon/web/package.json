@@ -20,7 +20,7 @@
     "@1password/op-js": "^0.1.13",
     "@heroui/react": "beta",
     "@phosphor-icons/react": "^2.1.10",
-    "@prisma/client": "^6.12.0",
+    "@prisma/client": "^6.17.1",
     "axios": "^1.12.2",
     "framer-motion": "^11.18.2",
     "glob": "^10.4.5",
@@ -52,7 +52,7 @@
     "prettier-plugin-organize-imports": "^4.3.0",
     "prettier-plugin-package": "^1.4.0",
     "prettier-plugin-tailwindcss": "^0.7.1",
-    "prisma": "^6.12.0",
+    "prisma": "^6.17.1",
     "tailwind-variants": "^1.0.0",
     "tailwindcss": "^4.1.14",
     "typescript": "^5.9.3"
