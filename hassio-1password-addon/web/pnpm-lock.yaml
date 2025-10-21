@@ -76,8 +76,8 @@ importers:
         specifier: ^19.2.2
         version: 19.2.2(@types/react@19.2.2)
       '@types/react-timeago':
-        specifier: ^4.1.7
-        version: 4.1.7
+        specifier: ^8.0.0
+        version: 8.0.0(react@19.2.0)
       autoprefixer:
         specifier: ^10.4.21
         version: 10.4.21(postcss@8.5.6)
@@ -1529,8 +1529,9 @@ packages:
     peerDependencies:
       '@types/react': ^19.2.0
 
-  '@types/react-timeago@4.1.7':
-    resolution: {integrity: sha512-ogD4Ror/hDG+pQggCX+TgPgJ8W2jeeUxsgNU485Qpm0Ma+E2TND2EJuKwK5+sxlkDXDEgsHradO0zWBkTgLzNg==}
+  '@types/react-timeago@8.0.0':
+    resolution: {integrity: sha512-omC9GxqKOdEiHLlqWU6NrDUF+qD7DHIZ9K5Wxw/XPrm22rfP/jgZrW8c27u23ON5LMWM/nIlUf0FUh+/DlftlQ==}
+    deprecated: This is a stub types definition. react-timeago provides its own type definitions, so you do not need this installed.
 
   '@types/react@19.2.2':
     resolution: {integrity: sha512-6mDvHUFSjyT2B2yeNx2nUgMxh9LtOWvkhIU3uePn2I2oyNymUAX1NIsdgviM4CH+JSrp2D2hsMvJOkxY+0wNRA==}
@@ -5406,9 +5407,11 @@ snapshots:
     dependencies:
       '@types/react': 19.2.2
 
-  '@types/react-timeago@4.1.7':
+  '@types/react-timeago@8.0.0(react@19.2.0)':
     dependencies:
-      '@types/react': 19.2.2
+      react-timeago: 8.3.0(react@19.2.0)
+    transitivePeerDependencies:
+      - react
 
   '@types/react@19.2.2':
     dependencies:
