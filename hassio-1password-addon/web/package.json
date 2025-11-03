@@ -38,10 +38,10 @@
   "devDependencies": {
     "@react-aria/ssr": "^3.9.9",
     "@react-aria/visually-hidden": "^3.8.25",
-    "@types/node": "^22.18.11",
+    "@types/node": "^24.10.0",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
-    "@types/react-timeago": "^4.1.7",
+    "@types/react-timeago": "^8.0.0",
     "autoprefixer": "^10.4.21",
     "clsx": "^2.1.1",
     "eslint": "^9.38.0",
