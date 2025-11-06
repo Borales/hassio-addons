@@ -3,7 +3,7 @@
   "description": "1Password for Home Assistant",
   "version": "0.0.1",
   "private": true,
-  "packageManager": "pnpm@10.18.3",
+  "packageManager": "pnpm@10.20.0",
   "scripts": {
     "build": "next build",
     "db:reset": "prisma migrate reset",
