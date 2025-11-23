@@ -70,10 +70,10 @@ importers:
         version: 2.8.1
     devDependencies:
       '@react-aria/ssr':
-        specifier: ^3.9.9
+        specifier: ^3.9.10
         version: 3.9.10(react@19.2.0)
       '@react-aria/visually-hidden':
-        specifier: ^3.8.25
+        specifier: ^3.8.28
         version: 3.8.28(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@tailwindcss/postcss':
         specifier: ^4.1.17
