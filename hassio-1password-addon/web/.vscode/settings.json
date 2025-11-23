@@ -1,6 +1,9 @@
 {
-  "tailwindCSS.experimental.configFile": "./tailwind.config.js",
+  "tailwindCSS.experimental.configFile": "./src/app/globals.css",
   "tailwindCSS.experimental.classRegex": [
     ["tv\\((([^()]*|\\([^()]*\\))*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
-  ]
+  ],
+  "files.associations": {
+    "*.css": "tailwindcss"
+  }
 }
