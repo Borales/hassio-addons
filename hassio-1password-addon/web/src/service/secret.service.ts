@@ -1,4 +1,4 @@
-import { Secret as HaSecret } from '@prisma/client';
+import { Secret as HaSecret } from '@prisma-generated/client';
 import { prisma, PrismaType } from './client/db';
 import { secretHelper, SecretHelper } from './client/secret';
 
