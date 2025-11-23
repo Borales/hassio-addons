@@ -22,7 +22,7 @@
     "@phosphor-icons/react": "^2.1.10",
     "@prisma/adapter-better-sqlite3": "^7.0.0",
     "@prisma/client": "^7.0.0",
-    "axios": "^1.12.2",
+    "axios": "^1.13.2",
     "better-sqlite3": "^11.10.0",
     "dotenv": "^17.2.3",
     "framer-motion": "^12.23.24",
