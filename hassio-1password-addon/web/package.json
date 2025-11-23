@@ -13,7 +13,8 @@
     "migration:prod": "prisma migrate deploy",
     "prettier": "prettier --check ./src",
     "prisma:generate": "prisma generate",
-    "start": "next start -p 8000"
+    "start": "next start -p 8000",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@1password/op-js": "^0.1.13",

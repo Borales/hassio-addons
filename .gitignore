@@ -9,3 +9,5 @@ hassio-1password-addon/web/test_yaml/secrets.yaml
 
 .env
 .DS_Store
+
+tsconfig.tsbuildinfo
