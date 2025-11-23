@@ -3,21 +3,25 @@ import {
   Field as OpField,
   URL as OpURL
 } from '@1password/op-js';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma-generated/client';
+import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
 import { pagination } from 'prisma-extension-pagination';
+import { env } from 'prisma/config';
 
 export type {
   Setting as AppSetting,
   Secret as HaSecret,
   Item as OpItem,
   Vault as OpVault
-} from '@prisma/client';
+} from '@prisma-generated/client';
 
-const db_url = process.env.OP_DB_URL || '';
+const adapter = new PrismaBetterSqlite3({
+  url: env('OP_DB_URL') || ''
+});
 
 export type PrismaType = typeof prisma;
 
-export const prisma = new PrismaClient({ datasources: { db: { url: db_url } } })
+export const prisma = new PrismaClient({ adapter })
   .$extends(pagination())
   .$extends({
     result: {

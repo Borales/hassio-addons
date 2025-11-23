@@ -1,5 +1,5 @@
 import { Field, URL } from '@1password/op-js';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@prisma-generated/client';
 import {
   OnePasswordClient,
   OpClientItem,

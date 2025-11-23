@@ -2,9 +2,12 @@ hassio-1password-addon/web/node_modules
 hassio-1password-addon/web/.next
 hassio-1password-addon/web/store.db*
 hassio-1password-addon/web/src/gql/*
+hassio-1password-addon/web/src/generated/prisma
 !hassio-1password-addon/web/src/gql/queries
 !hassio-1password-addon/web/src/gql/mutations
 hassio-1password-addon/web/test_yaml/secrets.yaml
 
 .env
 .DS_Store
+
+tsconfig.tsbuildinfo
