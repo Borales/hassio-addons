@@ -29,19 +29,19 @@ export const HASecretModalFieldList = ({
           ? 'No fields found. Press the button to sync the fields →'
           : undefined
       }
-      multiple={false}
+      selectionMode="single"
       onSelectionChange={onSelectionChange}
+      items={cleanFields}
     >
-      {cleanFields.map((field) => (
+      {(field) => (
         <SelectItem
           key={field.reference as string}
           description={field.value}
-          value={field.reference}
           textValue={field.label}
         >
           {field.label}
         </SelectItem>
-      ))}
+      )}
     </Select>
   );
 };

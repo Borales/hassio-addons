@@ -1,7 +1,11 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
   output: 'standalone',
   poweredByHeader: false,
+  devIndicators: {
+    position: 'bottom-right'
+  },
   experimental: {
     turbopackFileSystemCacheForDev: true
   },
@@ -15,4 +19,4 @@ const nextConfig = {
   }
 };
 
-module.exports = nextConfig;
+export default nextConfig;

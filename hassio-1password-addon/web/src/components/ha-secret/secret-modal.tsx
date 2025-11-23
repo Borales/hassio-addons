@@ -64,11 +64,11 @@ export const HASecretModal = ({
                 }}
                 isRequired
                 label="1password item"
+                items={opItems}
               >
-                {opItems.map((item) => (
+                {(item) => (
                   <AutocompleteItem
                     key={item.id}
-                    value={item.id}
                     textValue={`${item.title} (${item.additionalInfo})`}
                     description={item.additionalInfo}
                     startContent={
@@ -77,7 +77,7 @@ export const HASecretModal = ({
                   >
                     {item.title}
                   </AutocompleteItem>
-                ))}
+                )}
               </Autocomplete>
 
               {selectedOpItem && (

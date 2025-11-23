@@ -1,4 +1,4 @@
-import '@/globals.css';
+import './globals.css';
 
 import { Footer } from '@/components/footer';
 import { Menu } from '@/components/menu';
@@ -6,7 +6,7 @@ import { fontSans } from '@/config/fonts';
 import { siteConfig } from '@/config/site';
 import clsx from 'clsx';
 import { Metadata, Viewport } from 'next';
-import { Providers } from './providers';
+import { Providers } from '../components/providers';
 
 export const metadata: Metadata = {
   title: {
