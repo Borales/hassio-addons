@@ -12,12 +12,12 @@ const variants = tv({
   variants: {
     active: {
       '/': {
-        home: 'font-bold text-primary',
+        home: 'text-primary font-bold',
         op: ''
       },
       '/op': {
         home: '',
-        op: 'font-bold text-primary'
+        op: 'text-primary font-bold'
       }
     }
   },

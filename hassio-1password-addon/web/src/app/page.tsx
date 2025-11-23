@@ -34,7 +34,7 @@ export default async function Home(props: { searchParams: Promise<any> }) {
 
       <HASecretList items={secrets} />
 
-      <span className="block text-center font-mono text-xs text-default-400">
+      <span className="text-default-400 block text-center font-mono text-xs">
         {nextUpdate && (
           <>
             Next automatic update: <CustomTimeAgo date={nextUpdate} />
