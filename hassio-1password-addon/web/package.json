@@ -41,7 +41,7 @@
     "@types/react": "^19.2.6",
     "@types/react-dom": "^19.2.3",
     "@types/react-timeago": "^4.1.7",
-    "autoprefixer": "^10.4.21",
+    "autoprefixer": "^10.4.22",
     "clsx": "^2.1.1",
     "eslint": "^9.39.1",
     "eslint-config-next": "^16.0.3",
@@ -53,8 +53,8 @@
     "prettier-plugin-tailwindcss": "^0.7.1",
     "prisma": "^6.12.0",
     "tailwind-variants": "^1.0.0",
-    "tailwindcss": "^4.1.14",
+    "tailwindcss": "^4.1.17",
     "typescript": "^5.9.3"
   },
-  "packageManager": "pnpm@10.20.0"
+  "packageManager": "pnpm@10.23.0"
 }
