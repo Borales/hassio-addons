@@ -1,9 +1,8 @@
 {
   "name": "hassio-1password-addon",
-  "description": "1Password for Home Assistant",
   "version": "0.0.1",
   "private": true,
-  "packageManager": "pnpm@10.20.0",
+  "description": "1Password for Home Assistant",
   "scripts": {
     "build": "next build",
     "db:reset": "prisma migrate reset",
@@ -22,7 +21,7 @@
     "@phosphor-icons/react": "^2.1.10",
     "@prisma/client": "^6.12.0",
     "axios": "^1.12.2",
-    "framer-motion": "^11.18.2",
+    "framer-motion": "^12.23.24",
     "glob": "^13.0.0",
     "home-assistant-js-websocket": "^9.5.0",
     "next": "^16.0.3",
@@ -56,5 +55,6 @@
     "tailwind-variants": "^1.0.0",
     "tailwindcss": "^4.1.14",
     "typescript": "^5.9.3"
-  }
+  },
+  "packageManager": "pnpm@10.20.0"
 }
