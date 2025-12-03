@@ -21,7 +21,7 @@ jobs:
       changed: ${{ steps.changed_addons.outputs.changed }}
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v6.0.0
+        uses: actions/checkout@v6.0.1
 
       - name: Get changed files
         id: changed_files
@@ -70,8 +70,8 @@ jobs:
       matrix:
         addon: ${{ fromJson(needs.init.outputs.changed_addons) }}
     steps:
-      - uses: actions/checkout@v6.0.0
-      - uses: actions/setup-node@v6.0.0
+      - uses: actions/checkout@v6.0.1
+      - uses: actions/setup-node@v6.1.0
         with:
           node-version-file: "./${{ matrix.addon }}/web/.nvmrc"
       - name: Get yarn cache directory path
@@ -114,7 +114,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6.0.0
+        uses: actions/checkout@v6.0.1
 
       - name: Get information
         id: info
