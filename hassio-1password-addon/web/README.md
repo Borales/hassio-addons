@@ -20,5 +20,5 @@
 - [ ] proper documentation
 - [ ] tests
 - [ ] add custom events
-- [ ] move yarn install before docker build (with cache)
+- [ ] move pnpm install before docker build (with cache)
 - [ ] don't install all dependencies on the runner (keep only Prisma)

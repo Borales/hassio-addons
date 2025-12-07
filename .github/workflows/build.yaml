@@ -74,19 +74,23 @@ jobs:
       - uses: actions/setup-node@v6.0.0
         with:
           node-version-file: "./${{ matrix.addon }}/web/.nvmrc"
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v4.3.0
-        id: yarn-cache
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
         with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          version: latest
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v4.3.0
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-
-      - run: yarn --frozen-lockfile
+            ${{ runner.os }}-pnpm-store-
+      - run: pnpm install --frozen-lockfile
         working-directory: ./${{ matrix.addon }}/web
-      - run: yarn build
+      - run: pnpm build
         working-directory: ./${{ matrix.addon }}/web
       - uses: actions/upload-artifact@v5.0.0
         with:
