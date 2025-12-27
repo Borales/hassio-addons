@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@react-aria/ssr": "^3.9.10",
-    "@react-aria/visually-hidden": "^3.8.28",
+    "@react-aria/visually-hidden": "^3.8.29",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/node": "^24.10.4",
     "@types/react": "^19.2.7",
