@@ -82,7 +82,7 @@ jobs:
         id: pnpm-cache
         shell: bash
         run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v4.3.0
+      - uses: actions/cache@v5.0.1
         with:
           path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -92,7 +92,7 @@ jobs:
         working-directory: ./${{ matrix.addon }}/web
       - run: pnpm build
         working-directory: ./${{ matrix.addon }}/web
-      - uses: actions/upload-artifact@v5.0.0
+      - uses: actions/upload-artifact@v6.0.0
         with:
           name: artifacts-${{ github.sha }}-${{ matrix.addon }}
           path: |
@@ -151,7 +151,7 @@ jobs:
       - run: mkdir -p web/.next
         working-directory: ./${{ matrix.addon }}
       - name: Download artifact
-        uses: actions/download-artifact@v6.0.0
+        uses: actions/download-artifact@v7.0.0
         with:
           name: artifacts-${{ github.sha }}-${{ matrix.addon }}
           path: ./${{ matrix.addon }}/web/
