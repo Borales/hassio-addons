@@ -73,7 +73,7 @@ importers:
         specifier: ^3.9.10
         version: 3.9.10(react@19.2.3)
       '@react-aria/visually-hidden':
-        specifier: ^3.8.28
+        specifier: ^3.8.29
         version: 3.8.29(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@tailwindcss/postcss':
         specifier: ^4.1.18
