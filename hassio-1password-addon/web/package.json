@@ -23,7 +23,7 @@
     "@prisma/adapter-better-sqlite3": "^7.2.0",
     "@prisma/client": "^7.2.0",
     "axios": "^1.13.3",
-    "better-sqlite3": "^12.5.0",
+    "better-sqlite3": "^12.6.2",
     "dotenv": "^17.2.3",
     "framer-motion": "^12.26.2",
     "glob": "^13.0.0",
