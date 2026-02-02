@@ -62,11 +62,11 @@ export const HASecretModal = ({
                   setReference(new Set([]));
                   setOpSecretId(key || '');
                 }}
+                defaultItems={opItems}
                 isRequired
                 label="1password item"
-                items={opItems}
               >
-                {(item) => (
+                {(item: OpItem) => (
                   <AutocompleteItem
                     key={item.id}
                     textValue={`${item.title} (${item.additionalInfo})`}
