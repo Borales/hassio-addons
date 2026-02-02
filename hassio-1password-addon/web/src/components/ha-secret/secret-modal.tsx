@@ -24,6 +24,9 @@ type HASecretModalProps = {
   opItems: OpItem[];
 };
 
+const getItemTextValue = (item: OpItem) =>
+  item.additionalInfo ? `${item.title} (${item.additionalInfo})` : item.title;
+
 export const HASecretModal = ({
   activeSecret,
   opItems
@@ -69,7 +72,7 @@ export const HASecretModal = ({
                 {(item: OpItem) => (
                   <AutocompleteItem
                     key={item.id}
-                    textValue={`${item.title} (${item.additionalInfo})`}
+                    textValue={getItemTextValue(item)}
                     description={item.additionalInfo}
                     startContent={
                       <OpSecretIcon urls={item.urls} alt={item.title} />
