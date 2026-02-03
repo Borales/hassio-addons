@@ -12,6 +12,7 @@
     "lint": "eslint .",
     "migration:dev": "prisma migrate dev",
     "migration:prod": "prisma migrate deploy",
+    "postinstall": "next typegen",
     "prettier": "prettier --check ./src",
     "prettier:fix": "prettier --write ./src",
     "prisma:generate": "prisma generate",
