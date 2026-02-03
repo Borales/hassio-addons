@@ -3,3 +3,26 @@
 
 @source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
 @custom-variant dark (&:is(.dark *));
+
+/* Better dark mode contrast and visual refinements */
+@layer base {
+  :root {
+    --divider-opacity: 0.15;
+  }
+
+  .dark {
+    --divider-opacity: 0.2;
+  }
+}
+
+@layer components {
+  /* Improved table row hover states for dark mode */
+  .dark .divide-divider > :not([hidden]) ~ :not([hidden]) {
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  /* Better contrast for borders in dark mode */
+  .dark .border-divider {
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+}

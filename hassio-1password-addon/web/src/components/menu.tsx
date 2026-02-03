@@ -1,54 +1,67 @@
 'use client';
 
 import { siteConfig } from '@/config/site';
+import { Avatar } from '@heroui/react';
+import { GithubLogoIcon } from '@phosphor-icons/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { tv } from 'tailwind-variants';
 import { ThemeSwitch } from './theme-switch';
 
-const variants = tv({
-  base: '',
+const navLink = tv({
+  base: 'text-default-500 hover:text-foreground hover:bg-default-100/50 rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
   variants: {
     active: {
-      '/': {
-        home: 'text-primary font-bold',
-        op: ''
-      },
-      '/op': {
-        home: '',
-        op: 'text-primary font-bold'
-      }
+      true: 'bg-default-100 text-foreground dark:bg-default-200'
     }
-  },
-  slots: { home: '', op: '' }
+  }
 });
 
 export const Menu = () => {
   const pathname = usePathname();
-  const { home, op } = variants({ active: pathname as any });
 
   return (
-    <header className="bg-background shadow-small">
-      <div className="container mx-auto flex max-w-7xl justify-between px-6 py-4">
-        <div className="flex items-center gap-6">
-          <Link href="/" className="text-2xl font-bold">
+    <header className="bg-background/80 border-divider sticky top-0 z-50 border-b backdrop-blur-md">
+      <div className="container mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
+        <div className="flex items-center gap-8">
+          <Link href="/" className="flex items-center">
             <Image
               src="/logo.png"
-              width={150}
-              height={45}
+              width={120}
+              height={36}
               alt={siteConfig.name}
-              className="drop-shadow-md filter"
+              className="dark:brightness-110"
             />
           </Link>
-          <Link className={home()} href="/">
-            HA Secrets
-          </Link>
-          <Link className={op()} href="/op">
-            1Password
-          </Link>
+          <nav className="flex items-center gap-1">
+            <Link className={navLink({ active: pathname === '/' })} href="/">
+              Secrets
+            </Link>
+            <Link
+              className={navLink({ active: pathname === '/groups' })}
+              href="/groups"
+            >
+              Groups
+            </Link>
+          </nav>
         </div>
-        <ThemeSwitch />
+        <div className="flex items-center gap-4">
+          <Link
+            href="https://github.com/Borales/hassio-addons"
+            target="_blank"
+            title="Visit the project on GitHub"
+            className="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm transition-colors"
+          >
+            <Avatar
+              size="sm"
+              title="Visit the project on GitHub"
+              className="bg-primary-900 text-default-100"
+              icon={<GithubLogoIcon size={18} weight="fill" />}
+            />
+          </Link>
+          <ThemeSwitch />
+        </div>
       </div>
     </header>
   );

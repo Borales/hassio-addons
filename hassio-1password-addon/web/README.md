@@ -16,9 +16,9 @@
 - [ ] add proper "update at" for the homepage
 - [ ] add 1Password masking secrets before saving to db
 - [ ] add better design
-- [ ] make 1Password item dropdowns searchable
+- [x] make 1Password item dropdowns searchable
 - [ ] proper documentation
 - [ ] tests
-- [ ] add custom events
+- [x] add custom events
 - [ ] move pnpm install before docker build (with cache)
 - [ ] don't install all dependencies on the runner (keep only Prisma)

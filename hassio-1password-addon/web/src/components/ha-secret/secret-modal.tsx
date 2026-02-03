@@ -1,6 +1,7 @@
 'use client';
 
-import { OpItem } from '@/service/1password.service';
+import { fetchOpItemFields } from '@/actions/refresh-op-secret';
+import { HaSecret, OpItem } from '@/service/1password.service';
 import {
   Autocomplete,
   AutocompleteItem,
@@ -9,15 +10,19 @@ import {
   ModalBody,
   ModalContent,
   ModalFooter,
-  ModalHeader
+  ModalHeader,
+  Spinner
 } from '@heroui/react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { OpSecretIcon } from '../op-secret/secret-icon';
-import { Item } from './secret-item';
-import { HASecretModalFetchFields } from './secret-modal-fetch-fields';
 import { HASecretModalFieldList } from './secret-modal-field-list';
 import { HASecretModalSave } from './secret-modal-save';
+
+export type Item = Pick<
+  HaSecret,
+  'id' | 'isSkipped' | 'itemId' | 'updatedAt' | 'reference'
+>;
 
 type HASecretModalProps = {
   activeSecret?: Item | null;
@@ -38,8 +43,48 @@ export const HASecretModal = ({
   const [reference, setReference] = useState<Set<string | number>>(
     new Set([activeSecret?.reference || ''])
   );
+  const [selectedOpItem, setSelectedOpItem] = useState<OpItem | undefined>(
+    opItems.find((item) => item.id === opSecretId)
+  );
+  const [isLoadingFields, setIsLoadingFields] = useState(false);
 
-  const selectedOpItem = opItems.find((item) => item.id === opSecretId);
+  // Auto-fetch fresh fields when the selected item ID changes
+  useEffect(() => {
+    const fetchFields = async () => {
+      if (!opSecretId) {
+        setSelectedOpItem(undefined);
+        return;
+      }
+
+      const item = opItems.find((item) => item.id === opSecretId);
+      if (!item || !item.vaultId) {
+        setSelectedOpItem(item);
+        return;
+      }
+
+      setIsLoadingFields(true);
+      try {
+        const result = await fetchOpItemFields(item.id, item.vaultId);
+        if (result.success && result.item) {
+          setSelectedOpItem({
+            ...item,
+            fields: result.item.fields,
+            urls: result.item.urls
+          });
+        } else {
+          setSelectedOpItem(item);
+        }
+      } catch (error) {
+        console.error('Failed to fetch fields:', error);
+        setSelectedOpItem(item);
+      } finally {
+        setIsLoadingFields(false);
+      }
+    };
+
+    fetchFields();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [opSecretId]);
 
   return (
     <Modal
@@ -68,6 +113,7 @@ export const HASecretModal = ({
                 defaultItems={opItems}
                 isRequired
                 label="1password item"
+                itemHeight={64}
               >
                 {(item: OpItem) => (
                   <AutocompleteItem
@@ -77,27 +123,32 @@ export const HASecretModal = ({
                     startContent={
                       <OpSecretIcon urls={item.urls} alt={item.title} />
                     }
+                    classNames={{
+                      base: 'py-3 gap-3',
+                      title: 'text-base',
+                      description: 'text-sm'
+                    }}
                   >
                     {item.title}
                   </AutocompleteItem>
                 )}
               </Autocomplete>
 
-              {selectedOpItem && (
+              {isLoadingFields && (
+                <div className="flex items-center justify-center p-4">
+                  <Spinner label="Loading fields..." />
+                </div>
+              )}
+
+              {!isLoadingFields && selectedOpItem && (
                 <>
-                  <div className="flex items-center gap-2">
-                    <HASecretModalFieldList
-                      onSelectionChange={(value) =>
-                        setReference(value as Set<string | number>)
-                      }
-                      reference={reference}
-                      fields={selectedOpItem.fields}
-                    />
-                    <HASecretModalFetchFields
-                      id={selectedOpItem.id}
-                      vaultId={selectedOpItem.vaultId as string}
-                    />
-                  </div>
+                  <HASecretModalFieldList
+                    onSelectionChange={(value) =>
+                      setReference(value as Set<string | number>)
+                    }
+                    reference={reference}
+                    fields={selectedOpItem.fields}
+                  />
 
                   {reference.size > 0 && (
                     <Code color="success" className="w-fit text-xs" size="sm">

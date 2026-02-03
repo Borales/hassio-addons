@@ -1,5 +1,10 @@
 import { Secret as HaSecret } from '@prisma-generated/client';
+import { parse } from 'yaml';
 import { prisma, PrismaType } from './client/db';
+import {
+  homeAssistantClient,
+  HomeAssistantClient
+} from './client/homeassistant';
 import { secretHelper, SecretHelper } from './client/secret';
 
 export type { HaSecret };
@@ -7,7 +12,8 @@ export type { HaSecret };
 export class HASecretService {
   constructor(
     protected secretHelper: SecretHelper,
-    protected db: PrismaType
+    protected db: PrismaType,
+    protected haClient: HomeAssistantClient
   ) {}
 
   /**
@@ -84,18 +90,113 @@ export class HASecretService {
     });
 
     if (!existing) {
-      return;
+      return { secret: null, previousState: null };
     }
 
-    return this.db.secret.update({
+    const newState = !existing.isSkipped;
+    const secret = await this.db.secret.update({
       where: { id },
-      data: { isSkipped: !existing.isSkipped }
+      data: { isSkipped: newState }
     });
+
+    return { secret, previousState: existing.isSkipped };
   }
 
-  async saveSecrets(secrets: Record<string, string>) {
-    return this.secretHelper.save(secrets);
+  /**
+   * Save secrets to the YAML file and fire events for each.
+   * Returns the list of secret names that were written.
+   */
+  async saveSecrets(secrets: Record<string, string>): Promise<string[]> {
+    const secretNames = Object.keys(secrets);
+
+    if (secretNames.length === 0) {
+      return [];
+    }
+
+    // Check which secrets are new vs updated by parsing the YAML
+    const existingContent = await this.secretHelper.readSecretsFromFile();
+    let existingSecrets: Record<string, unknown> = {};
+    try {
+      existingSecrets = existingContent ? parse(existingContent) || {} : {};
+    } catch {
+      // If YAML parsing fails, assume all secrets are new
+      existingSecrets = {};
+    }
+
+    await this.secretHelper.save(secrets);
+
+    // Fire events for each secret
+    for (const secretName of secretNames) {
+      const isNew = !(secretName in existingSecrets);
+      await this.haClient.fireSecretWrittenEvent(secretName, isNew);
+    }
+
+    // Find and fire group events
+    await this.fireGroupEventsForSecrets(secretNames);
+
+    return secretNames;
+  }
+
+  /**
+   * Fire events for all groups that contain any of the updated secrets.
+   */
+  async fireGroupEventsForSecrets(
+    secretNames: string[]
+  ): Promise<Array<{ name: string; id: string; secrets: string[] }>> {
+    const groups = await this.db.group.findMany({
+      where: {
+        secrets: {
+          some: { secretId: { in: secretNames } }
+        }
+      },
+      include: {
+        secrets: {
+          select: { secretId: true }
+        }
+      }
+    });
+
+    const affectedGroups = groups.map((group) => ({
+      id: group.id,
+      name: group.name,
+      secrets: group.secrets
+        .map((s) => s.secretId)
+        .filter((id) => secretNames.includes(id))
+    }));
+
+    // Fire event for each affected group
+    for (const group of affectedGroups) {
+      await this.haClient.fireGroupUpdatedEvent(
+        group.name,
+        group.id,
+        group.secrets
+      );
+    }
+
+    return affectedGroups;
+  }
+
+  /**
+   * Get groups that a specific secret belongs to.
+   */
+  async getGroupsForSecret(
+    secretId: string
+  ): Promise<Array<{ id: string; name: string }>> {
+    const groups = await this.db.group.findMany({
+      where: {
+        secrets: {
+          some: { secretId }
+        }
+      },
+      select: { id: true, name: true }
+    });
+
+    return groups;
   }
 }
 
-export const haSecretService = new HASecretService(secretHelper, prisma);
+export const haSecretService = new HASecretService(
+  secretHelper,
+  prisma,
+  homeAssistantClient
+);

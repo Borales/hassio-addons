@@ -33,15 +33,17 @@ type ListParams = {
 };
 
 // Replace the middle part of the password with asterisks
-// leaving the first and the last X characters visible
-const maskPassword = (password: string, numChars: number = 2): string => {
-  if (!password) {
-    return password;
+// leaving the first and the last 3 characters visible
+const maskConcealedValue = (value: string): string => {
+  const numChars = 3;
+  if (!value) {
+    return value;
   }
-  if (password.length <= 2 * numChars) {
-    return '***';
+  if (value.length <= 2 * numChars) {
+    return '*'.repeat(value.length || 3);
   }
-  return `${password.slice(0, numChars)}***${password.slice(-numChars)}`;
+  const maskedLength = value.length - 2 * numChars;
+  return `${value.slice(0, numChars)}${'*'.repeat(maskedLength)}${value.slice(-numChars)}`;
 };
 
 export class OnePasswordService {
@@ -56,14 +58,13 @@ export class OnePasswordService {
    * Sync fields of a secret from 1Password to the database
    */
   async syncItem(id: string, vaultId: string) {
-    const item = this.client.getItem(id, vaultId);
+    const item = this.client.getItem(id, vaultId) as OpClientItem | undefined;
 
     if (!item) {
       return;
     }
 
     const data = this.convertOpToDbSecret(item);
-    // TODO: mask the fields
 
     await this.db.item.upsert({
       where: { id },
@@ -96,6 +97,16 @@ export class OnePasswordService {
       const syncedItemIds: string[] = [];
       const syncedVaultIds: string[] = [];
 
+      // Get all assigned item IDs to fetch fresh field data for them
+      const assignedItems = await this.db.secret.findMany({
+        where: {
+          itemId: { not: null },
+          reference: { not: null }
+        },
+        select: { itemId: true }
+      });
+      const assignedItemIds = new Set(assignedItems.map((s) => s.itemId));
+
       await Promise.all(
         opItems.map(async (item) => {
           if (!syncedItemIds.includes(item.id)) {
@@ -105,10 +116,24 @@ export class OnePasswordService {
             syncedVaultIds.push(item.vault.id);
           }
 
+          // For assigned items, fetch fresh field data from 1Password
+          // (list API doesn't include detailed field information)
+          let itemData;
+          if (assignedItemIds.has(item.id)) {
+            const fullItem = this.client.getItem(item.id, item.vault.id) as
+              | OpClientItem
+              | undefined;
+            itemData = fullItem
+              ? this.convertOpToDbSecret(fullItem)
+              : this.convertOpToDbSecret(item);
+          } else {
+            itemData = this.convertOpToDbSecret(item);
+          }
+
           await this.db.item.upsert({
             where: { id: item.id },
             create: {
-              ...this.convertOpToDbSecret(item),
+              ...itemData,
               vault: {
                 connectOrCreate: {
                   where: { id: item.vault.id },
@@ -116,7 +141,7 @@ export class OnePasswordService {
                 }
               }
             },
-            update: this.convertOpToDbSecret(item)
+            update: itemData
           });
         })
       );
@@ -129,8 +154,6 @@ export class OnePasswordService {
       await this.db.vault.deleteMany({
         where: { NOT: { id: { in: syncedVaultIds } } }
       });
-
-      // TODO: check for updated assigned fields
 
       await this.updateNextSync();
     } catch (e) {
@@ -253,19 +276,6 @@ export class OnePasswordService {
       });
   }
 
-  /**
-   * Masking all the secrets directly in the service
-   * to avoid exposing the secrets to the client-side.
-   */
-  async getItemsSecurely(
-    params: ListParams & { vault?: string; search?: string }
-  ): ReturnType<OnePasswordService['getItems']> {
-    const [items, pagination] = await this.getItems(params);
-    const secureItems = items.map((item) => this.maskSecrets(item));
-
-    return [secureItems, pagination];
-  }
-
   async getItem(id: string, vaultId: string) {
     return this.db.item.findUnique({ where: { id, vaultId } });
   }
@@ -286,35 +296,31 @@ export class OnePasswordService {
 
   /**
    * Convert an 1Password item to a database secret.
+   * CONCEALED field values are masked when stored in the database.
    */
   protected convertOpToDbSecret(
     item: OpClientItem
   ): Omit<PrismaOpItem, 'vaultId'> {
+    // Mask CONCEALED field values before storing in the database
+    // skip "password_details" prop from being stored which contains JSON with password metadata
+    const maskedFields = item.fields?.map((field) => ({
+      ...field,
+      password_details: undefined,
+      value:
+        field.type === 'CONCEALED'
+          ? maskConcealedValue(field.value)
+          : field.value
+    }));
+
     return {
       id: item.id,
       title: item.title,
       category: item.category,
       additionalInfo: item.additional_information as string,
       urls: JSON.stringify(item.urls),
-      fields: JSON.stringify(item.fields),
+      fields: JSON.stringify(maskedFields),
       createdAt: new Date(item.created_at),
       updatedAt: new Date(item.updated_at)
-    };
-  }
-
-  protected maskSecrets<T>(item: T & { fields?: Field[] }) {
-    const { fields, ...rest } = item;
-
-    const secureFields: Field[] =
-      fields?.map((field) => ({
-        ...field,
-        value:
-          field.type === 'CONCEALED' ? maskPassword(field.value) : field.value
-      })) || [];
-
-    return {
-      ...rest,
-      fields: secureFields
     };
   }
 }

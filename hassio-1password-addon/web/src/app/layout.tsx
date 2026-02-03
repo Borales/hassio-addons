@@ -1,11 +1,10 @@
 import './globals.css';
 
-import { Footer } from '@/components/footer';
 import { Menu } from '@/components/menu';
 import { fontSans } from '@/config/fonts';
 import { siteConfig } from '@/config/site';
-import clsx from 'clsx';
 import { Metadata, Viewport } from 'next';
+import { Suspense } from 'react';
 import { Providers } from '../components/providers';
 
 export const metadata: Metadata = {
@@ -69,27 +68,19 @@ export const viewport: Viewport = {
   ]
 };
 
-export default function RootLayout({
-  children
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
       <body
-        className={clsx(
-          'bg-background min-h-screen font-sans antialiased',
-          fontSans.variable
-        )}
+        className={`bg-background min-h-screen font-sans antialiased ${fontSans.variable}`}
       >
         <Providers themeProps={{ attribute: 'class', defaultTheme: 'dark' }}>
           <div className="relative flex h-screen flex-col">
             <Menu />
             <main className="container mx-auto max-w-7xl grow p-6">
-              {children}
+              <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
             </main>
-            <Footer />
           </div>
         </Providers>
       </body>
