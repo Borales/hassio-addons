@@ -12,7 +12,7 @@ import {
   TableHeader,
   TableRow
 } from '@heroui/react';
-import { memo, useCallback, useMemo } from 'react';
+import { Key, memo, useCallback, useMemo } from 'react';
 import { CustomTimeAgo } from '../date-formatter';
 import { ActionButtons } from '../ui/action-buttons';
 import { ChipList } from '../ui/chip-list';
@@ -96,7 +96,7 @@ export const HASecretList = ({ items }: HASecretListProps) => {
   );
 };
 
-function renderCell(item: Item, columnKey: React.Key) {
+function renderCell(item: Item, columnKey: Key) {
   switch (columnKey) {
     case 'secretKey':
       return <SecretKeyCell item={item} />;

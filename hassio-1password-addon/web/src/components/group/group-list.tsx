@@ -16,7 +16,7 @@ import {
 } from '@heroui/react';
 import { PencilSimpleIcon, TrashIcon } from '@phosphor-icons/react';
 import Link from 'next/link';
-import { memo, useCallback, useTransition } from 'react';
+import { Key, memo, useCallback, useTransition } from 'react';
 import { ActionButtons } from '../ui/action-buttons';
 import { ChipList } from '../ui/chip-list';
 
@@ -57,7 +57,7 @@ export const GroupList = ({ groups }: GroupListProps) => {
   );
 };
 
-function renderCell(group: GroupWithSecrets, columnKey: React.Key) {
+function renderCell(group: GroupWithSecrets, columnKey: Key) {
   switch (columnKey) {
     case 'name':
       return <GroupNameCell group={group} />;
