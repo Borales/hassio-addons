@@ -32,9 +32,9 @@ export class HomeAssistantClient {
 
   /**
    * Fire a custom event to Home Assistant.
-   * All events are prefixed with 'onepassword_' and include a timestamp.
+   * All events prefixed with 'onepassword_' and include a timestamp.
    *
-   * @param eventType - The event type (will be prefixed with 'onepassword_')
+   * @param eventType - The event type (prefixed with 'onepassword_')
    * @param eventData - Additional data to include in the event
    */
   async fireEvent(
