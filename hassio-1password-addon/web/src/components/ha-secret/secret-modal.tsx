@@ -13,6 +13,7 @@ import {
   ModalHeader,
   Spinner
 } from '@heroui/react';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { OpSecretIcon } from '../op-secret/secret-icon';
@@ -36,6 +37,7 @@ export const HASecretModal = ({
   activeSecret,
   opItems
 }: HASecretModalProps) => {
+  const t = useTranslations('secrets.modal');
   const nav = useRouter();
   const [opSecretId, setOpSecretId] = useState<string | number>(
     activeSecret?.itemId || ''
@@ -99,7 +101,8 @@ export const HASecretModal = ({
         {(onClose) => (
           <>
             <ModalHeader>
-              Assign&nbsp;<Code className="font-bold">{activeSecret?.id}</Code>
+              {t('title')}&nbsp;
+              <Code className="font-bold">{activeSecret?.id}</Code>
             </ModalHeader>
             <ModalBody>
               <Autocomplete
@@ -112,7 +115,7 @@ export const HASecretModal = ({
                 }}
                 defaultItems={opItems}
                 isRequired
-                label="1password item"
+                label={t('searchLabel')}
                 itemHeight={64}
               >
                 {(item: OpItem) => (
@@ -136,7 +139,7 @@ export const HASecretModal = ({
 
               {isLoadingFields && (
                 <div className="flex items-center justify-center p-4">
-                  <Spinner label="Loading fields..." />
+                  <Spinner label={t('loadingItems')} />
                 </div>
               )}
 

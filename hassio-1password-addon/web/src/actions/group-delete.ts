@@ -2,6 +2,7 @@
 
 import { logger } from '@/service/client/logger';
 import { groupService } from '@/service/group.service';
+import { getTranslations } from 'next-intl/server';
 import { updateTag } from 'next/cache';
 
 export type GroupDeleteResult = {
@@ -12,12 +13,14 @@ export type GroupDeleteResult = {
 export async function deleteGroup(
   formData: FormData
 ): Promise<GroupDeleteResult> {
+  const t = await getTranslations('errors.actions');
+  const tCommon = await getTranslations('common.errors');
   const groupId = formData.get('groupId') as string;
 
   logger.debug('Deleting group: %s', groupId);
 
   if (!groupId) {
-    return { success: false, error: 'Group ID is required' };
+    return { success: false, error: tCommon('required') };
   }
 
   try {
@@ -30,7 +33,7 @@ export async function deleteGroup(
     logger.error('Failed to delete group: %o', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to delete group'
+      error: error instanceof Error ? error.message : t('deleteGroupFailed')
     };
   }
 }

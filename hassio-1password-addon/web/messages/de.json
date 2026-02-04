@@ -1,0 +1,159 @@
+{
+  "menu": {
+    "secrets": "Geheimnisse",
+    "groups": "Gruppen",
+    "github": "Projekt auf GitHub besuchen"
+  },
+  "home": {
+    "title": "Home Assistant Geheimnisse",
+    "description": "Verwalten und synchronisieren Sie Ihre Geheimnisse von 1Password zu Home Assistant",
+    "nextSync": "Nächste Synchronisation:",
+    "notSyncedYet": "Noch nicht synchronisiert",
+    "updateNow": "Jetzt synchronisieren"
+  },
+  "groups": {
+    "title": "Ereignisgruppen",
+    "description": "Kombinieren Sie Geheimnisse, um ein einzelnes Ereignis zu erhalten, wenn ein Geheimnis in der Gruppe aktualisiert wird",
+    "eventFormat": "Ereignisformat:",
+    "noGroupsYet": "Noch keine Gruppen erstellt",
+    "createFirstGroup": "Erste Gruppe erstellen →",
+    "groupCount": "{count, plural, =1 {Gruppe} other {Gruppen}}",
+    "modal": {
+      "createTitle": "Neue Gruppe erstellen",
+      "editTitle": "Gruppe bearbeiten: {name}",
+      "nameLabel": "Gruppenname",
+      "namePlaceholder": "mein_dienst",
+      "nameDescription": "Nur Kleinbuchstaben, Zahlen, Unterstriche und Bindestriche. Dies wird im Ereignisnamen verwendet.",
+      "descriptionLabel": "Beschreibung",
+      "descriptionPlaceholder": "Optionale Beschreibung für diese Gruppe",
+      "secretsLabel": "Geheimnisse",
+      "secretsPlaceholder": "Geheimnisse zum Einbeziehen auswählen",
+      "eventNameLabel": "Ereignisname",
+      "selectedSecretsLabel": "Ausgewählt: {count, plural, =0 {keine Geheimnisse} =1 {1 Geheimnis} other {{count} Geheimnisse}}"
+    },
+    "list": {
+      "columns": {
+        "name": "Gruppenname",
+        "secrets": "Verknüpfte Geheimnisse",
+        "event": "Ereignisname",
+        "actions": "Aktionen"
+      },
+      "noSecrets": "Keine Geheimnisse verknüpft",
+      "deleteConfirm": "Sind Sie sicher, dass Sie diese Gruppe löschen möchten?"
+    },
+    "actions": {
+      "newGroup": "Neue Gruppe",
+      "editGroup": "Gruppe bearbeiten",
+      "deleteGroup": "Gruppe löschen"
+    }
+  },
+  "secrets": {
+    "list": {
+      "columns": {
+        "secretKey": "Geheimschlüssel",
+        "reference": "1Password-Referenz",
+        "lastUpdated": "Zuletzt aktualisiert",
+        "actions": "Aktionen"
+      },
+      "status": {
+        "hidden": "Verborgen",
+        "assigned": "Zugewiesen",
+        "unassigned": "Nicht zugewiesen",
+        "notLinked": "Nicht verknüpft"
+      },
+      "statistics": {
+        "total": "gesamt",
+        "assigned": "zugewiesen",
+        "unassigned": "nicht zugewiesen",
+        "hidden": "verborgen"
+      },
+      "ariaLabel": "Home Assistant Geheimnisse"
+    },
+    "modal": {
+      "title": "Zuweisen",
+      "searchLabel": "1Password-Elemente suchen",
+      "searchPlaceholder": "Zum Suchen eingeben...",
+      "loadingItems": "1Password-Elemente werden geladen...",
+      "selectVault": "Wählen Sie zuerst einen Tresor",
+      "vaultLabel": "Tresor",
+      "fieldItemLabel": "1password-Feld",
+      "fieldItemPlaceholder": "Keine Felder gefunden.",
+      "itemLabel": "Element",
+      "fieldLabel": "Feld",
+      "noResults": "Keine Elemente gefunden",
+      "selectItem": "Element auswählen",
+      "selectField": "Feld auswählen",
+      "refreshFields": "Elementfelder aktualisieren"
+    }
+  },
+  "theme": {
+    "switchToDark": "Zum dunklen Modus wechseln",
+    "switchToLight": "Zum hellen Modus wechseln"
+  },
+  "locale": {
+    "switchLocale": "Sprache wechseln",
+    "en-us": "Englisch (USA)",
+    "en-gb": "Englisch (UK)",
+    "pl": "Polnisch",
+    "uk": "Ukrainisch",
+    "nl": "Niederländisch",
+    "de": "Deutsch"
+  },
+  "common": {
+    "loading": "Lädt...",
+    "actions": {
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "delete": "Löschen",
+      "edit": "Bearbeiten",
+      "create": "Erstellen",
+      "assign": "Zuweisen",
+      "unassign": "Zuweisung aufheben",
+      "show": "Anzeigen",
+      "hide": "Verbergen",
+      "refresh": "Aktualisieren"
+    },
+    "labels": {
+      "name": "Name",
+      "description": "Beschreibung",
+      "actions": "Aktionen",
+      "status": "Status"
+    },
+    "errors": {
+      "unknown": "Ein unbekannter Fehler ist aufgetreten",
+      "required": "Dieses Feld ist erforderlich",
+      "loadingFailed": "Laden der Daten fehlgeschlagen"
+    }
+  },
+  "validation": {
+    "groupName": {
+      "required": "Gruppenname ist erforderlich",
+      "invalid": "Gruppenname darf nur Kleinbuchstaben, Zahlen, Unterstriche und Bindestriche enthalten",
+      "tooShort": "Gruppenname muss mindestens 1 Zeichen lang sein",
+      "tooLong": "Gruppenname darf höchstens 50 Zeichen lang sein"
+    },
+    "generic": {
+      "required": "Dieses Feld ist erforderlich",
+      "invalid": "Ungültiger Wert"
+    }
+  },
+  "confirmDialog": {
+    "title": "Aktion bestätigen",
+    "cancel": "Abbrechen",
+    "confirm": "Bestätigen",
+    "delete": "Löschen"
+  },
+  "errors": {
+    "actions": {
+      "assignSecretFailed": "Zuweisung des Geheimnisses fehlgeschlagen",
+      "unassignSecretFailed": "Aufhebung der Zuweisung fehlgeschlagen",
+      "toggleSkipFailed": "Änderung des Überspringen-Status fehlgeschlagen",
+      "refreshItemFailed": "Aktualisierung des 1Password-Elements fehlgeschlagen",
+      "createGroupFailed": "Erstellung der Gruppe fehlgeschlagen",
+      "updateGroupFailed": "Aktualisierung der Gruppe fehlgeschlagen",
+      "deleteGroupFailed": "Löschen der Gruppe fehlgeschlagen",
+      "addSecretToGroupFailed": "Hinzufügen des Geheimnisses zur Gruppe fehlgeschlagen",
+      "removeSecretFromGroupFailed": "Entfernen des Geheimnisses aus der Gruppe fehlgeschlagen"
+    }
+  }
+}

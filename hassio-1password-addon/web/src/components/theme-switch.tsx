@@ -4,6 +4,7 @@ import { SwitchProps, useSwitch } from '@heroui/switch';
 import { MoonIcon, SunIcon } from '@phosphor-icons/react/dist/ssr';
 import { useIsSSR } from '@react-aria/ssr';
 import { VisuallyHidden } from '@react-aria/visually-hidden';
+import { useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
 import { FC } from 'react';
 import { tv } from 'tailwind-variants';
@@ -19,6 +20,7 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
 }) => {
   const { theme, setTheme } = useTheme();
   const isSSR = useIsSSR();
+  const t = useTranslations('theme');
 
   const onChange = () => {
     theme === 'light' ? setTheme('dark') : setTheme('light');
@@ -33,9 +35,8 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
     getWrapperProps
   } = useSwitch({
     isSelected: theme === 'light' || isSSR,
-    'aria-label': `Switch to ${
-      theme === 'light' || isSSR ? 'dark' : 'light'
-    } mode`,
+    'aria-label':
+      theme === 'light' || isSSR ? t('switchToDark') : t('switchToLight'),
     onChange
   });
 

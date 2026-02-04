@@ -4,9 +4,11 @@ import { homeAssistantClient } from '@/service/client/homeassistant';
 import { logger } from '@/service/client/logger';
 import { groupService } from '@/service/group.service';
 import { haSecretService } from '@/service/secret.service';
+import { getTranslations } from 'next-intl/server';
 import { updateTag } from 'next/cache';
 
 export const assignSecret = async (formData: FormData) => {
+  const t = await getTranslations('errors.actions');
   const haSecretId = formData.get('haSecretId') as string;
   const opSecretId = formData.get('opSecretId') as string;
   const ref = formData.get('ref') as string;
@@ -34,7 +36,7 @@ export const assignSecret = async (formData: FormData) => {
     logger.error('Failed to assign secret: %o', error);
     await homeAssistantClient.fireErrorEvent('assign_secret_failed', {
       secretName: haSecretId,
-      error: error instanceof Error ? error.message : String(error)
+      error: error instanceof Error ? error.message : t('assignSecretFailed')
     });
   }
 

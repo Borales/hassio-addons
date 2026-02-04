@@ -1,28 +1,45 @@
 import { z } from 'zod';
 
+type ValidationMessages = {
+  required: string;
+  invalid: string;
+  tooShort: string;
+  tooLong: string;
+};
+
 /**
- * Zod schema for group name validation.
+ * Factory function that creates a Zod schema for group name validation with translated messages.
  * Only lowercase alphanumeric characters, underscores, and hyphens allowed.
  */
-export const groupNameSchema = z
-  .string()
-  .min(2, 'Group name must be at least 2 characters')
-  .max(50, 'Group name must be at most 50 characters')
-  .regex(
-    /^[a-z0-9_-]+$/,
-    'Group name must contain only lowercase letters, numbers, underscores, and hyphens'
-  );
+export function createGroupNameSchema(messages: ValidationMessages) {
+  return z
+    .string()
+    .min(2, messages.tooShort)
+    .max(50, messages.tooLong)
+    .regex(/^[a-z0-9_-]+$/, messages.invalid);
+}
 
 /**
- * Full group schema for create/update operations.
+ * Factory function that creates a full group schema for create/update operations with translated messages.
  */
-export const groupSchema = z.object({
-  name: groupNameSchema,
-  description: z
-    .string()
-    .max(500, 'Description must be at most 500 characters')
-    .optional(),
-  secretIds: z.array(z.string()).optional()
+export function createGroupSchema(messages: ValidationMessages) {
+  return z.object({
+    name: createGroupNameSchema(messages),
+    description: z
+      .string()
+      .max(500, 'Description must be at most 500 characters')
+      .optional(),
+    secretIds: z.array(z.string()).optional()
+  });
+}
+
+// Type inference helper - uses default English messages
+const defaultSchema = createGroupSchema({
+  required: 'Group name is required',
+  invalid:
+    'Group name must contain only lowercase letters, numbers, underscores, and hyphens',
+  tooShort: 'Group name must be at least 1 character',
+  tooLong: 'Group name must be at most 50 characters'
 });
 
-export type GroupInput = z.infer<typeof groupSchema>;
+export type GroupInput = z.infer<typeof defaultSchema>;

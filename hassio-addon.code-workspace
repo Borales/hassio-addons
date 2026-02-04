@@ -1,0 +1,26 @@
+{
+  "folders": [
+    {
+      "name": "Root",
+      "path": ".",
+    },
+    {
+      "name": "1password addon (web)",
+      "path": "./hassio-1password-addon/web",
+      "settings": {
+        "tailwindCSS.experimental.configFile": "./src/app/globals.css",
+        "tailwindCSS.experimental.classRegex": [
+          ["tv\\((([^()]*|\\([^()]*\\))*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+        ],
+        "files.associations": { "*.css": "tailwindcss" },
+        "i18n-ally.localesPaths": ["messages"],
+        "i18n-ally.keystyle": "nested",
+        "i18n-ally.enabledFrameworks": ["next-intl"],
+        "i18n-ally.sourceLanguage": "en-us",
+        "i18n-ally.displayLanguage": "en-us",
+        "typescript.tsdk": "./node_modules/typescript/lib",
+      },
+    },
+  ],
+  "settings": {},
+}

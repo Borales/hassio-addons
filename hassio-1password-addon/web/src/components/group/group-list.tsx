@@ -15,23 +15,30 @@ import {
   Tooltip
 } from '@heroui/react';
 import { PencilSimpleIcon, TrashIcon } from '@phosphor-icons/react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { Key, memo, useCallback, useTransition } from 'react';
+import { Key, memo, useCallback, useMemo, useTransition } from 'react';
 import { ActionButtons } from '../ui/action-buttons';
 import { ChipList } from '../ui/chip-list';
+import { ConfirmDialog } from '../ui/confirm-dialog';
 
 type GroupListProps = {
   groups: GroupWithSecrets[];
 };
 
-const COLUMNS = [
-  { key: 'name', label: 'Group Name' },
-  { key: 'secrets', label: 'Linked Secrets' },
-  { key: 'event', label: 'Event Name' },
-  { key: 'actions', label: 'Actions' }
-];
-
 export const GroupList = ({ groups }: GroupListProps) => {
+  const t = useTranslations('groups.list.columns');
+
+  const COLUMNS = useMemo(
+    () => [
+      { key: 'name', label: t('name') },
+      { key: 'secrets', label: t('secrets') },
+      { key: 'event', label: t('event') },
+      { key: 'actions', label: t('actions') }
+    ],
+    [t]
+  );
+
   return (
     <Table aria-label="Groups" removeWrapper>
       <TableHeader columns={COLUMNS}>
@@ -91,6 +98,7 @@ GroupNameCell.displayName = 'GroupNameCell';
 
 const LinkedSecretsCell = memo(
   ({ secrets }: { secrets: Array<{ secretId: string }> }) => {
+    const t = useTranslations('groups.list');
     const secretChips = secrets.map((s) => ({
       id: s.secretId,
       label: s.secretId
@@ -117,7 +125,7 @@ const LinkedSecretsCell = memo(
       <ChipList
         items={secretChips}
         maxVisible={4}
-        emptyMessage="No secrets linked"
+        emptyMessage={t('noSecrets')}
         renderChip={renderChip}
       />
     );
@@ -133,15 +141,12 @@ const EventNameCell = memo(({ groupName }: { groupName: string }) => {
 EventNameCell.displayName = 'EventNameCell';
 
 function GroupActionsCell({ group }: { group: GroupWithSecrets }) {
+  const t = useTranslations('groups.actions');
+  const tConfirm = useTranslations('groups.list');
+  const tCommon = useTranslations('confirmDialog');
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = () => {
-    if (
-      !confirm(`Are you sure you want to delete the group "${group.name}"?`)
-    ) {
-      return;
-    }
-
     startTransition(async () => {
       const formData = new FormData();
       formData.set('groupId', group.id);
@@ -152,21 +157,34 @@ function GroupActionsCell({ group }: { group: GroupWithSecrets }) {
   return (
     <ActionButtons>
       <Link href={`/groups?groupId=${group.id}`}>
-        <Button isIconOnly size="sm" variant="light" aria-label="Edit group">
+        <Button
+          isIconOnly
+          size="sm"
+          variant="light"
+          aria-label={t('editGroup')}
+        >
           <PencilSimpleIcon size={16} />
         </Button>
       </Link>
-      <Button
-        isIconOnly
-        size="sm"
-        variant="light"
-        color="danger"
-        aria-label="Delete group"
-        isLoading={isPending}
-        onPress={handleDelete}
-      >
-        <TrashIcon size={16} />
-      </Button>
+      <ConfirmDialog
+        message={tConfirm('deleteConfirm')}
+        confirmLabel={tCommon('delete')}
+        confirmColor="danger"
+        onConfirm={handleDelete}
+        trigger={(onOpen) => (
+          <Button
+            isIconOnly
+            size="sm"
+            variant="light"
+            color="danger"
+            aria-label={t('deleteGroup')}
+            isLoading={isPending}
+            onPress={onOpen}
+          >
+            <TrashIcon size={16} />
+          </Button>
+        )}
+      />
     </ActionButtons>
   );
 }

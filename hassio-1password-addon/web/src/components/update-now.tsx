@@ -3,10 +3,12 @@
 import { forceUpdateNow } from '@/actions/force-update';
 import { Button } from '@heroui/react';
 import { ArrowsClockwiseIcon } from '@phosphor-icons/react';
+import { useTranslations } from 'next-intl';
 import { useFormStatus } from 'react-dom';
 
 const Submit = () => {
   const { pending } = useFormStatus();
+  const t = useTranslations('home');
 
   return (
     <Button
@@ -17,7 +19,7 @@ const Submit = () => {
       startContent={!pending && <ArrowsClockwiseIcon size={14} />}
       className="bg-default-100 dark:bg-default-200 text-foreground"
     >
-      Sync Now
+      {t('updateNow')}
     </Button>
   );
 };
