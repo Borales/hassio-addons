@@ -7,18 +7,10 @@
 - [x] add i18n
 - [ ] add logger
 - [ ] add an ability to unassign a secret
-- [ ] add manual secret creation
-- [ ] add view page for 1Password item
-- [ ] add search/filter for 1Password items
 - [ ] add approx stats for requests
 - [ ] add timeout when hitting the rate limit
-- [ ] add form loading states for all submits
-- [ ] add proper "update at" for the homepage
-- [ ] add 1Password masking secrets before saving to db
-- [ ] add better design
+- [x] add 1Password masking secrets before saving to db
 - [x] make 1Password item dropdowns searchable
-- [ ] proper documentation
-- [ ] tests
 - [x] add custom events
-- [ ] move pnpm install before docker build (with cache)
-- [ ] don't install all dependencies on the runner (keep only Prisma)
+- [ ] tests
+- [ ] proper documentation
