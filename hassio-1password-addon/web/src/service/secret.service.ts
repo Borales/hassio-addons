@@ -106,7 +106,7 @@ export class HASecretService {
    * Save secrets to the YAML file and fire events for each.
    * Returns the list of secret names that were written.
    */
-  async saveSecrets(secrets: Record<string, string>): Promise<string[]> {
+  async saveSecrets(secrets: Record<string, string>) {
     const secretNames = Object.keys(secrets);
 
     if (secretNames.length === 0) {
@@ -140,9 +140,7 @@ export class HASecretService {
   /**
    * Fire events for all groups that contain any of the updated secrets.
    */
-  async fireGroupEventsForSecrets(
-    secretNames: string[]
-  ): Promise<Array<{ name: string; id: string; secrets: string[] }>> {
+  async fireGroupEventsForSecrets(secretNames: string[]) {
     const groups = await this.db.group.findMany({
       where: {
         secrets: {
@@ -179,9 +177,7 @@ export class HASecretService {
   /**
    * Get groups that a specific secret belongs to.
    */
-  async getGroupsForSecret(
-    secretId: string
-  ): Promise<Array<{ id: string; name: string }>> {
+  async getGroupsForSecret(secretId: string) {
     const groups = await this.db.group.findMany({
       where: {
         secrets: {
