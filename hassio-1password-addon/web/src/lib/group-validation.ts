@@ -14,7 +14,7 @@ type ValidationMessages = {
 export function createGroupNameSchema(messages: ValidationMessages) {
   return z
     .string()
-    .min(1, messages.tooShort)
+    .min(2, messages.tooShort)
     .max(50, messages.tooLong)
     .regex(/^[a-z0-9_-]+$/, messages.invalid);
 }
@@ -43,4 +43,3 @@ const defaultSchema = createGroupSchema({
 });
 
 export type GroupInput = z.infer<typeof defaultSchema>;
-
