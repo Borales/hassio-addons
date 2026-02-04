@@ -246,6 +246,30 @@ export class HomeAssistantClient {
       isSkipped
     });
   }
+
+  /**
+   * Fire group update events for all groups.
+   * Handles the cycle internally to avoid repetitive code.
+   *
+   * @param groups - Array of groups to fire events for
+   */
+  async fireGroupUpdatedEventsForSecrets(
+    groups: Array<{ name: string; id: string; secrets: string[] }>
+  ): Promise<void> {
+    if (groups.length === 0) {
+      return;
+    }
+
+    try {
+      await Promise.all(
+        groups.map((group) =>
+          this.fireGroupUpdatedEvent(group.name, group.id, group.secrets)
+        )
+      );
+    } catch (error) {
+      this.logger.error('Failed to fire group update events: %o', error);
+    }
+  }
 }
 
 export const homeAssistantClient = new HomeAssistantClient(logger);

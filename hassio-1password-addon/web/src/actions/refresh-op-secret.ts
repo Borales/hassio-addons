@@ -62,16 +62,8 @@ export const refreshOpSecret = async (formData: FormData) => {
     );
 
     // Fire group events for any groups containing affected secrets
-    if (affectedSecretIds.length > 0) {
-      const groups = await groupService.getGroupsForSecrets(affectedSecretIds);
-      for (const group of groups) {
-        await homeAssistantClient.fireGroupUpdatedEvent(
-          group.name,
-          group.id,
-          group.secrets
-        );
-      }
-    }
+    const groups = await groupService.getGroupsForSecrets(affectedSecretIds);
+    await homeAssistantClient.fireGroupUpdatedEventsForSecrets(groups);
   } catch (error) {
     logger.error('Failed to refresh 1Password secret: %o', error);
     await homeAssistantClient.fireErrorEvent('refresh_item_failed', {

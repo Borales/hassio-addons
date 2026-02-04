@@ -24,13 +24,7 @@ export async function toggleSkipSecret(formData: FormData) {
 
       // Fire group events for any groups containing this secret
       const groups = await groupService.getGroupsForSecrets([haSecretId]);
-      for (const group of groups) {
-        await homeAssistantClient.fireGroupUpdatedEvent(
-          group.name,
-          group.id,
-          group.secrets
-        );
-      }
+      await homeAssistantClient.fireGroupUpdatedEventsForSecrets(groups);
     }
   } catch (error) {
     logger.error('Failed to toggle skip secret: %o', error);
