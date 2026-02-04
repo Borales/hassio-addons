@@ -1,7 +1,7 @@
 'use client';
 
 import { deleteGroup } from '@/actions/group-delete';
-import { GroupWithSecrets } from '@/types/group';
+import { GroupWithSecrets } from '@/service/group.service';
 import {
   Button,
   Chip,

@@ -1,8 +1,11 @@
 import { groupNameSchema } from '@/lib/group-validation';
-import { GroupWithSecrets } from '@/types/group';
-import { Group } from '@prisma-generated/client';
+import { Group, SecretGroup } from '@prisma-generated/client';
 import { prisma, PrismaType } from './client/db';
 import { Logger, logger } from './client/logger';
+
+export type GroupWithSecrets = Group & {
+  secrets: Pick<SecretGroup, 'secretId' | 'addedAt'>[];
+};
 
 export type { Group };
 

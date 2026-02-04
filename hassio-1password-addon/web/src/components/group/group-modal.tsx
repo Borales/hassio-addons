@@ -3,7 +3,7 @@
 import { createGroup } from '@/actions/group-create';
 import { updateGroup } from '@/actions/group-update';
 import { groupNameSchema } from '@/lib/group-validation';
-import { GroupWithSecrets, HaSecretItem } from '@/types/group';
+import { GroupWithSecrets } from '@/service/group.service';
 import {
   Button,
   Chip,
@@ -17,6 +17,7 @@ import {
   SelectItem,
   Textarea
 } from '@heroui/react';
+import { Secret as HaSecretItem } from '@prisma-generated/client';
 import { useRouter } from 'next/navigation';
 import { useActionState, useEffect, useMemo, useState } from 'react';
 
