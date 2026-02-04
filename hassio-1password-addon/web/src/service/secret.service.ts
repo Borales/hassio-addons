@@ -162,14 +162,7 @@ export class HASecretService {
         .filter((id) => secretNames.includes(id))
     }));
 
-    // Fire event for each affected group
-    for (const group of affectedGroups) {
-      await this.haClient.fireGroupUpdatedEvent(
-        group.name,
-        group.id,
-        group.secrets
-      );
-    }
+    await this.haClient.fireGroupUpdatedEventsForSecrets(affectedGroups);
 
     return affectedGroups;
   }
