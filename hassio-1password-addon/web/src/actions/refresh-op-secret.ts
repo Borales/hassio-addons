@@ -1,8 +1,40 @@
 'use server';
 
 import { onePasswordService } from '@/service/1password.service';
+import { prisma } from '@/service/client/db';
+import { homeAssistantClient } from '@/service/client/homeassistant';
 import { logger } from '@/service/client/logger';
-import { revalidatePath } from 'next/cache';
+import { groupService } from '@/service/group.service';
+import { updateTag } from 'next/cache';
+
+/**
+ * Fetch fresh fields for a specific 1Password item
+ */
+export const fetchOpItemFields = async (
+  opSecretId: string,
+  opVaultId: string
+) => {
+  try {
+    await onePasswordService.syncItem(opSecretId, opVaultId);
+    updateTag('op-items');
+
+    // Return the updated item (serialize to plain object for client component)
+    const item = await prisma.item.findUnique({
+      where: { id: opSecretId, vaultId: opVaultId }
+    });
+
+    return {
+      success: true,
+      item: item ? JSON.parse(JSON.stringify(item)) : null
+    };
+  } catch (error) {
+    logger.error('Failed to fetch 1Password item fields: %o', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : String(error)
+    };
+  }
+};
 
 export const refreshOpSecret = async (formData: FormData) => {
   const opSecretId = formData.get('opSecretId') as string;
@@ -12,7 +44,36 @@ export const refreshOpSecret = async (formData: FormData) => {
     opVaultId
   });
 
-  await onePasswordService.syncItem(opSecretId, opVaultId);
+  try {
+    await onePasswordService.syncItem(opSecretId, opVaultId);
 
-  revalidatePath('/');
+    // Find secrets affected by this item refresh
+    const affectedSecrets = await prisma.secret.findMany({
+      where: { itemId: opSecretId },
+      select: { id: true }
+    });
+    const affectedSecretIds = affectedSecrets.map((s) => s.id);
+
+    // Fire HA event
+    await homeAssistantClient.fireItemRefreshedEvent(
+      opSecretId,
+      opVaultId,
+      affectedSecretIds
+    );
+
+    // Fire group events for any groups containing affected secrets
+    const groups = await groupService.getGroupsForSecrets(affectedSecretIds);
+    await homeAssistantClient.fireGroupUpdatedEventsForSecrets(groups);
+  } catch (error) {
+    logger.error('Failed to refresh 1Password secret: %o', error);
+    await homeAssistantClient.fireErrorEvent('refresh_item_failed', {
+      itemId: opSecretId,
+      vaultId: opVaultId,
+      error: error instanceof Error ? error.message : String(error)
+    });
+  }
+
+  updateTag('op-items');
+  updateTag('secrets');
+  updateTag('groups'); // Refresh affects group displays
 };

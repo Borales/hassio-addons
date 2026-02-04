@@ -8,7 +8,6 @@ type DateFormatterProps = {
 };
 
 export const CustomTimeAgo = ({ date, locale = 'en' }: DateFormatterProps) => {
-  // TODO: replace with the active language
   const dateFormatter = new Intl.DateTimeFormat(locale, {
     year: '2-digit',
     month: 'short',

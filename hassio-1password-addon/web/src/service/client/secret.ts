@@ -65,8 +65,15 @@ export class SecretHelper {
     return this.writeSecretsToFile(secretFileContent);
   }
 
-  protected async readSecretsFromFile() {
-    return (await readFile(this.secretFile, 'utf-8')).trim();
+  /**
+   * Read the raw content of the secrets file.
+   */
+  async readSecretsFromFile() {
+    try {
+      return (await readFile(this.secretFile, 'utf-8')).trim();
+    } catch {
+      return '';
+    }
   }
 
   protected async writeSecretsToFile(content: string) {

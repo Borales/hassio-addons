@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "description": "1Password for Home Assistant",
+  "type": "module",
   "scripts": {
     "build": "next build",
     "db:reset": "prisma migrate reset",
@@ -11,7 +12,9 @@
     "lint": "eslint .",
     "migration:dev": "prisma migrate dev",
     "migration:prod": "prisma migrate deploy",
+    "postinstall": "next typegen",
     "prettier": "prettier --check ./src",
+    "prettier:fix": "prettier --write ./src",
     "prisma:generate": "prisma generate",
     "start": "next start -p 8000",
     "typecheck": "tsc --noEmit"
@@ -20,8 +23,8 @@
     "@1password/op-js": "^0.1.13",
     "@heroui/react": "^2.8.8",
     "@phosphor-icons/react": "^2.1.10",
-    "@prisma/adapter-better-sqlite3": "^7.2.0",
-    "@prisma/client": "^7.2.0",
+    "@prisma/adapter-better-sqlite3": "^7.3.0",
+    "@prisma/client": "^7.3.0",
     "axios": "^1.13.3",
     "better-sqlite3": "^12.6.2",
     "dotenv": "^17.2.3",
@@ -36,7 +39,8 @@
     "react-timeago": "^8.3.0",
     "sharp": "^0.34.5",
     "winston": "^3.19.0",
-    "yaml": "^2.8.2"
+    "yaml": "^2.8.2",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@react-aria/ssr": "^3.9.10",
@@ -54,7 +58,7 @@
     "prettier-plugin-organize-imports": "^4.3.0",
     "prettier-plugin-package": "^2.0.0",
     "prettier-plugin-tailwindcss": "^0.7.2",
-    "prisma": "^7.2.0",
+    "prisma": "^7.3.0",
     "tailwind-merge": "^3.4.0",
     "tailwind-variants": "^3.2.2",
     "tailwindcss": "^4.1.18",

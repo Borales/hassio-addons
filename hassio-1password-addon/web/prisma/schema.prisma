@@ -15,9 +15,36 @@ model Secret {
   updatedAt DateTime? @updatedAt @map("updated_at")
   isSkipped Boolean?  @default(false) @map("is_skipped")
 
-  item Item? @relation(fields: [itemId], references: [id], onDelete: SetNull)
+  item   Item?         @relation(fields: [itemId], references: [id], onDelete: SetNull)
+  groups SecretGroup[]
 
   @@map("ha_secrets")
+}
+
+// Secret Groups for HA event notifications
+model Group {
+  id          String   @id @default(uuid())
+  name        String   @unique // lowercase alphanumeric, underscores, hyphens only
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  secrets SecretGroup[]
+
+  @@map("groups")
+}
+
+// Junction table for many-to-many Secret <-> Group
+model SecretGroup {
+  secretId String   @map("secret_id")
+  groupId  String   @map("group_id")
+  addedAt  DateTime @default(now()) @map("added_at")
+
+  secret Secret @relation(fields: [secretId], references: [id], onDelete: Cascade)
+  group  Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@id([secretId, groupId])
+  @@map("secret_groups")
 }
 
 // 1Password Item
