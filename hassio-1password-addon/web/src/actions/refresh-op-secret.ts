@@ -5,6 +5,7 @@ import { prisma } from '@/service/client/db';
 import { homeAssistantClient } from '@/service/client/homeassistant';
 import { logger } from '@/service/client/logger';
 import { groupService } from '@/service/group.service';
+import { getTranslations } from 'next-intl/server';
 import { updateTag } from 'next/cache';
 
 /**
@@ -14,6 +15,7 @@ export const fetchOpItemFields = async (
   opSecretId: string,
   opVaultId: string
 ) => {
+  const t = await getTranslations('errors.actions');
   try {
     await onePasswordService.syncItem(opSecretId, opVaultId);
     updateTag('op-items');
@@ -31,12 +33,13 @@ export const fetchOpItemFields = async (
     logger.error('Failed to fetch 1Password item fields: %o', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : String(error)
+      error: error instanceof Error ? error.message : t('refreshItemFailed')
     };
   }
 };
 
 export const refreshOpSecret = async (formData: FormData) => {
+  const t = await getTranslations('errors.actions');
   const opSecretId = formData.get('opSecretId') as string;
   const opVaultId = formData.get('opVaultId') as string;
   logger.debug('Refreshing 1Password secret: %o', {
@@ -69,7 +72,7 @@ export const refreshOpSecret = async (formData: FormData) => {
     await homeAssistantClient.fireErrorEvent('refresh_item_failed', {
       itemId: opSecretId,
       vaultId: opVaultId,
-      error: error instanceof Error ? error.message : String(error)
+      error: error instanceof Error ? error.message : t('refreshItemFailed')
     });
   }
 

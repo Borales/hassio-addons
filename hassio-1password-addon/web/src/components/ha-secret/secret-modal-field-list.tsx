@@ -2,6 +2,7 @@
 
 import { Field, ResponseFieldType } from '@1password/op-js';
 import { Select, SelectItem, Selection } from '@heroui/react';
+import { useTranslations } from 'next-intl';
 
 type HASecretModalFieldListProps = {
   reference: Set<string | number>;
@@ -16,19 +17,16 @@ export const HASecretModalFieldList = ({
   fields,
   onSelectionChange
 }: HASecretModalFieldListProps) => {
+  const t = useTranslations('secrets.modal');
   const cleanFields = fields!.filter(
     (item) => !categoriesToSkip.includes(item.type) && item.value
   );
 
   return (
     <Select
-      label="1password field"
+      label={t('fieldItemLabel')}
       selectedKeys={reference}
-      placeholder={
-        !fields?.length
-          ? 'No fields found. Press the button to sync the fields →'
-          : undefined
-      }
+      placeholder={!fields?.length ? t('fieldItemPlaceholder') : undefined}
       selectionMode="single"
       onSelectionChange={onSelectionChange}
       items={cleanFields}

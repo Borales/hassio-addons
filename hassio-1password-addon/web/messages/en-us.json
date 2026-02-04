@@ -1,0 +1,159 @@
+{
+  "menu": {
+    "secrets": "Secrets",
+    "groups": "Groups",
+    "github": "Visit the project on GitHub"
+  },
+  "home": {
+    "title": "Home Assistant Secrets",
+    "description": "Manage and sync your secrets from 1Password to Home Assistant",
+    "nextSync": "Next sync:",
+    "notSyncedYet": "Not synced yet",
+    "updateNow": "Sync Now"
+  },
+  "groups": {
+    "title": "Event Groups",
+    "description": "Combine secrets to receive a single event when any secret in the group updates",
+    "eventFormat": "Event format:",
+    "noGroupsYet": "No groups created yet",
+    "createFirstGroup": "Create your first group →",
+    "groupCount": "{count, plural, =1 {group} other {groups}}",
+    "modal": {
+      "createTitle": "Create New Group",
+      "editTitle": "Edit Group: {name}",
+      "nameLabel": "Group Name",
+      "namePlaceholder": "my_service",
+      "nameDescription": "Lowercase letters, numbers, underscores, and hyphens only. This will be used in the event name.",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Optional description for this group",
+      "secretsLabel": "Secrets",
+      "secretsPlaceholder": "Select secrets to include",
+      "eventNameLabel": "Event name",
+      "selectedSecretsLabel": "Selected: {count, plural, =0 {no secrets} =1 {1 secret} other {{count} secrets}}"
+    },
+    "list": {
+      "columns": {
+        "name": "Group Name",
+        "secrets": "Linked Secrets",
+        "event": "Event Name",
+        "actions": "Actions"
+      },
+      "noSecrets": "No secrets linked",
+      "deleteConfirm": "Are you sure you want to delete this group?"
+    },
+    "actions": {
+      "newGroup": "New Group",
+      "editGroup": "Edit group",
+      "deleteGroup": "Delete group"
+    }
+  },
+  "secrets": {
+    "list": {
+      "columns": {
+        "secretKey": "Secret Key",
+        "reference": "1Password Reference",
+        "lastUpdated": "Last Updated",
+        "actions": "Actions"
+      },
+      "status": {
+        "hidden": "Hidden",
+        "assigned": "Assigned",
+        "unassigned": "Unassigned",
+        "notLinked": "Not linked"
+      },
+      "statistics": {
+        "total": "total",
+        "assigned": "assigned",
+        "unassigned": "unassigned",
+        "hidden": "hidden"
+      },
+      "ariaLabel": "Home Assistant secrets"
+    },
+    "modal": {
+      "title": "Assign",
+      "searchLabel": "Search 1Password items",
+      "searchPlaceholder": "Type to search...",
+      "loadingItems": "Loading 1Password items...",
+      "selectVault": "Select a vault first",
+      "vaultLabel": "Vault",
+      "fieldItemLabel": "1password field",
+      "fieldItemPlaceholder": "No fields found.",
+      "itemLabel": "Item",
+      "fieldLabel": "Field",
+      "noResults": "No items found",
+      "selectItem": "Select an item",
+      "selectField": "Select a field",
+      "refreshFields": "Refresh item fields"
+    }
+  },
+  "theme": {
+    "switchToDark": "Switch to dark mode",
+    "switchToLight": "Switch to light mode"
+  },
+  "locale": {
+    "switchLocale": "Switch language",
+    "en-us": "English (US)",
+    "en-gb": "English (UK)",
+    "pl": "Polish",
+    "uk": "Ukrainian",
+    "nl": "Dutch",
+    "de": "German"
+  },
+  "common": {
+    "loading": "Loading...",
+    "actions": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "edit": "Edit",
+      "create": "Create",
+      "assign": "Assign",
+      "unassign": "Unassign",
+      "show": "Show",
+      "hide": "Hide",
+      "refresh": "Refresh"
+    },
+    "labels": {
+      "name": "Name",
+      "description": "Description",
+      "actions": "Actions",
+      "status": "Status"
+    },
+    "errors": {
+      "unknown": "An unknown error occurred",
+      "required": "This field is required",
+      "loadingFailed": "Failed to load data"
+    }
+  },
+  "validation": {
+    "groupName": {
+      "required": "Group name is required",
+      "invalid": "Group name must contain only lowercase letters, numbers, underscores, and hyphens",
+      "tooShort": "Group name must be at least 1 character",
+      "tooLong": "Group name must be at most 50 characters"
+    },
+    "generic": {
+      "required": "This field is required",
+      "invalid": "Invalid value"
+    }
+  },
+  "confirmDialog": {
+    "title": "Confirm Action",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete"
+  },
+  "errors": {
+    "actions": {
+      "assignSecretFailed": "Failed to assign secret",
+      "unassignSecretFailed": "Failed to unassign secret",
+      "toggleSkipFailed": "Failed to toggle skip status",
+      "refreshItemFailed": "Failed to refresh 1Password item",
+      "createGroupFailed": "Failed to create group",
+      "updateGroupFailed": "Failed to update group",
+      "deleteGroupFailed": "Failed to delete group",
+      "addSecretToGroupFailed": "Failed to add secret to group",
+      "removeSecretFromGroupFailed": "Failed to remove secret from group"
+    }
+  }
+}

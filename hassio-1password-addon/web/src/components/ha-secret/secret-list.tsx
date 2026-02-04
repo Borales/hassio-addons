@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow
 } from '@heroui/react';
+import { useTranslations } from 'next-intl';
 import { Key, memo, useCallback, useMemo } from 'react';
 import { CustomTimeAgo } from '../date-formatter';
 import { ActionButtons } from '../ui/action-buttons';
@@ -32,46 +33,50 @@ type HASecretListProps = {
   items: Item[];
 };
 
-const COLUMNS = [
-  { key: 'secretKey', label: 'Secret Key' },
-  { key: 'reference', label: '1Password Reference' },
-  { key: 'lastUpdated', label: 'Last Updated' },
-  { key: 'actions', label: 'Actions' }
-];
-
 export const HASecretList = ({ items }: HASecretListProps) => {
+  const t = useTranslations('secrets.list');
   const stats = useSecretStatistics(items);
+
+  const COLUMNS = useMemo(
+    () => [
+      { key: 'secretKey', label: t('columns.secretKey') },
+      { key: 'reference', label: t('columns.reference') },
+      { key: 'lastUpdated', label: t('columns.lastUpdated') },
+      { key: 'actions', label: t('columns.actions') }
+    ],
+    [t]
+  );
 
   const statisticsConfig = useMemo(
     () => [
-      { label: 'total', value: stats.total, showWhenZero: true },
+      { label: t('statistics.total'), value: stats.total, showWhenZero: true },
       {
-        label: 'assigned',
+        label: t('statistics.assigned'),
         value: stats.assigned,
         color: 'success' as const,
         showWhenZero: true
       },
       {
-        label: 'unassigned',
+        label: t('statistics.unassigned'),
         value: stats.unassigned,
         color: 'warning' as const,
         showWhenZero: true
       },
       {
-        label: 'hidden',
+        label: t('statistics.hidden'),
         value: stats.skipped,
         color: 'muted' as const,
         showWhenZero: false
       }
     ],
-    [stats]
+    [stats, t]
   );
 
   return (
     <>
       <StatisticsBar stats={statisticsConfig} />
 
-      <Table aria-label="Home Assistant secrets" removeWrapper>
+      <Table aria-label={t('ariaLabel')} removeWrapper>
         <TableHeader columns={COLUMNS}>
           {(column) => (
             <TableColumn
@@ -112,14 +117,15 @@ function renderCell(item: Item, columnKey: Key) {
 }
 
 const SecretKeyCell = memo(({ item }: { item: Item }) => {
+  const t = useTranslations('secrets.list.status');
   const isSkipped = item.isSkipped;
   const isAssigned = !!item.itemId && !item.isSkipped;
 
   const statusConfig = isSkipped
-    ? { status: 'inactive' as const, label: 'Hidden' }
+    ? { status: 'inactive' as const, label: t('hidden') }
     : isAssigned
-      ? { status: 'success' as const, label: 'Assigned' }
-      : { status: 'warning' as const, label: 'Unassigned' };
+      ? { status: 'success' as const, label: t('assigned') }
+      : { status: 'warning' as const, label: t('unassigned') };
 
   const groupChips =
     item.groups?.map((group) => ({
@@ -163,13 +169,14 @@ const SecretKeyCell = memo(({ item }: { item: Item }) => {
 SecretKeyCell.displayName = 'SecretKeyCell';
 
 const ReferenceCell = memo(({ reference }: { reference?: string | null }) => {
+  const t = useTranslations('secrets.list.status');
   return reference ? (
     <span className="font-mono text-xs">
       <Code>{reference}</Code>
     </span>
   ) : (
     <span className="text-default-300 dark:text-default-500 text-xs">
-      Not linked
+      {t('notLinked')}
     </span>
   );
 });

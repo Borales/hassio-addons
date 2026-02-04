@@ -2,7 +2,7 @@
 
 import { createGroup } from '@/actions/group-create';
 import { updateGroup } from '@/actions/group-update';
-import { groupNameSchema } from '@/lib/group-validation';
+import { createGroupNameSchema } from '@/lib/group-validation';
 import { GroupWithSecrets } from '@/service/group.service';
 import {
   Button,
@@ -18,6 +18,7 @@ import {
   Textarea
 } from '@heroui/react';
 import { Secret as HaSecretItem } from '@prisma-generated/client';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useActionState, useEffect, useMemo, useState } from 'react';
 
@@ -28,6 +29,9 @@ type GroupModalProps = {
 };
 
 export const GroupModal = ({ group, secrets, isNew }: GroupModalProps) => {
+  const t = useTranslations('groups.modal');
+  const tCommon = useTranslations('common.actions');
+  const tValidation = useTranslations('validation.groupName');
   const router = useRouter();
   const [name, setName] = useState(group?.name || '');
   const [description, setDescription] = useState(group?.description || '');
@@ -43,12 +47,24 @@ export const GroupModal = ({ group, secrets, isNew }: GroupModalProps) => {
     null
   );
 
+  // Create schema with translated messages
+  const groupNameSchema = useMemo(
+    () =>
+      createGroupNameSchema({
+        required: tValidation('required'),
+        invalid: tValidation('invalid'),
+        tooShort: tValidation('tooShort'),
+        tooLong: tValidation('tooLong')
+      }),
+    [tValidation]
+  );
+
   // Validate name (computed synchronously during render)
   const nameError = useMemo(() => {
     if (!name) return null;
     const result = groupNameSchema.safeParse(name);
     return result.success ? null : result.error.issues[0].message;
-  }, [name]);
+  }, [name, groupNameSchema]);
 
   // Close modal on success
   useEffect(() => {
@@ -70,7 +86,9 @@ export const GroupModal = ({ group, secrets, isNew }: GroupModalProps) => {
             {!isNew && <input type="hidden" name="name" value={name} />}
 
             <ModalHeader>
-              {isNew ? 'Create New Group' : `Edit Group: ${group?.name}`}
+              {isNew
+                ? t('createTitle')
+                : t('editTitle', { name: group?.name || '' })}
             </ModalHeader>
 
             <ModalBody>
@@ -82,9 +100,9 @@ export const GroupModal = ({ group, secrets, isNew }: GroupModalProps) => {
 
               <Input
                 name={isNew ? 'name' : undefined}
-                label="Group Name"
-                placeholder="my_service"
-                description="Lowercase letters, numbers, underscores, and hyphens only. This will be used in the event name."
+                label={t('nameLabel')}
+                placeholder={t('namePlaceholder')}
+                description={t('nameDescription')}
                 value={name}
                 onValueChange={setName}
                 isInvalid={!!nameError}
@@ -96,16 +114,16 @@ export const GroupModal = ({ group, secrets, isNew }: GroupModalProps) => {
 
               <Textarea
                 name="description"
-                label="Description"
-                placeholder="Optional description for this group"
+                label={t('descriptionLabel')}
+                placeholder={t('descriptionPlaceholder')}
                 value={description}
                 onValueChange={setDescription}
                 className="mt-4"
               />
 
               <Select
-                label="Secrets"
-                placeholder="Select secrets to include"
+                label={t('secretsLabel')}
+                placeholder={t('secretsPlaceholder')}
                 selectionMode="multiple"
                 selectedKeys={selectedSecrets}
                 onSelectionChange={(keys) =>
@@ -134,7 +152,7 @@ export const GroupModal = ({ group, secrets, isNew }: GroupModalProps) => {
               {selectedSecrets.size > 0 && (
                 <div className="mt-4">
                   <p className="text-default-500 mb-2 text-sm">
-                    Selected secrets:
+                    {t('selectedSecretsLabel', { count: selectedSecrets.size })}
                   </p>
                   <div className="flex flex-wrap gap-1">
                     {Array.from(selectedSecrets).map((secretId) => (
@@ -159,7 +177,7 @@ export const GroupModal = ({ group, secrets, isNew }: GroupModalProps) => {
               {name && !nameError && (
                 <div className="bg-default-100 mt-4 rounded-lg p-3">
                   <p className="text-default-600 text-sm">
-                    Event name:{' '}
+                    {t('eventNameLabel')}:{' '}
                     <code className="text-primary font-mono">
                       onepassword_group_{name}_updated
                     </code>
@@ -170,7 +188,7 @@ export const GroupModal = ({ group, secrets, isNew }: GroupModalProps) => {
 
             <ModalFooter>
               <Button variant="light" onPress={onClose}>
-                Cancel
+                {tCommon('cancel')}
               </Button>
               <Button
                 color="primary"
@@ -178,7 +196,7 @@ export const GroupModal = ({ group, secrets, isNew }: GroupModalProps) => {
                 isLoading={isPending}
                 isDisabled={!!nameError || !name}
               >
-                {isNew ? 'Create Group' : 'Save Changes'}
+                {isNew ? tCommon('create') : tCommon('save')}
               </Button>
             </ModalFooter>
           </form>

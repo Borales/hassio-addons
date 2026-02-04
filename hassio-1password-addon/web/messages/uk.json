@@ -1,0 +1,159 @@
+{
+  "menu": {
+    "secrets": "Секрети",
+    "groups": "Групи",
+    "github": "Відвідати проєкт на GitHub"
+  },
+  "home": {
+    "title": "Секрети Home Assistant",
+    "description": "Керуйте та синхронізуйте свої секрети з 1Password до Home Assistant",
+    "nextSync": "Наступна синхронізація:",
+    "notSyncedYet": "Ще не синхронізовано",
+    "updateNow": "Синхронізувати зараз"
+  },
+  "groups": {
+    "title": "Групи подій",
+    "description": "Об'єднайте секрети, щоб отримувати одну подію, коли будь-який секрет у групі оновлюється",
+    "eventFormat": "Формат події:",
+    "noGroupsYet": "Групи ще не створені",
+    "createFirstGroup": "Створити першу групу →",
+    "groupCount": "{count, plural, =1 {група} few {групи} other {груп}}",
+    "modal": {
+      "createTitle": "Створити нову групу",
+      "editTitle": "Редагувати групу: {name}",
+      "nameLabel": "Назва групи",
+      "namePlaceholder": "my_service",
+      "nameDescription": "Тільки малі літери, цифри, підкреслення та дефіси. Буде використано в назві події.",
+      "descriptionLabel": "Опис",
+      "descriptionPlaceholder": "Необов'язковий опис для цієї групи",
+      "secretsLabel": "Секрети",
+      "secretsPlaceholder": "Виберіть секрети для включення",
+      "eventNameLabel": "Назва події",
+      "selectedSecretsLabel": "Вибрано: {count, plural, =0 {немає секретів} =1 {1 секрет} few {{count} секрети} other {{count} секретів}}"
+    },
+    "list": {
+      "columns": {
+        "name": "Назва групи",
+        "secrets": "Пов'язані секрети",
+        "event": "Назва події",
+        "actions": "Дії"
+      },
+      "noSecrets": "Немає пов'язаних секретів",
+      "deleteConfirm": "Ви впевнені, що хочете видалити цю групу?"
+    },
+    "actions": {
+      "newGroup": "Нова група",
+      "editGroup": "Редагувати групу",
+      "deleteGroup": "Видалити групу"
+    }
+  },
+  "secrets": {
+    "list": {
+      "columns": {
+        "secretKey": "Ключ секрету",
+        "reference": "Посилання 1Password",
+        "lastUpdated": "Останнє оновлення",
+        "actions": "Дії"
+      },
+      "status": {
+        "hidden": "Прихований",
+        "assigned": "Призначено",
+        "unassigned": "Не призначено",
+        "notLinked": "Не пов'язано"
+      },
+      "statistics": {
+        "total": "всього",
+        "assigned": "призначено",
+        "unassigned": "не призначено",
+        "hidden": "приховано"
+      },
+      "ariaLabel": "Секрети Home Assistant"
+    },
+    "modal": {
+      "title": "Призначити",
+      "searchLabel": "Пошук елементів 1Password",
+      "searchPlaceholder": "Введіть для пошуку...",
+      "loadingItems": "Завантаження елементів 1Password...",
+      "selectVault": "Спочатку виберіть сховище",
+      "vaultLabel": "Сховище",
+      "fieldItemLabel": "Поле 1password",
+      "fieldItemPlaceholder": "Поля не знайдено.",
+      "itemLabel": "Елемент",
+      "fieldLabel": "Поле",
+      "noResults": "Елементів не знайдено",
+      "selectItem": "Виберіть елемент",
+      "selectField": "Виберіть поле",
+      "refreshFields": "Оновити поля елемента"
+    }
+  },
+  "theme": {
+    "switchToDark": "Перейти на темну тему",
+    "switchToLight": "Перейти на світлу тему"
+  },
+  "locale": {
+    "switchLocale": "Змінити мову",
+    "en-us": "Англійська (США)",
+    "en-gb": "Англійська (Велика Британія)",
+    "pl": "Польська",
+    "uk": "Українська",
+    "nl": "Нідерландська",
+    "de": "Німецька"
+  },
+  "common": {
+    "loading": "Завантаження...",
+    "actions": {
+      "save": "Зберегти",
+      "cancel": "Скасувати",
+      "delete": "Видалити",
+      "edit": "Редагувати",
+      "create": "Створити",
+      "assign": "Призначити",
+      "unassign": "Скасувати призначення",
+      "show": "Показати",
+      "hide": "Приховати",
+      "refresh": "Оновити"
+    },
+    "labels": {
+      "name": "Назва",
+      "description": "Опис",
+      "actions": "Дії",
+      "status": "Статус"
+    },
+    "errors": {
+      "unknown": "Виникла невідома помилка",
+      "required": "Це поле обов'язкове",
+      "loadingFailed": "Не вдалося завантажити дані"
+    }
+  },
+  "validation": {
+    "groupName": {
+      "required": "Назва групи обов'язкова",
+      "invalid": "Назва групи повинна містити лише малі літери, цифри, підкреслення та дефіси",
+      "tooShort": "Назва групи повинна містити принаймні 1 символ",
+      "tooLong": "Назва групи повинна містити не більше 50 символів"
+    },
+    "generic": {
+      "required": "Це поле обов'язкове",
+      "invalid": "Недійсне значення"
+    }
+  },
+  "confirmDialog": {
+    "title": "Підтвердити дію",
+    "cancel": "Скасувати",
+    "confirm": "Підтвердити",
+    "delete": "Видалити"
+  },
+  "errors": {
+    "actions": {
+      "assignSecretFailed": "Не вдалося призначити секрет",
+      "unassignSecretFailed": "Не вдалося скасувати призначення секрету",
+      "toggleSkipFailed": "Не вдалося змінити статус пропуску",
+      "refreshItemFailed": "Не вдалося оновити елемент 1Password",
+      "createGroupFailed": "Не вдалося створити групу",
+      "updateGroupFailed": "Не вдалося оновити групу",
+      "deleteGroupFailed": "Не вдалося видалити групу",
+      "addSecretToGroupFailed": "Не вдалося додати секрет до групи",
+      "removeSecretFromGroupFailed": "Не вдалося видалити секрет з групи"
+    }
+  }
+}

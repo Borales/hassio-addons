@@ -1,0 +1,159 @@
+{
+  "menu": {
+    "secrets": "Sekrety",
+    "groups": "Grupy",
+    "github": "Odwiedź projekt na GitHub"
+  },
+  "home": {
+    "title": "Sekrety Home Assistant",
+    "description": "Zarządzaj i synchronizuj sekrety z 1Password do Home Assistant",
+    "nextSync": "Następna synchronizacja:",
+    "notSyncedYet": "Jeszcze nie zsynchronizowano",
+    "updateNow": "Synchronizuj teraz"
+  },
+  "groups": {
+    "title": "Grupy Zdarzeń",
+    "description": "Połącz sekrety, aby otrzymać pojedyncze zdarzenie, gdy którykolwiek sekret w grupie zostanie zaktualizowany",
+    "eventFormat": "Format zdarzenia:",
+    "noGroupsYet": "Nie utworzono jeszcze żadnych grup",
+    "createFirstGroup": "Utwórz pierwszą grupę →",
+    "groupCount": "{count, plural, =1 {grupa} few {grupy} other {grup}}",
+    "modal": {
+      "createTitle": "Utwórz nową grupę",
+      "editTitle": "Edytuj grupę: {name}",
+      "nameLabel": "Nazwa grupy",
+      "namePlaceholder": "moja_usluga",
+      "nameDescription": "Tylko małe litery, cyfry, podkreślenia i myślniki. Zostanie użyte w nazwie zdarzenia.",
+      "descriptionLabel": "Opis",
+      "descriptionPlaceholder": "Opcjonalny opis dla tej grupy",
+      "secretsLabel": "Sekrety",
+      "secretsPlaceholder": "Wybierz sekrety do uwzględnienia",
+      "eventNameLabel": "Nazwa zdarzenia",
+      "selectedSecretsLabel": "Wybrano: {count, plural, =0 {brak sekretów} =1 {1 sekret} few {{count} sekrety} other {{count} sekretów}}"
+    },
+    "list": {
+      "columns": {
+        "name": "Nazwa grupy",
+        "secrets": "Powiązane sekrety",
+        "event": "Nazwa zdarzenia",
+        "actions": "Akcje"
+      },
+      "noSecrets": "Brak powiązanych sekretów",
+      "deleteConfirm": "Czy na pewno chcesz usunąć tę grupę?"
+    },
+    "actions": {
+      "newGroup": "Nowa grupa",
+      "editGroup": "Edytuj grupę",
+      "deleteGroup": "Usuń grupę"
+    }
+  },
+  "secrets": {
+    "list": {
+      "columns": {
+        "secretKey": "Klucz sekretu",
+        "reference": "Referencja 1Password",
+        "lastUpdated": "Ostatnia aktualizacja",
+        "actions": "Akcje"
+      },
+      "status": {
+        "hidden": "Ukryty",
+        "assigned": "Przypisany",
+        "unassigned": "Nieprzypisany",
+        "notLinked": "Niepołączony"
+      },
+      "statistics": {
+        "total": "wszystkie",
+        "assigned": "przypisane",
+        "unassigned": "nieprzypisane",
+        "hidden": "ukryte"
+      },
+      "ariaLabel": "Sekrety Home Assistant"
+    },
+    "modal": {
+      "title": "Przypisz",
+      "searchLabel": "Szukaj elementów 1Password",
+      "searchPlaceholder": "Wpisz, aby wyszukać...",
+      "loadingItems": "Ładowanie elementów 1Password...",
+      "selectVault": "Najpierw wybierz sejf",
+      "vaultLabel": "Sejf",
+      "fieldItemLabel": "Pole 1password",
+      "fieldItemPlaceholder": "Nie znaleziono pól.",
+      "itemLabel": "Element",
+      "fieldLabel": "Pole",
+      "noResults": "Nie znaleziono elementów",
+      "selectItem": "Wybierz element",
+      "selectField": "Wybierz pole",
+      "refreshFields": "Odśwież pola elementu"
+    }
+  },
+  "theme": {
+    "switchToDark": "Przełącz na tryb ciemny",
+    "switchToLight": "Przełącz na tryb jasny"
+  },
+  "locale": {
+    "switchLocale": "Przełącz język",
+    "en-us": "Angielski (USA)",
+    "en-gb": "Angielski (Wielka Brytania)",
+    "pl": "Polski",
+    "uk": "Ukraiński",
+    "nl": "Niderlandzki",
+    "de": "Niemiecki"
+  },
+  "common": {
+    "loading": "Ładowanie...",
+    "actions": {
+      "save": "Zapisz",
+      "cancel": "Anuluj",
+      "delete": "Usuń",
+      "edit": "Edytuj",
+      "create": "Utwórz",
+      "assign": "Przypisz",
+      "unassign": "Odepnij",
+      "show": "Pokaż",
+      "hide": "Ukryj",
+      "refresh": "Odśwież"
+    },
+    "labels": {
+      "name": "Nazwa",
+      "description": "Opis",
+      "actions": "Akcje",
+      "status": "Status"
+    },
+    "errors": {
+      "unknown": "Wystąpił nieznany błąd",
+      "required": "To pole jest wymagane",
+      "loadingFailed": "Nie udało się załadować danych"
+    }
+  },
+  "validation": {
+    "groupName": {
+      "required": "Nazwa grupy jest wymagana",
+      "invalid": "Nazwa grupy może zawierać tylko małe litery, cyfry, podkreślenia i myślniki",
+      "tooShort": "Nazwa grupy musi mieć co najmniej 1 znak",
+      "tooLong": "Nazwa grupy może mieć maksymalnie 50 znaków"
+    },
+    "generic": {
+      "required": "To pole jest wymagane",
+      "invalid": "Nieprawidłowa wartość"
+    }
+  },
+  "confirmDialog": {
+    "title": "Potwierdź akcję",
+    "cancel": "Anuluj",
+    "confirm": "Potwierdź",
+    "delete": "Usuń"
+  },
+  "errors": {
+    "actions": {
+      "assignSecretFailed": "Nie udało się przypisać sekretu",
+      "unassignSecretFailed": "Nie udało się odpiąć sekretu",
+      "toggleSkipFailed": "Nie udało się przełączyć statusu ukrycia",
+      "refreshItemFailed": "Nie udało się odświeżyć elementu 1Password",
+      "createGroupFailed": "Nie udało się utworzyć grupy",
+      "updateGroupFailed": "Nie udało się zaktualizować grupy",
+      "deleteGroupFailed": "Nie udało się usunąć grupy",
+      "addSecretToGroupFailed": "Nie udało się dodać sekretu do grupy",
+      "removeSecretFromGroupFailed": "Nie udało się usunąć sekretu z grupy"
+    }
+  }
+}

@@ -1,8 +1,9 @@
 'use server';
 
-import { groupNameSchema } from '@/lib/group-validation';
+import { createGroupNameSchema } from '@/lib/group-validation';
 import { logger } from '@/service/client/logger';
 import { groupService } from '@/service/group.service';
+import { getTranslations } from 'next-intl/server';
 import { updateTag } from 'next/cache';
 
 export type GroupUpdateResult = {
@@ -13,6 +14,8 @@ export type GroupUpdateResult = {
 export async function updateGroup(
   formData: FormData
 ): Promise<GroupUpdateResult> {
+  const t = await getTranslations('errors.actions');
+  const tValidation = await getTranslations('validation.groupName');
   const groupId = formData.get('groupId') as string;
   const name = (formData.get('name') as string)?.trim();
   const description = (formData.get('description') as string)?.trim() || null;
@@ -26,6 +29,14 @@ export async function updateGroup(
 
   // Validate name if provided
   if (name) {
+    // Create schema with translated messages
+    const groupNameSchema = createGroupNameSchema({
+      required: tValidation('required'),
+      invalid: tValidation('invalid'),
+      tooShort: tValidation('tooShort'),
+      tooLong: tValidation('tooLong')
+    });
+
     const validation = groupNameSchema.safeParse(name);
     if (!validation.success) {
       return { success: false, error: validation.error.issues[0].message };
@@ -54,7 +65,7 @@ export async function updateGroup(
     logger.error('Failed to update group: %o', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to update group'
+      error: error instanceof Error ? error.message : t('updateGroupFailed')
     };
   }
 }

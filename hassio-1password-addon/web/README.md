@@ -4,7 +4,7 @@
 
 ## Things to do next
 
-- [ ] add i18n
+- [x] add i18n
 - [ ] add logger
 - [ ] add an ability to unassign a secret
 - [ ] add manual secret creation

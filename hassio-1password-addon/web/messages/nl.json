@@ -1,0 +1,159 @@
+{
+  "menu": {
+    "secrets": "Geheimen",
+    "groups": "Groepen",
+    "github": "Bezoek het project op GitHub"
+  },
+  "home": {
+    "title": "Home Assistant Geheimen",
+    "description": "Beheer en synchroniseer je geheimen van 1Password naar Home Assistant",
+    "nextSync": "Volgende synchronisatie:",
+    "notSyncedYet": "Nog niet gesynchroniseerd",
+    "updateNow": "Nu synchroniseren"
+  },
+  "groups": {
+    "title": "Gebeurtenisgroepen",
+    "description": "Combineer geheimen om één gebeurtenis te ontvangen wanneer een geheim in de groep wordt bijgewerkt",
+    "eventFormat": "Gebeurtenisformaat:",
+    "noGroupsYet": "Nog geen groepen aangemaakt",
+    "createFirstGroup": "Maak je eerste groep →",
+    "groupCount": "{count, plural, =1 {groep} other {groepen}}",
+    "modal": {
+      "createTitle": "Nieuwe groep maken",
+      "editTitle": "Groep bewerken: {name}",
+      "nameLabel": "Groepsnaam",
+      "namePlaceholder": "mijn_service",
+      "nameDescription": "Alleen kleine letters, cijfers, underscores en koppeltekens. Dit wordt gebruikt in de gebeurtenisnaam.",
+      "descriptionLabel": "Omschrijving",
+      "descriptionPlaceholder": "Optionele omschrijving voor deze groep",
+      "secretsLabel": "Geheimen",
+      "secretsPlaceholder": "Selecteer geheimen om op te nemen",
+      "eventNameLabel": "Gebeurtenisnaam",
+      "selectedSecretsLabel": "Geselecteerd: {count, plural, =0 {geen geheimen} =1 {1 geheim} other {{count} geheimen}}"
+    },
+    "list": {
+      "columns": {
+        "name": "Groepsnaam",
+        "secrets": "Gekoppelde geheimen",
+        "event": "Gebeurtenisnaam",
+        "actions": "Acties"
+      },
+      "noSecrets": "Geen gekoppelde geheimen",
+      "deleteConfirm": "Weet je zeker dat je deze groep wilt verwijderen?"
+    },
+    "actions": {
+      "newGroup": "Nieuwe groep",
+      "editGroup": "Groep bewerken",
+      "deleteGroup": "Groep verwijderen"
+    }
+  },
+  "secrets": {
+    "list": {
+      "columns": {
+        "secretKey": "Geheime sleutel",
+        "reference": "1Password referentie",
+        "lastUpdated": "Laatst bijgewerkt",
+        "actions": "Acties"
+      },
+      "status": {
+        "hidden": "Verborgen",
+        "assigned": "Toegewezen",
+        "unassigned": "Niet toegewezen",
+        "notLinked": "Niet gekoppeld"
+      },
+      "statistics": {
+        "total": "totaal",
+        "assigned": "toegewezen",
+        "unassigned": "niet toegewezen",
+        "hidden": "verborgen"
+      },
+      "ariaLabel": "Home Assistant geheimen"
+    },
+    "modal": {
+      "title": "Toewijzen",
+      "searchLabel": "Zoek 1Password items",
+      "searchPlaceholder": "Typ om te zoeken...",
+      "loadingItems": "1Password items laden...",
+      "selectVault": "Selecteer eerst een kluis",
+      "vaultLabel": "Kluis",
+      "fieldItemLabel": "1password veld",
+      "fieldItemPlaceholder": "Geen velden gevonden.",
+      "itemLabel": "Item",
+      "fieldLabel": "Veld",
+      "noResults": "Geen items gevonden",
+      "selectItem": "Selecteer een item",
+      "selectField": "Selecteer een veld",
+      "refreshFields": "Item velden vernieuwen"
+    }
+  },
+  "theme": {
+    "switchToDark": "Schakel over naar donkere modus",
+    "switchToLight": "Schakel over naar lichte modus"
+  },
+  "locale": {
+    "switchLocale": "Taal wijzigen",
+    "en-us": "Engels (VS)",
+    "en-gb": "Engels (VK)",
+    "pl": "Pools",
+    "uk": "Oekraïens",
+    "nl": "Nederlands",
+    "de": "Duits"
+  },
+  "common": {
+    "loading": "Laden...",
+    "actions": {
+      "save": "Opslaan",
+      "cancel": "Annuleren",
+      "delete": "Verwijderen",
+      "edit": "Bewerken",
+      "create": "Maken",
+      "assign": "Toewijzen",
+      "unassign": "Toewijzing opheffen",
+      "show": "Tonen",
+      "hide": "Verbergen",
+      "refresh": "Vernieuwen"
+    },
+    "labels": {
+      "name": "Naam",
+      "description": "Omschrijving",
+      "actions": "Acties",
+      "status": "Status"
+    },
+    "errors": {
+      "unknown": "Er is een onbekende fout opgetreden",
+      "required": "Dit veld is verplicht",
+      "loadingFailed": "Laden van gegevens mislukt"
+    }
+  },
+  "validation": {
+    "groupName": {
+      "required": "Groepsnaam is verplicht",
+      "invalid": "Groepsnaam mag alleen kleine letters, cijfers, underscores en koppeltekens bevatten",
+      "tooShort": "Groepsnaam moet minimaal 1 karakter lang zijn",
+      "tooLong": "Groepsnaam mag maximaal 50 karakters lang zijn"
+    },
+    "generic": {
+      "required": "Dit veld is verplicht",
+      "invalid": "Ongeldige waarde"
+    }
+  },
+  "confirmDialog": {
+    "title": "Actie bevestigen",
+    "cancel": "Annuleren",
+    "confirm": "Bevestigen",
+    "delete": "Verwijderen"
+  },
+  "errors": {
+    "actions": {
+      "assignSecretFailed": "Toewijzen van geheim mislukt",
+      "unassignSecretFailed": "Opheffen van toewijzing mislukt",
+      "toggleSkipFailed": "Wijzigen van overslaan-status mislukt",
+      "refreshItemFailed": "Vernieuwen van 1Password item mislukt",
+      "createGroupFailed": "Aanmaken van groep mislukt",
+      "updateGroupFailed": "Bijwerken van groep mislukt",
+      "deleteGroupFailed": "Verwijderen van groep mislukt",
+      "addSecretToGroupFailed": "Toevoegen van geheim aan groep mislukt",
+      "removeSecretFromGroupFailed": "Verwijderen van geheim uit groep mislukt"
+    }
+  }
+}

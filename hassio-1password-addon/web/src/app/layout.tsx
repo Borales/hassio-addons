@@ -4,6 +4,8 @@ import { Menu } from '@/components/menu';
 import { fontSans } from '@/config/fonts';
 import { siteConfig } from '@/config/site';
 import { Metadata, Viewport } from 'next';
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getMessages } from 'next-intl/server';
 import { Suspense } from 'react';
 import { Providers } from '../components/providers';
 
@@ -68,6 +70,18 @@ export const viewport: Viewport = {
   ]
 };
 
+async function I18nProvider({ children }: { children: React.ReactNode }) {
+  const messages = await getMessages();
+  const locale = await getLocale();
+  const now = new Date();
+
+  return (
+    <NextIntlClientProvider messages={messages} now={now} locale={locale}>
+      {children}
+    </NextIntlClientProvider>
+  );
+}
+
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -75,14 +89,20 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       <body
         className={`bg-background min-h-screen font-sans antialiased ${fontSans.variable}`}
       >
-        <Providers themeProps={{ attribute: 'class', defaultTheme: 'dark' }}>
-          <div className="relative flex h-screen flex-col">
-            <Menu />
-            <main className="container mx-auto max-w-7xl grow p-6">
-              <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
-            </main>
-          </div>
-        </Providers>
+        <Suspense fallback={null}>
+          <I18nProvider>
+            <Providers
+              themeProps={{ attribute: 'class', defaultTheme: 'dark' }}
+            >
+              <div className="relative flex h-screen flex-col">
+                <Menu />
+                <main className="container mx-auto max-w-7xl grow p-6">
+                  {children}
+                </main>
+              </div>
+            </Providers>
+          </I18nProvider>
+        </Suspense>
       </body>
     </html>
   );

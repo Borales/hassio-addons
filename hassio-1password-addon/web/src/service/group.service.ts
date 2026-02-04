@@ -1,4 +1,4 @@
-import { groupNameSchema } from '@/lib/group-validation';
+import { createGroupNameSchema } from '@/lib/group-validation';
 import { Group, SecretGroup } from '@prisma-generated/client';
 import { prisma, PrismaType } from './client/db';
 import { Logger, logger } from './client/logger';
@@ -8,6 +8,15 @@ export type GroupWithSecrets = Group & {
 };
 
 export type { Group };
+
+// Create a default schema for service-level validation (English messages)
+const groupNameSchema = createGroupNameSchema({
+  required: 'Group name is required',
+  invalid:
+    'Group name must contain only lowercase letters, numbers, underscores, and hyphens',
+  tooShort: 'Group name must be at least 1 character',
+  tooLong: 'Group name must be at most 50 characters'
+});
 
 export class GroupService {
   constructor(

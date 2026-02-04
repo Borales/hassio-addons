@@ -7,5 +7,6 @@
 
 export { ActionButtons } from './action-buttons';
 export { ChipList } from './chip-list';
+export { ConfirmDialog } from './confirm-dialog';
 export { StatisticsBar } from './statistics-bar';
 export { StatusIndicator } from './status-indicator';

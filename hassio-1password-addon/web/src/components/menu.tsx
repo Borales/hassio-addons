@@ -3,10 +3,12 @@
 import { siteConfig } from '@/config/site';
 import { Avatar } from '@heroui/react';
 import { GithubLogoIcon } from '@phosphor-icons/react';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { tv } from 'tailwind-variants';
+import { LocaleSwitch } from './locale-switch';
 import { ThemeSwitch } from './theme-switch';
 
 const navLink = tv({
@@ -20,6 +22,7 @@ const navLink = tv({
 
 export const Menu = () => {
   const pathname = usePathname();
+  const t = useTranslations('menu');
 
   return (
     <header className="bg-background/80 border-divider sticky top-0 z-50 border-b backdrop-blur-md">
@@ -36,13 +39,13 @@ export const Menu = () => {
           </Link>
           <nav className="flex items-center gap-1">
             <Link className={navLink({ active: pathname === '/' })} href="/">
-              Secrets
+              {t('secrets')}
             </Link>
             <Link
               className={navLink({ active: pathname === '/groups' })}
               href="/groups"
             >
-              Groups
+              {t('groups')}
             </Link>
           </nav>
         </div>
@@ -50,16 +53,17 @@ export const Menu = () => {
           <Link
             href="https://github.com/Borales/hassio-addons"
             target="_blank"
-            title="Visit the project on GitHub"
+            title={t('github')}
             className="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm transition-colors"
           >
             <Avatar
               size="sm"
-              title="Visit the project on GitHub"
+              title={t('github')}
               className="bg-primary-900 text-default-100"
               icon={<GithubLogoIcon size={18} weight="fill" />}
             />
           </Link>
+          <LocaleSwitch />
           <ThemeSwitch />
         </div>
       </div>

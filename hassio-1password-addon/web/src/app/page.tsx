@@ -10,11 +10,14 @@ import {
   getCachedSecrets
 } from '@/lib/cached-data';
 import { Code } from '@heroui/react';
+import { getTranslations } from 'next-intl/server';
 
 export default async function Home(props: PageProps<'/'>) {
   const searchParams = await props.searchParams;
   const page: number = Number(searchParams.page || 1);
   const activeSecretId = (searchParams.secretId || '') as string;
+
+  const t = await getTranslations('home');
 
   // Fetch all data in parallel for optimal performance
   const [nextUpdate, [items], secrets, allGroups, activeSecret] =
@@ -55,12 +58,9 @@ export default async function Home(props: PageProps<'/'>) {
 
       {/* Page header */}
       <div className="mb-6">
-        <h1 className="text-foreground text-xl font-semibold">
-          Home Assistant Secrets
-        </h1>
+        <h1 className="text-foreground text-xl font-semibold">{t('title')}</h1>
         <p className="text-default-500 mt-1 text-sm">
-          Manage and sync your secrets from 1Password to Home Assistant{' '}
-          <Code>secrets.yaml</Code>
+          {t('description')} <Code>secrets.yaml</Code>
         </p>
       </div>
 
@@ -71,11 +71,11 @@ export default async function Home(props: PageProps<'/'>) {
         <span className="text-default-500 text-sm">
           {nextUpdate && (
             <>
-              Next sync: <CustomTimeAgo date={nextUpdate} />
+              {t('nextSync')} <CustomTimeAgo date={nextUpdate} />
             </>
           )}
           {!nextUpdate && (
-            <span className="text-warning-500">Not synced yet</span>
+            <span className="text-warning-500">{t('notSyncedYet')}</span>
           )}
         </span>
         <UpdateNowBtn />

@@ -2,6 +2,7 @@
 
 import { assignSecret } from '@/actions/assign-secret';
 import { Button } from '@heroui/react';
+import { useTranslations } from 'next-intl';
 import { useFormStatus } from 'react-dom';
 
 type HASecretModalSaveProps = {
@@ -12,6 +13,7 @@ type HASecretModalSaveProps = {
 };
 
 const Submit = () => {
+  const t = useTranslations('common.actions');
   const { pending } = useFormStatus();
 
   return (
@@ -22,7 +24,7 @@ const Submit = () => {
       size="sm"
       variant="shadow"
     >
-      Save
+      {t('save')}
     </Button>
   );
 };
@@ -33,6 +35,7 @@ export const HASecretModalSave = ({
   reference,
   onClose
 }: HASecretModalSaveProps) => {
+  const t = useTranslations('common.actions');
   return (
     <form action={assignSecret}>
       <input type="hidden" name="haSecretId" value={activeSecretId} />
@@ -46,7 +49,7 @@ export const HASecretModalSave = ({
         variant="shadow"
         onClick={onClose}
       >
-        Cancel
+        {t('cancel')}
       </Button>
       <Submit />
     </form>
