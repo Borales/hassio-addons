@@ -16,10 +16,7 @@ export class SyncService {
     protected logger: Logger
   ) {}
 
-  async sync(force?: boolean): Promise<{
-    changedSecrets: string[];
-    changedGroups: Array<{ name: string; id: string; secrets: string[] }>;
-  }> {
+  async sync(force?: boolean) {
     this.logger.debug('Syncing HA secrets');
     await this.haSecretService.syncSecrets();
     this.logger.debug('Syncing 1Password items');
@@ -59,9 +56,7 @@ export class SyncService {
   /**
    * Get groups affected by the given secrets.
    */
-  private async getAffectedGroups(
-    secretNames: string[]
-  ): Promise<Array<{ name: string; id: string; secrets: string[] }>> {
+  private async getAffectedGroups(secretNames: string[]) {
     return this.groupService.getGroupsForSecrets(secretNames);
   }
 }

@@ -36,7 +36,7 @@ export class GroupService {
 
     this.logger.info('Creating group: %s', name);
 
-    const group = await this.db.group.create({
+    return this.db.group.create({
       data: {
         name,
         description,
@@ -47,8 +47,6 @@ export class GroupService {
           : undefined
       }
     });
-
-    return group;
   }
 
   /**
@@ -84,7 +82,7 @@ export class GroupService {
   /**
    * Delete a group.
    */
-  async deleteGroup(id: string): Promise<void> {
+  async deleteGroup(id: string) {
     this.logger.info('Deleting group: %s', id);
     await this.db.group.delete({ where: { id } });
   }
@@ -134,7 +132,7 @@ export class GroupService {
   /**
    * Add secrets to a group.
    */
-  async addSecretsToGroup(groupId: string, secretIds: string[]): Promise<void> {
+  async addSecretsToGroup(groupId: string, secretIds: string[]) {
     this.logger.info('Adding secrets to group %s: %o', groupId, secretIds);
 
     // Add each secret individually, ignoring duplicates
@@ -152,10 +150,7 @@ export class GroupService {
   /**
    * Remove secrets from a group.
    */
-  async removeSecretsFromGroup(
-    groupId: string,
-    secretIds: string[]
-  ): Promise<void> {
+  async removeSecretsFromGroup(groupId: string, secretIds: string[]) {
     this.logger.info('Removing secrets from group %s: %o', groupId, secretIds);
 
     await this.db.secretGroup.deleteMany({
@@ -169,7 +164,7 @@ export class GroupService {
   /**
    * Set the secrets for a group (replaces all existing).
    */
-  async setGroupSecrets(groupId: string, secretIds: string[]): Promise<void> {
+  async setGroupSecrets(groupId: string, secretIds: string[]) {
     this.logger.info('Setting secrets for group %s: %o', groupId, secretIds);
 
     await this.db.$transaction([
@@ -185,9 +180,7 @@ export class GroupService {
   /**
    * Get all groups that contain any of the given secrets.
    */
-  async getGroupsForSecrets(
-    secretIds: string[]
-  ): Promise<Array<{ id: string; name: string; secrets: string[] }>> {
+  async getGroupsForSecrets(secretIds: string[]) {
     const groups = await this.db.group.findMany({
       where: {
         secrets: {
@@ -213,10 +206,8 @@ export class GroupService {
   /**
    * Get groups that a specific secret belongs to.
    */
-  async getGroupsForSecret(
-    secretId: string
-  ): Promise<Array<{ id: string; name: string }>> {
-    const groups = await this.db.group.findMany({
+  async getGroupsForSecret(secretId: string) {
+    return this.db.group.findMany({
       where: {
         secrets: {
           some: { secretId }
@@ -224,8 +215,6 @@ export class GroupService {
       },
       select: { id: true, name: true }
     });
-
-    return groups;
   }
 }
 
