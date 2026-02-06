@@ -21,7 +21,7 @@ export const HASecretItemEdit = ({ secretId }: HASecretItemEditProps) => {
       as={Link}
       prefetch={false}
       scroll={false}
-      className="w-8 min-w-8"
+      size="sm"
     >
       <PencilIcon />
     </Button>

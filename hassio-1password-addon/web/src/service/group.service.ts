@@ -111,20 +111,6 @@ export class GroupService {
   }
 
   /**
-   * Get a group by name.
-   */
-  async getGroupByName(name: string): Promise<GroupWithSecrets | null> {
-    return this.db.group.findUnique({
-      where: { name },
-      include: {
-        secrets: {
-          select: { secretId: true, addedAt: true }
-        }
-      }
-    });
-  }
-
-  /**
    * Get all groups.
    */
   async getGroups(): Promise<GroupWithSecrets[]> {
@@ -210,20 +196,6 @@ export class GroupService {
         .map((s) => s.secretId)
         .filter((id) => secretIds.includes(id))
     }));
-  }
-
-  /**
-   * Get groups that a specific secret belongs to.
-   */
-  async getGroupsForSecret(secretId: string) {
-    return this.db.group.findMany({
-      where: {
-        secrets: {
-          some: { secretId }
-        }
-      },
-      select: { id: true, name: true }
-    });
   }
 }
 

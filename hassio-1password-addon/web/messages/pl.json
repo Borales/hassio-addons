@@ -28,6 +28,7 @@
       "descriptionPlaceholder": "Opcjonalny opis dla tej grupy",
       "secretsLabel": "Sekrety",
       "secretsPlaceholder": "Wybierz sekrety do uwzględnienia",
+      "secretsDescription": "Wybierz sekrety, które powinny wyzwalać zdarzenie tej grupy po aktualizacji.",
       "eventNameLabel": "Nazwa zdarzenia",
       "selectedSecretsLabel": "Wybrano: {count, plural, =0 {brak sekretów} =1 {1 sekret} few {{count} sekrety} other {{count} sekretów}}"
     },
@@ -151,9 +152,7 @@
       "refreshItemFailed": "Nie udało się odświeżyć elementu 1Password",
       "createGroupFailed": "Nie udało się utworzyć grupy",
       "updateGroupFailed": "Nie udało się zaktualizować grupy",
-      "deleteGroupFailed": "Nie udało się usunąć grupy",
-      "addSecretToGroupFailed": "Nie udało się dodać sekretu do grupy",
-      "removeSecretFromGroupFailed": "Nie udało się usunąć sekretu z grupy"
+      "deleteGroupFailed": "Nie udało się usunąć grupy"
     }
   }
 }

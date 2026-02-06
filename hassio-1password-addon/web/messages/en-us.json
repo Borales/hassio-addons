@@ -28,6 +28,7 @@
       "descriptionPlaceholder": "Optional description for this group",
       "secretsLabel": "Secrets",
       "secretsPlaceholder": "Select secrets to include",
+      "secretsDescription": "Select the secrets that should trigger this group's event when updated.",
       "eventNameLabel": "Event name",
       "selectedSecretsLabel": "Selected: {count, plural, =0 {no secrets} =1 {1 secret} other {{count} secrets}}"
     },
@@ -151,9 +152,7 @@
       "refreshItemFailed": "Failed to refresh 1Password item",
       "createGroupFailed": "Failed to create group",
       "updateGroupFailed": "Failed to update group",
-      "deleteGroupFailed": "Failed to delete group",
-      "addSecretToGroupFailed": "Failed to add secret to group",
-      "removeSecretFromGroupFailed": "Failed to remove secret from group"
+      "deleteGroupFailed": "Failed to delete group"
     }
   }
 }

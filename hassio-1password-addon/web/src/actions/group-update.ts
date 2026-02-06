@@ -1,6 +1,6 @@
 'use server';
 
-import { createGroupNameSchema } from '@/lib/group-validation';
+import { createTranslatedGroupNameSchema } from '@/lib/group-validation';
 import { logger } from '@/service/client/logger';
 import { groupService } from '@/service/group.service';
 import { getTranslations } from 'next-intl/server';
@@ -29,13 +29,7 @@ export async function updateGroup(
 
   // Validate name if provided
   if (name) {
-    // Create schema with translated messages
-    const groupNameSchema = createGroupNameSchema({
-      required: tValidation('required'),
-      invalid: tValidation('invalid'),
-      tooShort: tValidation('tooShort'),
-      tooLong: tValidation('tooLong')
-    });
+    const groupNameSchema = createTranslatedGroupNameSchema(tValidation);
 
     const validation = groupNameSchema.safeParse(name);
     if (!validation.success) {

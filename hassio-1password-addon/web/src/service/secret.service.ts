@@ -6,6 +6,7 @@ import {
   HomeAssistantClient
 } from './client/homeassistant';
 import { secretHelper, SecretHelper } from './client/secret';
+import { groupService, GroupService } from './group.service';
 
 export type { HaSecret };
 
@@ -13,7 +14,8 @@ export class HASecretService {
   constructor(
     protected secretHelper: SecretHelper,
     protected db: PrismaType,
-    protected haClient: HomeAssistantClient
+    protected haClient: HomeAssistantClient,
+    protected groupService: GroupService
   ) {}
 
   /**
@@ -141,51 +143,18 @@ export class HASecretService {
    * Fire events for all groups that contain any of the updated secrets.
    */
   async fireGroupEventsForSecrets(secretNames: string[]) {
-    const groups = await this.db.group.findMany({
-      where: {
-        secrets: {
-          some: { secretId: { in: secretNames } }
-        }
-      },
-      include: {
-        secrets: {
-          select: { secretId: true }
-        }
-      }
-    });
-
-    const affectedGroups = groups.map((group) => ({
-      id: group.id,
-      name: group.name,
-      secrets: group.secrets
-        .map((s) => s.secretId)
-        .filter((id) => secretNames.includes(id))
-    }));
+    const affectedGroups =
+      await this.groupService.getGroupsForSecrets(secretNames);
 
     await this.haClient.fireGroupUpdatedEventsForSecrets(affectedGroups);
 
     return affectedGroups;
-  }
-
-  /**
-   * Get groups that a specific secret belongs to.
-   */
-  async getGroupsForSecret(secretId: string) {
-    const groups = await this.db.group.findMany({
-      where: {
-        secrets: {
-          some: { secretId }
-        }
-      },
-      select: { id: true, name: true }
-    });
-
-    return groups;
   }
 }
 
 export const haSecretService = new HASecretService(
   secretHelper,
   prisma,
-  homeAssistantClient
+  homeAssistantClient,
+  groupService
 );

@@ -10,9 +10,8 @@ import { updateTag } from 'next/cache';
 export const unassignSecret = async (formData: FormData) => {
   const t = await getTranslations('errors.actions');
   const haSecretId = formData.get('haSecretId') as string;
-  logger.debug('Unassigning secret: %o', {
-    haSecretId
-  });
+
+  logger.debug('Unassigning secret: %s', haSecretId);
 
   try {
     await haSecretService.unassignSecret(haSecretId);

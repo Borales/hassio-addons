@@ -9,10 +9,8 @@ import { pagination } from 'prisma-extension-pagination';
 import { env } from 'prisma/config';
 
 export type {
-  Setting as AppSetting,
   Secret as HaSecret,
-  Item as OpItem,
-  Vault as OpVault
+  Item as OpItem
 } from '@prisma-generated/client';
 
 const adapter = new PrismaBetterSqlite3({

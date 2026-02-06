@@ -164,6 +164,7 @@ export const HASecretModal = ({
             <ModalFooter>
               <HASecretModalSave
                 onClose={onClose}
+                onSuccess={onClose}
                 activeSecretId={activeSecret?.id as string}
                 opSecretId={opSecretId}
                 reference={Array.from(reference).join(', ')}

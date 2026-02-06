@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-type ValidationMessages = {
+export type ValidationMessages = {
   required: string;
   invalid: string;
   tooShort: string;
@@ -20,26 +20,16 @@ export function createGroupNameSchema(messages: ValidationMessages) {
 }
 
 /**
- * Factory function that creates a full group schema for create/update operations with translated messages.
+ * Creates a group name validation schema using a next-intl translation function.
+ * Reduces boilerplate when creating schemas in server actions and components.
  */
-export function createGroupSchema(messages: ValidationMessages) {
-  return z.object({
-    name: createGroupNameSchema(messages),
-    description: z
-      .string()
-      .max(500, 'Description must be at most 500 characters')
-      .optional(),
-    secretIds: z.array(z.string()).optional()
+export function createTranslatedGroupNameSchema(
+  t: (key: string) => string
+) {
+  return createGroupNameSchema({
+    required: t('required'),
+    invalid: t('invalid'),
+    tooShort: t('tooShort'),
+    tooLong: t('tooLong')
   });
 }
-
-// Type inference helper - uses default English messages
-const defaultSchema = createGroupSchema({
-  required: 'Group name is required',
-  invalid:
-    'Group name must contain only lowercase letters, numbers, underscores, and hyphens',
-  tooShort: 'Group name must be at least 1 character',
-  tooLong: 'Group name must be at most 50 characters'
-});
-
-export type GroupInput = z.infer<typeof defaultSchema>;

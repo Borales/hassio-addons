@@ -28,6 +28,7 @@
       "descriptionPlaceholder": "Optionale Beschreibung für diese Gruppe",
       "secretsLabel": "Geheimnisse",
       "secretsPlaceholder": "Geheimnisse zum Einbeziehen auswählen",
+      "secretsDescription": "Wählen Sie die Geheimnisse aus, die das Ereignis dieser Gruppe bei Aktualisierung auslösen sollen.",
       "eventNameLabel": "Ereignisname",
       "selectedSecretsLabel": "Ausgewählt: {count, plural, =0 {keine Geheimnisse} =1 {1 Geheimnis} other {{count} Geheimnisse}}"
     },
@@ -151,9 +152,7 @@
       "refreshItemFailed": "Aktualisierung des 1Password-Elements fehlgeschlagen",
       "createGroupFailed": "Erstellung der Gruppe fehlgeschlagen",
       "updateGroupFailed": "Aktualisierung der Gruppe fehlgeschlagen",
-      "deleteGroupFailed": "Löschen der Gruppe fehlgeschlagen",
-      "addSecretToGroupFailed": "Hinzufügen des Geheimnisses zur Gruppe fehlgeschlagen",
-      "removeSecretFromGroupFailed": "Entfernen des Geheimnisses aus der Gruppe fehlgeschlagen"
+      "deleteGroupFailed": "Löschen der Gruppe fehlgeschlagen"
     }
   }
 }

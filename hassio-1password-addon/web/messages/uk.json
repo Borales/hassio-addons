@@ -28,6 +28,7 @@
       "descriptionPlaceholder": "Необов'язковий опис для цієї групи",
       "secretsLabel": "Секрети",
       "secretsPlaceholder": "Виберіть секрети для включення",
+      "secretsDescription": "Виберіть секрети, які повинні ініціювати подію цієї групи при оновленні.",
       "eventNameLabel": "Назва події",
       "selectedSecretsLabel": "Вибрано: {count, plural, =0 {немає секретів} =1 {1 секрет} few {{count} секрети} other {{count} секретів}}"
     },
@@ -151,9 +152,7 @@
       "refreshItemFailed": "Не вдалося оновити елемент 1Password",
       "createGroupFailed": "Не вдалося створити групу",
       "updateGroupFailed": "Не вдалося оновити групу",
-      "deleteGroupFailed": "Не вдалося видалити групу",
-      "addSecretToGroupFailed": "Не вдалося додати секрет до групи",
-      "removeSecretFromGroupFailed": "Не вдалося видалити секрет з групи"
+      "deleteGroupFailed": "Не вдалося видалити групу"
     }
   }
 }
