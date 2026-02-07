@@ -23,9 +23,7 @@ export function createGroupNameSchema(messages: ValidationMessages) {
  * Creates a group name validation schema using a next-intl translation function.
  * Reduces boilerplate when creating schemas in server actions and components.
  */
-export function createTranslatedGroupNameSchema(
-  t: (key: string) => string
-) {
+export function createTranslatedGroupNameSchema(t: (key: string) => string) {
   return createGroupNameSchema({
     required: t('required'),
     invalid: t('invalid'),

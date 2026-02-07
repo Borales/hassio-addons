@@ -26,6 +26,7 @@ export const HASecretHideToggle = ({
         type="submit"
         size="sm"
         title={isSkipped ? t('show') : t('hide')}
+        aria-label={isSkipped ? t('show') : t('hide')}
       >
         {isSkipped ? <EyeIcon /> : <EyeSlashIcon />}
       </Button>
