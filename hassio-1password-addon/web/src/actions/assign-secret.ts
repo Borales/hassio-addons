@@ -7,7 +7,14 @@ import { haSecretService } from '@/service/secret.service';
 import { getTranslations } from 'next-intl/server';
 import { updateTag } from 'next/cache';
 
-export const assignSecret = async (formData: FormData) => {
+export type AssignSecretResult = {
+  success: boolean;
+  error?: string;
+};
+
+export const assignSecret = async (
+  formData: FormData
+): Promise<AssignSecretResult> => {
   const t = await getTranslations('errors.actions');
   const haSecretId = formData.get('haSecretId') as string;
   const opSecretId = formData.get('opSecretId') as string;
@@ -32,15 +39,22 @@ export const assignSecret = async (formData: FormData) => {
     // Fire group events for any groups containing this secret
     const groups = await groupService.getGroupsForSecrets([haSecretId]);
     await homeAssistantClient.fireGroupUpdatedEventsForSecrets(groups);
+
+    updateTag('secrets');
+    updateTag(`secret-${haSecretId}`);
+    updateTag('groups');
+
+    return { success: true };
   } catch (error) {
     logger.error('Failed to assign secret: %o', error);
     await homeAssistantClient.fireErrorEvent('assign_secret_failed', {
       secretName: haSecretId,
       error: error instanceof Error ? error.message : t('assignSecretFailed')
     });
-  }
 
-  updateTag('secrets');
-  updateTag(`secret-${haSecretId}`);
-  updateTag('groups'); // Assignment affects group displays
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : t('assignSecretFailed')
+    };
+  }
 };

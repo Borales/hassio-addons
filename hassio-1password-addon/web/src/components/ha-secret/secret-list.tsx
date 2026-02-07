@@ -21,6 +21,7 @@ import { StatisticsBar } from '../ui/statistics-bar';
 import { StatusIndicator } from '../ui/status-indicator';
 import { HASecretHideToggle } from './secret-hide-toggle';
 import { HASecretItemEdit } from './secret-item-edit';
+import { HASecretUnassign } from './secret-unassign';
 
 type Item = Pick<
   HaSecret,
@@ -201,6 +202,7 @@ const ActionsCell = memo(({ item }: { item: Item }) => {
   return (
     <ActionButtons>
       {!item.isSkipped && <HASecretItemEdit secretId={item.id} />}
+      <HASecretUnassign secretId={item.id} isAssigned={!!item.itemId} />
       <HASecretHideToggle secretId={item.id} isSkipped={item.isSkipped} />
     </ActionButtons>
   );

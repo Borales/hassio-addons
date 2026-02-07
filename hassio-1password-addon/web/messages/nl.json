@@ -28,6 +28,7 @@
       "descriptionPlaceholder": "Optionele omschrijving voor deze groep",
       "secretsLabel": "Geheimen",
       "secretsPlaceholder": "Selecteer geheimen om op te nemen",
+      "secretsDescription": "Selecteer de geheimen die de gebeurtenis van deze groep moeten activeren bij een update.",
       "eventNameLabel": "Gebeurtenisnaam",
       "selectedSecretsLabel": "Geselecteerd: {count, plural, =0 {geen geheimen} =1 {1 geheim} other {{count} geheimen}}"
     },
@@ -151,9 +152,7 @@
       "refreshItemFailed": "Vernieuwen van 1Password item mislukt",
       "createGroupFailed": "Aanmaken van groep mislukt",
       "updateGroupFailed": "Bijwerken van groep mislukt",
-      "deleteGroupFailed": "Verwijderen van groep mislukt",
-      "addSecretToGroupFailed": "Toevoegen van geheim aan groep mislukt",
-      "removeSecretFromGroupFailed": "Verwijderen van geheim uit groep mislukt"
+      "deleteGroupFailed": "Verwijderen van groep mislukt"
     }
   }
 }

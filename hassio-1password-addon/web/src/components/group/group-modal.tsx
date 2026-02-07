@@ -2,7 +2,7 @@
 
 import { createGroup } from '@/actions/group-create';
 import { updateGroup } from '@/actions/group-update';
-import { createGroupNameSchema } from '@/lib/group-validation';
+import { createTranslatedGroupNameSchema } from '@/lib/group-validation';
 import { GroupWithSecrets } from '@/service/group.service';
 import {
   Button,
@@ -49,13 +49,7 @@ export const GroupModal = ({ group, secrets, isNew }: GroupModalProps) => {
 
   // Create schema with translated messages
   const groupNameSchema = useMemo(
-    () =>
-      createGroupNameSchema({
-        required: tValidation('required'),
-        invalid: tValidation('invalid'),
-        tooShort: tValidation('tooShort'),
-        tooLong: tValidation('tooLong')
-      }),
+    () => createTranslatedGroupNameSchema(tValidation),
     [tValidation]
   );
 
@@ -130,7 +124,7 @@ export const GroupModal = ({ group, secrets, isNew }: GroupModalProps) => {
                   setSelectedSecrets(keys as Set<string>)
                 }
                 className="mt-4"
-                description="Select the secrets that should trigger this group's event when updated."
+                description={t('secretsDescription')}
               >
                 {secrets
                   .filter((s) => !s.isSkipped && s.itemId)

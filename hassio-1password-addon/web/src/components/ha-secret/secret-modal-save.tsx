@@ -3,55 +3,66 @@
 import { assignSecret } from '@/actions/assign-secret';
 import { Button } from '@heroui/react';
 import { useTranslations } from 'next-intl';
-import { useFormStatus } from 'react-dom';
+import { useActionState } from 'react';
 
 type HASecretModalSaveProps = {
   activeSecretId: string;
   opSecretId: string | number;
   reference: string;
   onClose: () => void;
-};
-
-const Submit = () => {
-  const t = useTranslations('common.actions');
-  const { pending } = useFormStatus();
-
-  return (
-    <Button
-      isLoading={pending}
-      type="submit"
-      color="primary"
-      size="sm"
-      variant="shadow"
-    >
-      {t('save')}
-    </Button>
-  );
+  onSuccess?: () => void;
 };
 
 export const HASecretModalSave = ({
   activeSecretId,
   opSecretId,
   reference,
-  onClose
+  onClose,
+  onSuccess
 }: HASecretModalSaveProps) => {
   const t = useTranslations('common.actions');
-  return (
-    <form action={assignSecret}>
-      <input type="hidden" name="haSecretId" value={activeSecretId} />
-      <input type="hidden" name="opSecretId" value={opSecretId} />
-      <input type="hidden" name="ref" value={reference} />
+  const [state, formAction, isPending] = useActionState(
+    async (_prevState: unknown, formData: FormData) => {
+      const result = await assignSecret(formData);
+      if (result.success && onSuccess) {
+        onSuccess();
+      }
+      return result;
+    },
+    null
+  );
 
-      <Button
-        color="default"
-        size="sm"
-        className="mr-4"
-        variant="shadow"
-        onClick={onClose}
-      >
-        {t('cancel')}
-      </Button>
-      <Submit />
-    </form>
+  return (
+    <>
+      {state && !state.success && state.error && (
+        <div className="bg-danger-50 text-danger mb-4 rounded-lg p-3 text-sm">
+          {state.error}
+        </div>
+      )}
+      <form action={formAction} className="flex w-full justify-end gap-2">
+        <input type="hidden" name="haSecretId" value={activeSecretId} />
+        <input type="hidden" name="opSecretId" value={opSecretId} />
+        <input type="hidden" name="ref" value={reference} />
+
+        <Button
+          color="default"
+          size="sm"
+          variant="light"
+          onPress={onClose}
+          isDisabled={isPending}
+        >
+          {t('cancel')}
+        </Button>
+        <Button
+          type="submit"
+          color="primary"
+          size="sm"
+          isLoading={isPending}
+          isDisabled={!opSecretId || !reference}
+        >
+          {t('save')}
+        </Button>
+      </form>
+    </>
   );
 };

@@ -7,7 +7,6 @@ import {
 } from './client/1password';
 import {
   HaSecret,
-  OpVault,
   OpItem as PrismaOpItem,
   PrismaType,
   prisma
@@ -19,7 +18,7 @@ type OpItem = Omit<PrismaOpItem, 'urls' | 'fields'> & {
   fields: Field[];
 };
 
-export type { HaSecret, OpItem, OpVault };
+export type { HaSecret, OpItem };
 
 const NEXT_UPDATE_KEY = 'nextUpdate';
 
@@ -274,24 +273,6 @@ export class OnePasswordService {
         limit: params.pagination?.limit || 20,
         page: params.pagination?.page || 1
       });
-  }
-
-  async getItem(id: string, vaultId: string) {
-    return this.db.item.findUnique({ where: { id, vaultId } });
-  }
-
-  /**
-   * Get all vaults.
-   */
-  async getVaults() {
-    return this.db.vault.findMany();
-  }
-
-  /**
-   * Get a vault by its ID.
-   */
-  async getVault(id: string) {
-    return this.db.vault.findUnique({ where: { id } });
   }
 
   /**
