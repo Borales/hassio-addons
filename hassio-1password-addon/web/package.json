@@ -27,7 +27,7 @@
     "@prisma/client": "^7.3.0",
     "axios": "^1.13.4",
     "better-sqlite3": "^12.6.2",
-    "dotenv": "^17.2.3",
+    "dotenv": "^17.2.4",
     "framer-motion": "^12.31.1",
     "glob": "^13.0.1",
     "home-assistant-js-websocket": "^9.6.0",
