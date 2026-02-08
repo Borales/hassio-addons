@@ -34,7 +34,8 @@ export const UsageCard = ({
   const t = useTranslations('rateLimits.card');
   const [secondsUntilReset, setSecondsUntilReset] = useState<number>(0);
 
-  const percentage = (used / limit) * 100;
+  const rawPercentage = limit > 0 ? (used / limit) * 100 : 0;
+  const percentage = Math.min(100, Math.max(0, rawPercentage));
 
   const usageLevel =
     percentage >= 90

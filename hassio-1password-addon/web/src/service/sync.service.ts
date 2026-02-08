@@ -37,7 +37,11 @@ export class SyncService {
 
     // Refresh rate limits after sync to keep stats current
     this.logger.debug('Refreshing rate limits');
-    await this.rateLimitService.fetchAndStore();
+    try {
+      await this.rateLimitService.fetchAndStore();
+    } catch (error) {
+      this.logger.error('Failed to refresh rate limits', error);
+    }
 
     if (changedSecrets.length === 0) {
       return { changedSecrets: [], changedGroups: [] };
