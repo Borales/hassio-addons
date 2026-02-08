@@ -12,7 +12,7 @@ HA_CONFIG_FOLDER=/config
 HA_URL=http://supervisor/core/api
 
 OP_TTR="$(bashio::config 'checkIntervalMin')"
-OP_DB_URL="file:/data/onepassword_app_store.db?connection_limit=1"
+OP_DB_URL="file:/data/onepassword_app_store.db"
 OP_SERVICE_ACCOUNT_TOKEN="$(bashio::config 'serviceAccountToken')"
 APP_LOG_LEVEL="$(bashio::config 'logLevel')"
 
