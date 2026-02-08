@@ -13,6 +13,11 @@ const nextConfig: NextConfig = {
   experimental: {
     turbopackFileSystemCacheForDev: true
   },
+  turbopack: {
+    resolveAlias: {
+      'node:buffer': 'node_buffer'
+    }
+  },
   images: {
     remotePatterns: [
       {
