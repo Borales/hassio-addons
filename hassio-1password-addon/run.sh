@@ -30,8 +30,16 @@ fi
 
 # Run Prisma migrations
 bashio::log.info "Running Prisma migrations on ${OP_DB_URL}..."
+bashio::log.info "Node version: $(node --version)"
 
-cd /app && OP_DB_URL=${OP_DB_URL} npm exec -- prisma migrate deploy
+cd /app || exit 1
+
+if ! node node_modules/.bin/prisma migrate deploy; then
+  bashio::log.fatal "Prisma migration failed. Check the logs above for details."
+  exit 1
+fi
+
+bashio::log.info "Prisma migrations completed successfully"
 
 # run the web-app
 bashio::log.info "Starting the app..."
