@@ -22,6 +22,7 @@ export async function GET(request: NextRequest) {
     updateTag('op-items');
     updateTag('op-metadata');
     updateTag('secrets');
+    updateTag('rate-limits');
 
     // Only invalidate groups if they were actually changed
     if (result.changedGroups.length > 0) {

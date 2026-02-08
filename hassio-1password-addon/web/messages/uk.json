@@ -2,6 +2,7 @@
   "menu": {
     "secrets": "Секрети",
     "groups": "Групи",
+    "rateLimits": "Ліміти запитів",
     "github": "Відвідати проєкт на GitHub"
   },
   "home": {
@@ -10,6 +11,10 @@
     "nextSync": "Наступна синхронізація:",
     "notSyncedYet": "Ще не синхронізовано",
     "updateNow": "Синхронізувати зараз"
+  },
+  "serviceAccountWarning": {
+    "title": "Потрібен токен службового облікового запису 1Password",
+    "description": "Будь ласка, налаштуйте токен службового облікового запису 1Password у конфігурації додатку, щоб увімкнути синхронізацію секретів."
   },
   "groups": {
     "title": "Групи подій",
@@ -48,6 +53,47 @@
       "deleteGroup": "Видалити групу"
     }
   },
+  "rateLimits": {
+    "title": "Ліміти запитів 1Password",
+    "description": "Відстежуйте використання API та ліміти сервісного облікового запису 1Password",
+    "noDataYet": "Дані про ліміти ще не доступні. Дані будуть отримані автоматично.",
+    "lastUpdated": "Останнє оновлення",
+    "refreshButton": "Оновити зараз",
+    "daily": {
+      "title": "Денні запити",
+      "description": "Загальна кількість запитів API на день (усі сервісні облікові записи разом)"
+    },
+    "hourlyReads": {
+      "title": "Годинні читання",
+      "description": "Операції читання на годину (цей сервісний обліковий запис)"
+    },
+    "card": {
+      "usage": "Використання",
+      "percentUsed": "{percent}% використано",
+      "remaining": "{count} залишилось",
+      "progressLabel": "{title} використання: {percentage}%",
+      "noReset": "Немає активного ліміту",
+      "resetsInHours": "Скидання через {hours}г {minutes}хв",
+      "resetsInMinutes": "Скидання через {minutes}хв"
+    },
+    "warning": {
+      "title": "Попередження про ліміт запитів 1Password",
+      "description": "наближається до 90% ліміту.",
+      "viewDetails": "Переглянути деталі",
+      "labels": {
+        "daily": "Денні запити",
+        "hourlyReads": "Годинне читання"
+      }
+    },
+    "info": {
+      "title": "Про ліміти запитів",
+      "description": "1Password застосовує ліміти запитів для використання API сервісного облікового запису для забезпечення стабільності системи. Ці ліміти відрізняються залежно від рівня облікового запису.",
+      "dailyLimit": "Денний ліміт",
+      "requests": "{count} запитів",
+      "hourlyReadLimit": "Годинний ліміт читання",
+      "readOnlyNote": "Цей додаток лише читає дані з 1Password."
+    }
+  },
   "secrets": {
     "list": {
       "columns": {
@@ -75,16 +121,8 @@
       "searchLabel": "Пошук елементів 1Password",
       "searchPlaceholder": "Введіть для пошуку...",
       "loadingItems": "Завантаження елементів 1Password...",
-      "selectVault": "Спочатку виберіть сховище",
-      "vaultLabel": "Сховище",
       "fieldItemLabel": "Поле 1password",
-      "fieldItemPlaceholder": "Поля не знайдено.",
-      "itemLabel": "Елемент",
-      "fieldLabel": "Поле",
-      "noResults": "Елементів не знайдено",
-      "selectItem": "Виберіть елемент",
-      "selectField": "Виберіть поле",
-      "refreshFields": "Оновити поля елемента"
+      "fieldItemPlaceholder": "Поля не знайдено."
     }
   },
   "theme": {
@@ -114,16 +152,9 @@
       "hide": "Приховати",
       "refresh": "Оновити"
     },
-    "labels": {
-      "name": "Назва",
-      "description": "Опис",
-      "actions": "Дії",
-      "status": "Статус"
-    },
+
     "errors": {
-      "unknown": "Виникла невідома помилка",
-      "required": "Це поле обов'язкове",
-      "loadingFailed": "Не вдалося завантажити дані"
+      "required": "Це поле обов'язкове"
     }
   },
   "validation": {
@@ -132,10 +163,6 @@
       "invalid": "Назва групи повинна містити лише малі літери, цифри, підкреслення та дефіси",
       "tooShort": "Назва групи повинна містити принаймні 1 символ",
       "tooLong": "Назва групи повинна містити не більше 50 символів"
-    },
-    "generic": {
-      "required": "Це поле обов'язкове",
-      "invalid": "Недійсне значення"
     }
   },
   "confirmDialog": {

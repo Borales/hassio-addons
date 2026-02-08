@@ -47,6 +47,12 @@ export const Menu = () => {
             >
               {t('groups')}
             </Link>
+            <Link
+              className={navLink({ active: pathname === '/rate-limits' })}
+              href="/rate-limits"
+            >
+              {t('rateLimits')}
+            </Link>
           </nav>
         </div>
         <div className="flex items-center gap-4">

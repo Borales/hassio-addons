@@ -2,6 +2,7 @@
   "menu": {
     "secrets": "Secrets",
     "groups": "Groups",
+    "rateLimits": "Rate Limits",
     "github": "Visit the project on GitHub"
   },
   "home": {
@@ -10,6 +11,10 @@
     "nextSync": "Next sync:",
     "notSyncedYet": "Not synchronised yet",
     "updateNow": "Sync Now"
+  },
+  "serviceAccountWarning": {
+    "title": "1Password Service Account Token Required",
+    "description": "Please configure your 1Password service account token in the add-on configuration to enable secret synchronisation."
   },
   "groups": {
     "title": "Event Groups",
@@ -48,6 +53,47 @@
       "deleteGroup": "Delete group"
     }
   },
+  "rateLimits": {
+    "title": "1Password Rate Limits",
+    "description": "Monitor your 1Password service account API usage and limits",
+    "noDataYet": "No rate limit data available yet. Data will be fetched automatically.",
+    "lastUpdated": "Last updated",
+    "refreshButton": "Refresh Now",
+    "daily": {
+      "title": "Daily Requests",
+      "description": "Total API requests per day (all service accounts combined)"
+    },
+    "hourlyReads": {
+      "title": "Hourly Reads",
+      "description": "Read operations per hour (this service account)"
+    },
+    "card": {
+      "usage": "Usage",
+      "percentUsed": "{percent}% used",
+      "remaining": "{count} remaining",
+      "progressLabel": "{title} usage: {percentage}%",
+      "noReset": "No active limit",
+      "resetsInHours": "Resets in {hours}h {minutes}m",
+      "resetsInMinutes": "Resets in {minutes}m"
+    },
+    "warning": {
+      "title": "1Password rate limit warning",
+      "description": "approaching 90% of limit.",
+      "viewDetails": "View details",
+      "labels": {
+        "daily": "Daily requests",
+        "hourlyReads": "Hourly reads"
+      }
+    },
+    "info": {
+      "title": "About Rate Limits",
+      "description": "1Password enforces rate limits on service account API usage to ensure system stability. These limits vary by account tier.",
+      "dailyLimit": "Daily limit",
+      "requests": "{count} requests",
+      "hourlyReadLimit": "Hourly read limit",
+      "readOnlyNote": "This add-on only reads data from 1Password."
+    }
+  },
   "secrets": {
     "list": {
       "columns": {
@@ -75,16 +121,8 @@
       "searchLabel": "Search 1Password items",
       "searchPlaceholder": "Type to search...",
       "loadingItems": "Loading 1Password items...",
-      "selectVault": "Select a vault first",
-      "vaultLabel": "Vault",
       "fieldItemLabel": "1password field",
-      "fieldItemPlaceholder": "No fields found.",
-      "itemLabel": "Item",
-      "fieldLabel": "Field",
-      "noResults": "No items found",
-      "selectItem": "Select an item",
-      "selectField": "Select a field",
-      "refreshFields": "Refresh item fields"
+      "fieldItemPlaceholder": "No fields found."
     }
   },
   "theme": {
@@ -114,16 +152,9 @@
       "hide": "Hide",
       "refresh": "Refresh"
     },
-    "labels": {
-      "name": "Name",
-      "description": "Description",
-      "actions": "Actions",
-      "status": "Status"
-    },
+
     "errors": {
-      "unknown": "An unknown error occurred",
-      "required": "This field is required",
-      "loadingFailed": "Failed to load data"
+      "required": "This field is required"
     }
   },
   "validation": {
@@ -132,10 +163,6 @@
       "invalid": "Group name must contain only lowercase letters, numbers, underscores, and hyphens",
       "tooShort": "Group name must be at least 1 character",
       "tooLong": "Group name must be at most 50 characters"
-    },
-    "generic": {
-      "required": "This field is required",
-      "invalid": "Invalid value"
     }
   },
   "confirmDialog": {

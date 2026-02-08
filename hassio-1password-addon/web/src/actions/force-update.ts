@@ -13,4 +13,5 @@ export const forceUpdateNow = async () => {
   updateTag('op-metadata');
   updateTag('secrets');
   updateTag('groups');
+  updateTag('rate-limits');
 };
