@@ -33,9 +33,7 @@ COPY web/public ./public
 COPY web/.next/static ./.next/static
 COPY web/.next/standalone ./
 COPY web/prisma ./prisma
-COPY web/node_modules/.bin ./node_modules/.bin
-COPY web/node_modules/@prisma ./node_modules/@prisma
-COPY web/node_modules/prisma ./node_modules/prisma
+COPY web/node_modules/ ./node_modules/
 
 EXPOSE $PORT
 CMD ["/run.sh"]
