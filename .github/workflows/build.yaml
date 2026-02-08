@@ -90,7 +90,7 @@ jobs:
             ${{ runner.os }}-pnpm-store-
       - run: pnpm install --frozen-lockfile
         working-directory: ./${{ matrix.addon }}/web
-      - run: pnpm build
+      - run: OP_DB_URL=1 pnpm build
         working-directory: ./${{ matrix.addon }}/web
       - uses: actions/upload-artifact@v6.0.0
         with:
