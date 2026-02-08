@@ -5,6 +5,7 @@ import { prisma } from '@/service/client/db';
 import { homeAssistantClient } from '@/service/client/homeassistant';
 import { logger } from '@/service/client/logger';
 import { groupService } from '@/service/group.service';
+import { rateLimitService } from '@/service/ratelimit.service';
 import { getTranslations } from 'next-intl/server';
 import { updateTag } from 'next/cache';
 
@@ -18,7 +19,14 @@ export const fetchOpItemFields = async (
   const t = await getTranslations('errors.actions');
   try {
     await onePasswordService.syncItem(opSecretId, opVaultId);
+
+    // Fetch rate limits in background (non-blocking)
+    rateLimitService.fetchAndStore().catch((err) => {
+      logger.error('Failed to fetch rate limits in background: %o', err);
+    });
+
     updateTag('op-items');
+    updateTag('rate-limits');
 
     // Return the updated item (serialize to plain object for client component)
     const item = await prisma.item.findUnique({
@@ -50,6 +58,11 @@ export const refreshOpSecret = async (formData: FormData) => {
   try {
     await onePasswordService.syncItem(opSecretId, opVaultId);
 
+    // Fetch rate limits in background (non-blocking)
+    rateLimitService.fetchAndStore().catch((err) => {
+      logger.error('Failed to fetch rate limits in background: %o', err);
+    });
+
     // Find secrets affected by this item refresh
     const affectedSecrets = await prisma.secret.findMany({
       where: { itemId: opSecretId },
@@ -79,4 +92,5 @@ export const refreshOpSecret = async (formData: FormData) => {
   updateTag('op-items');
   updateTag('secrets');
   updateTag('groups'); // Refresh affects group displays
+  updateTag('rate-limits');
 };

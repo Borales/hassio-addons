@@ -2,6 +2,7 @@
   "menu": {
     "secrets": "Sekrety",
     "groups": "Grupy",
+    "rateLimits": "Limity zapytań",
     "github": "Odwiedź projekt na GitHub"
   },
   "home": {
@@ -10,6 +11,10 @@
     "nextSync": "Następna synchronizacja:",
     "notSyncedYet": "Jeszcze nie zsynchronizowano",
     "updateNow": "Synchronizuj teraz"
+  },
+  "serviceAccountWarning": {
+    "title": "Wymagany token konta serwisowego 1Password",
+    "description": "Skonfiguruj token konta serwisowego 1Password w konfiguracji dodatku, aby włączyć synchronizację sekretów."
   },
   "groups": {
     "title": "Grupy Zdarzeń",
@@ -48,6 +53,47 @@
       "deleteGroup": "Usuń grupę"
     }
   },
+  "rateLimits": {
+    "title": "Limity zapytań 1Password",
+    "description": "Monitoruj użycie API i limity konta usługowego 1Password",
+    "noDataYet": "Brak dostępnych danych o limitach. Dane zostaną pobrane automatycznie.",
+    "lastUpdated": "Ostatnia aktualizacja",
+    "refreshButton": "Odśwież teraz",
+    "daily": {
+      "title": "Dzienne zapytania",
+      "description": "Łączna liczba zapytań API dziennie (wszystkie konta usługowe łącznie)"
+    },
+    "hourlyReads": {
+      "title": "Odczyty godzinowe",
+      "description": "Operacje odczytu na godzinę (to konto usługowe)"
+    },
+    "card": {
+      "usage": "Użycie",
+      "percentUsed": "{percent}% wykorzystane",
+      "remaining": "{count} pozostało",
+      "progressLabel": "{title} wykorzystanie: {percentage}%",
+      "noReset": "Brak aktywnego limitu",
+      "resetsInHours": "Reset za {hours}h {minutes}m",
+      "resetsInMinutes": "Reset za {minutes}m"
+    },
+    "warning": {
+      "title": "Ostrzeżenie limitu zapytań 1Password",
+      "description": "zbliża się do 90% limitu.",
+      "viewDetails": "Wyświetl szczegóły",
+      "labels": {
+        "daily": "Dzienne zapytania",
+        "hourlyReads": "Odczyty godzinowe"
+      }
+    },
+    "info": {
+      "title": "O limitach zapytań",
+      "description": "1Password wymusza limity zapytań dla użycia API konta usługowego, aby zapewnić stabilność systemu. Limity te różnią się w zależności od poziomu konta.",
+      "dailyLimit": "Dzienny limit",
+      "requests": "{count} zapytań",
+      "hourlyReadLimit": "Godzinowy limit odczytu",
+      "readOnlyNote": "To dodatek tylko odczytuje dane z 1Password."
+    }
+  },
   "secrets": {
     "list": {
       "columns": {
@@ -75,16 +121,8 @@
       "searchLabel": "Szukaj elementów 1Password",
       "searchPlaceholder": "Wpisz, aby wyszukać...",
       "loadingItems": "Ładowanie elementów 1Password...",
-      "selectVault": "Najpierw wybierz sejf",
-      "vaultLabel": "Sejf",
       "fieldItemLabel": "Pole 1password",
-      "fieldItemPlaceholder": "Nie znaleziono pól.",
-      "itemLabel": "Element",
-      "fieldLabel": "Pole",
-      "noResults": "Nie znaleziono elementów",
-      "selectItem": "Wybierz element",
-      "selectField": "Wybierz pole",
-      "refreshFields": "Odśwież pola elementu"
+      "fieldItemPlaceholder": "Nie znaleziono pól."
     }
   },
   "theme": {
@@ -114,16 +152,9 @@
       "hide": "Ukryj",
       "refresh": "Odśwież"
     },
-    "labels": {
-      "name": "Nazwa",
-      "description": "Opis",
-      "actions": "Akcje",
-      "status": "Status"
-    },
+
     "errors": {
-      "unknown": "Wystąpił nieznany błąd",
-      "required": "To pole jest wymagane",
-      "loadingFailed": "Nie udało się załadować danych"
+      "required": "To pole jest wymagane"
     }
   },
   "validation": {
@@ -132,10 +163,6 @@
       "invalid": "Nazwa grupy może zawierać tylko małe litery, cyfry, podkreślenia i myślniki",
       "tooShort": "Nazwa grupy musi mieć co najmniej 1 znak",
       "tooLong": "Nazwa grupy może mieć maksymalnie 50 znaków"
-    },
-    "generic": {
-      "required": "To pole jest wymagane",
-      "invalid": "Nieprawidłowa wartość"
     }
   },
   "confirmDialog": {

@@ -14,6 +14,7 @@
 
 import { onePasswordService } from '@/service/1password.service';
 import { groupService } from '@/service/group.service';
+import { rateLimitService } from '@/service/ratelimit.service';
 import { haSecretService } from '@/service/secret.service';
 import { cacheLife, cacheTag } from 'next/cache';
 
@@ -102,4 +103,32 @@ export async function getCachedNextUpdate() {
 
   const nextUpdate = await onePasswordService.getNextUpdate();
   return serialize(nextUpdate);
+}
+
+/**
+ * Get rate limit data with caching
+ * Tags: 'rate-limits'
+ * Lifetime: ~60 seconds (minutes profile)
+ */
+export async function getCachedRateLimits() {
+  cacheTag('rate-limits');
+  cacheLife('minutes');
+
+  const rateLimits = await rateLimitService.getRateLimits();
+  return serialize(rateLimits);
+}
+
+/**
+ * Check if rate limit warning should be shown with caching
+ * Tags: 'rate-limits'
+ * Lifetime: ~60 seconds (minutes profile)
+ */
+export async function getCachedRateLimitWarning() {
+  cacheTag('rate-limits');
+  cacheLife('minutes');
+
+  const shouldShow = await rateLimitService.shouldShowWarning();
+  const warnings = shouldShow ? await rateLimitService.getWarningLimits() : [];
+
+  return serialize({ shouldShow, warnings });
 }

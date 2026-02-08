@@ -78,7 +78,7 @@ model Vault {
 model Setting {
   id        String   @id
   value     String
-  updatedAt DateTime @default(now()) @map("updated_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("settings")
 }

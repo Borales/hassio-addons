@@ -5,6 +5,7 @@ import {
 } from './client/homeassistant';
 import { Logger, logger } from './client/logger';
 import { groupService, GroupService } from './group.service';
+import { rateLimitService, RateLimitService } from './ratelimit.service';
 import { haSecretService, HASecretService } from './secret.service';
 
 export class SyncService {
@@ -12,6 +13,7 @@ export class SyncService {
     protected onePasswordService: OnePasswordService,
     protected haSecretService: HASecretService,
     protected groupService: GroupService,
+    protected rateLimitService: RateLimitService,
     protected haClient: HomeAssistantClient,
     protected logger: Logger
   ) {}
@@ -32,6 +34,14 @@ export class SyncService {
     );
     const changedSecrets =
       await this.haSecretService.saveSecrets(newlyUpdatedItems);
+
+    // Refresh rate limits after sync to keep stats current
+    this.logger.debug('Refreshing rate limits');
+    try {
+      await this.rateLimitService.fetchAndStore();
+    } catch (error) {
+      this.logger.error('Failed to refresh rate limits', error);
+    }
 
     if (changedSecrets.length === 0) {
       return { changedSecrets: [], changedGroups: [] };
@@ -65,6 +75,7 @@ export const syncService = new SyncService(
   onePasswordService,
   haSecretService,
   groupService,
+  rateLimitService,
   homeAssistantClient,
   logger
 );

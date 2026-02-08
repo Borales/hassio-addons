@@ -2,6 +2,7 @@
   "menu": {
     "secrets": "Geheimnisse",
     "groups": "Gruppen",
+    "rateLimits": "Ratenbegrenzungen",
     "github": "Projekt auf GitHub besuchen"
   },
   "home": {
@@ -10,6 +11,10 @@
     "nextSync": "Nächste Synchronisation:",
     "notSyncedYet": "Noch nicht synchronisiert",
     "updateNow": "Jetzt synchronisieren"
+  },
+  "serviceAccountWarning": {
+    "title": "1Password Service-Account-Token erforderlich",
+    "description": "Bitte konfigurieren Sie Ihr 1Password Service-Account-Token in der Add-on-Konfiguration, um die Geheimnis-Synchronisation zu aktivieren."
   },
   "groups": {
     "title": "Ereignisgruppen",
@@ -48,6 +53,47 @@
       "deleteGroup": "Gruppe löschen"
     }
   },
+  "rateLimits": {
+    "title": "1Password Ratenbegrenzungen",
+    "description": "Überwachen Sie die API-Nutzung und Limits Ihres 1Password-Dienstkontos",
+    "noDataYet": "Noch keine Ratenbegrenzungsdaten verfügbar. Daten werden automatisch abgerufen.",
+    "lastUpdated": "Zuletzt aktualisiert",
+    "refreshButton": "Jetzt aktualisieren",
+    "daily": {
+      "title": "Tägliche Anfragen",
+      "description": "Gesamt-API-Anfragen pro Tag (alle Dienstkonten kombiniert)"
+    },
+    "hourlyReads": {
+      "title": "Stündliche Lesevorgänge",
+      "description": "Lesevorgänge pro Stunde (dieses Dienstkonto)"
+    },
+    "card": {
+      "usage": "Nutzung",
+      "percentUsed": "{percent}% genutzt",
+      "remaining": "{count} verbleibend",
+      "progressLabel": "{title} Nutzung: {percentage}%",
+      "noReset": "Kein aktives Limit",
+      "resetsInHours": "Zurücksetzung in {hours}h {minutes}m",
+      "resetsInMinutes": "Zurücksetzung in {minutes}m"
+    },
+    "warning": {
+      "title": "1Password Ratenbegrenzungswarnung",
+      "description": "nähert sich 90% des Limits.",
+      "viewDetails": "Details anzeigen",
+      "labels": {
+        "daily": "Tägliche Anfragen",
+        "hourlyReads": "Stündliche Lesevorgänge"
+      }
+    },
+    "info": {
+      "title": "Über Ratenbegrenzungen",
+      "description": "1Password setzt Ratenbegrenzungen für die API-Nutzung von Dienstkonten durch, um die Systemstabilität zu gewährleisten. Diese Limits variieren je nach Kontostufe.",
+      "dailyLimit": "Tageslimit",
+      "requests": "{count} Anfragen",
+      "hourlyReadLimit": "Stündliches Leselimit",
+      "readOnlyNote": "Dieses Add-on liest nur Daten von 1Password."
+    }
+  },
   "secrets": {
     "list": {
       "columns": {
@@ -75,16 +121,8 @@
       "searchLabel": "1Password-Elemente suchen",
       "searchPlaceholder": "Zum Suchen eingeben...",
       "loadingItems": "1Password-Elemente werden geladen...",
-      "selectVault": "Wählen Sie zuerst einen Tresor",
-      "vaultLabel": "Tresor",
       "fieldItemLabel": "1password-Feld",
-      "fieldItemPlaceholder": "Keine Felder gefunden.",
-      "itemLabel": "Element",
-      "fieldLabel": "Feld",
-      "noResults": "Keine Elemente gefunden",
-      "selectItem": "Element auswählen",
-      "selectField": "Feld auswählen",
-      "refreshFields": "Elementfelder aktualisieren"
+      "fieldItemPlaceholder": "Keine Felder gefunden."
     }
   },
   "theme": {
@@ -114,16 +152,9 @@
       "hide": "Verbergen",
       "refresh": "Aktualisieren"
     },
-    "labels": {
-      "name": "Name",
-      "description": "Beschreibung",
-      "actions": "Aktionen",
-      "status": "Status"
-    },
+
     "errors": {
-      "unknown": "Ein unbekannter Fehler ist aufgetreten",
-      "required": "Dieses Feld ist erforderlich",
-      "loadingFailed": "Laden der Daten fehlgeschlagen"
+      "required": "Dieses Feld ist erforderlich"
     }
   },
   "validation": {
@@ -132,10 +163,6 @@
       "invalid": "Gruppenname darf nur Kleinbuchstaben, Zahlen, Unterstriche und Bindestriche enthalten",
       "tooShort": "Gruppenname muss mindestens 1 Zeichen lang sein",
       "tooLong": "Gruppenname darf höchstens 50 Zeichen lang sein"
-    },
-    "generic": {
-      "required": "Dieses Feld ist erforderlich",
-      "invalid": "Ungültiger Wert"
     }
   },
   "confirmDialog": {

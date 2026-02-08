@@ -1,11 +1,14 @@
 import { CustomTimeAgo } from '@/components/date-formatter';
 import { HASecretList } from '@/components/ha-secret/secret-list';
 import { HASecretModal } from '@/components/ha-secret/secret-modal';
+import { RateLimitWarningBanner } from '@/components/rate-limit/warning-banner';
+import { ServiceAccountWarning } from '@/components/service-account-warning';
 import { UpdateNowBtn } from '@/components/update-now';
 import {
   getCachedGroups,
   getCachedNextUpdate,
   getCachedOpItems,
+  getCachedRateLimitWarning,
   getCachedSecret,
   getCachedSecrets
 } from '@/lib/cached-data';
@@ -19,17 +22,27 @@ export default async function Home(props: PageProps<'/'>) {
 
   const t = await getTranslations('home');
 
+  // Check if service account token is configured
+  const hasServiceAccountToken = !!process.env.OP_SERVICE_ACCOUNT_TOKEN;
+
   // Fetch all data in parallel for optimal performance
-  const [nextUpdate, [items], secrets, allGroups, activeSecret] =
-    await Promise.all([
-      getCachedNextUpdate(),
-      getCachedOpItems({ pagination: { page, limit: 1000 } }),
-      getCachedSecrets(),
-      getCachedGroups(),
-      activeSecretId
-        ? getCachedSecret(activeSecretId)
-        : Promise.resolve(undefined)
-    ]);
+  const [
+    nextUpdate,
+    [items],
+    secrets,
+    allGroups,
+    activeSecret,
+    rateLimitWarning
+  ] = await Promise.all([
+    getCachedNextUpdate(),
+    getCachedOpItems({ pagination: { page, limit: 1000 } }),
+    getCachedSecrets(),
+    getCachedGroups(),
+    activeSecretId
+      ? getCachedSecret(activeSecretId)
+      : Promise.resolve(undefined),
+    getCachedRateLimitWarning()
+  ]);
 
   // Build a map of secretId -> groups for quick lookup
   const secretGroupsMap = new Map<
@@ -52,6 +65,12 @@ export default async function Home(props: PageProps<'/'>) {
 
   return (
     <>
+      {!hasServiceAccountToken && <ServiceAccountWarning />}
+
+      {rateLimitWarning.shouldShow && (
+        <RateLimitWarningBanner warnings={rateLimitWarning.warnings} />
+      )}
+
       {activeSecret && (
         <HASecretModal activeSecret={activeSecret} opItems={items || []} />
       )}

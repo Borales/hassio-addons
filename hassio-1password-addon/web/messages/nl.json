@@ -2,6 +2,7 @@
   "menu": {
     "secrets": "Geheimen",
     "groups": "Groepen",
+    "rateLimits": "Tarieflimieten",
     "github": "Bezoek het project op GitHub"
   },
   "home": {
@@ -10,6 +11,10 @@
     "nextSync": "Volgende synchronisatie:",
     "notSyncedYet": "Nog niet gesynchroniseerd",
     "updateNow": "Nu synchroniseren"
+  },
+  "serviceAccountWarning": {
+    "title": "1Password Service Account Token Vereist",
+    "description": "Configureer je 1Password service account token in de add-on configuratie om geheimen synchronisatie mogelijk te maken."
   },
   "groups": {
     "title": "Gebeurtenisgroepen",
@@ -48,6 +53,47 @@
       "deleteGroup": "Groep verwijderen"
     }
   },
+  "rateLimits": {
+    "title": "1Password Tarieflimieten",
+    "description": "Bewaak het API-gebruik en de limieten van je 1Password-serviceaccount",
+    "noDataYet": "Nog geen tarieflimieten beschikbaar. Gegevens worden automatisch opgehaald.",
+    "lastUpdated": "Laatst bijgewerkt",
+    "refreshButton": "Nu vernieuwen",
+    "daily": {
+      "title": "Dagelijkse verzoeken",
+      "description": "Totaal aantal API-verzoeken per dag (alle serviceaccounts gecombineerd)"
+    },
+    "hourlyReads": {
+      "title": "Uurlijkse leesbewerkingen",
+      "description": "Leesbewerkingen per uur (dit serviceaccount)"
+    },
+    "card": {
+      "usage": "Gebruik",
+      "percentUsed": "{percent}% gebruikt",
+      "remaining": "{count} resterend",
+      "progressLabel": "{title} gebruik: {percentage}%",
+      "noReset": "Geen actieve limiet",
+      "resetsInHours": "Reset over {hours}u {minutes}m",
+      "resetsInMinutes": "Reset over {minutes}m"
+    },
+    "warning": {
+      "title": "1Password tarieflimietwarning",
+      "description": "nadert 90% van de limiet.",
+      "viewDetails": "Details weergeven",
+      "labels": {
+        "daily": "Dagelijkse verzoeken",
+        "hourlyReads": "Uurlijkse leesbewerkingen"
+      }
+    },
+    "info": {
+      "title": "Over tarieflimieten",
+      "description": "1Password hanteert tarieflimieten voor API-gebruik van serviceaccounts om de systeemstabiliteit te waarborgen. Deze limieten variëren per accountniveau.",
+      "dailyLimit": "Daglimiet",
+      "requests": "{count} verzoeken",
+      "hourlyReadLimit": "Uurlijks leeslimiet",
+      "readOnlyNote": "Deze add-on leest alleen gegevens van 1Password."
+    }
+  },
   "secrets": {
     "list": {
       "columns": {
@@ -75,16 +121,8 @@
       "searchLabel": "Zoek 1Password items",
       "searchPlaceholder": "Typ om te zoeken...",
       "loadingItems": "1Password items laden...",
-      "selectVault": "Selecteer eerst een kluis",
-      "vaultLabel": "Kluis",
       "fieldItemLabel": "1password veld",
-      "fieldItemPlaceholder": "Geen velden gevonden.",
-      "itemLabel": "Item",
-      "fieldLabel": "Veld",
-      "noResults": "Geen items gevonden",
-      "selectItem": "Selecteer een item",
-      "selectField": "Selecteer een veld",
-      "refreshFields": "Item velden vernieuwen"
+      "fieldItemPlaceholder": "Geen velden gevonden."
     }
   },
   "theme": {
@@ -114,16 +152,9 @@
       "hide": "Verbergen",
       "refresh": "Vernieuwen"
     },
-    "labels": {
-      "name": "Naam",
-      "description": "Omschrijving",
-      "actions": "Acties",
-      "status": "Status"
-    },
+
     "errors": {
-      "unknown": "Er is een onbekende fout opgetreden",
-      "required": "Dit veld is verplicht",
-      "loadingFailed": "Laden van gegevens mislukt"
+      "required": "Dit veld is verplicht"
     }
   },
   "validation": {
@@ -132,10 +163,6 @@
       "invalid": "Groepsnaam mag alleen kleine letters, cijfers, underscores en koppeltekens bevatten",
       "tooShort": "Groepsnaam moet minimaal 1 karakter lang zijn",
       "tooLong": "Groepsnaam mag maximaal 50 karakters lang zijn"
-    },
-    "generic": {
-      "required": "Dit veld is verplicht",
-      "invalid": "Ongeldige waarde"
     }
   },
   "confirmDialog": {
