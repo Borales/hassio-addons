@@ -24,7 +24,7 @@ ENV PORT=8000
 ENV NEXT_TELEMETRY_DISABLED=1
 # ENV NODE_ENV production
 
-# Add crontab entry for fetching a url every 5 minutes
+# Add crontab entry for fetching a url every minute
 RUN echo "*/1 * * * * /usr/bin/curl -s -S -X GET \"http://localhost:${PORT}/api/cron\" > /dev/null" >> /etc/crontabs/root
 
 WORKDIR /app
@@ -33,7 +33,9 @@ COPY web/public ./public
 COPY web/.next/static ./.next/static
 COPY web/.next/standalone ./
 COPY web/prisma ./prisma
-COPY web/node_modules/ ./node_modules/
+COPY web/node_modules/.bin ./node_modules/.bin
+COPY web/node_modules/@prisma ./node_modules/@prisma
+COPY web/node_modules/prisma ./node_modules/prisma
 
 EXPOSE $PORT
 CMD ["/run.sh"]

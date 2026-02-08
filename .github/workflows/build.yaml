@@ -95,11 +95,13 @@ jobs:
       - uses: actions/upload-artifact@v6.0.0
         with:
           name: artifacts-${{ github.sha }}-${{ matrix.addon }}
+          include-hidden-files: true
           path: |
             ./${{ matrix.addon }}/web/.next/
+            ./${{ matrix.addon }}/web/public/
+            ./${{ matrix.addon }}/web/prisma/
             ./${{ matrix.addon }}/web/node_modules/.bin/
             ./${{ matrix.addon }}/web/node_modules/@prisma/
-            ./${{ matrix.addon }}/web/node_modules/.prisma/
             ./${{ matrix.addon }}/web/node_modules/prisma/
 
   build:
