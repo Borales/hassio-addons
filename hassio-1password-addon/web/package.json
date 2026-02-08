@@ -13,6 +13,7 @@
     "migration:dev": "prisma migrate dev",
     "migration:prod": "prisma migrate deploy",
     "postinstall": "next typegen",
+    "prebuild": "prisma generate",
     "prettier": "prettier --check ./src ./messages",
     "prettier:fix": "prettier --write ./src ./messages",
     "prisma:generate": "prisma generate",
