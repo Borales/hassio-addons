@@ -6,6 +6,9 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 const nextConfig: NextConfig = {
   cacheComponents: true,
   output: 'standalone',
+  outputFileTracingIncludes: {
+    '/': ['./node_modules/styled-jsx/**/*']
+  },
   poweredByHeader: false,
   devIndicators: {
     position: 'bottom-right'
