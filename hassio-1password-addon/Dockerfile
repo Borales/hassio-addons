@@ -38,10 +38,12 @@ COPY web/prisma ./prisma
 COPY web/prisma.config.ts ./
 COPY web/messages ./messages
 
-RUN mkdir /prisma-deps && cd /prisma-deps && \
+RUN apk add --no-cache rsync && \
+    mkdir /prisma-deps && cd /prisma-deps && \
     pnpm install prisma dotenv && \
-    tar cf - -C node_modules . | tar xf - -C /app/node_modules && \
-    rm -rf /prisma-deps
+    rsync -a node_modules/ /app/node_modules/ && \
+    rm -rf /prisma-deps && \
+    apk del rsync
 
 EXPOSE $PORT
 CMD ["/run.sh"]
