@@ -41,9 +41,9 @@ COPY web/messages ./messages
 RUN rm -rf /temp-app && mkdir /temp-app && cd /temp-app && pnpm install dotenv prisma @prisma/client
 RUN rm -fr /app/node_modules/dotenv && mv -f /temp-app/node_modules/dotenv ./node_modules/dotenv
 RUN rm -fr /app/node_modules/prisma && mv -f /temp-app/node_modules/prisma ./node_modules/prisma
-RUN cp -fr /temp-app/node_modules/.pnpm/dotenv* /app/node_modules/.pnpm/
-RUN cp -fr /temp-app/node_modules/.pnpm/prisma* /app/node_modules/.pnpm/
-RUN cp -fr /temp-app/node_modules/.pnpm/@prisma* /app/node_modules/.pnpm/
+RUN rm -rf /app/node_modules/.pnpm/dotenv* && cp -fr /temp-app/node_modules/.pnpm/dotenv* /app/node_modules/.pnpm/
+RUN rm -rf /app/node_modules/.pnpm/prisma* && cp -fr /temp-app/node_modules/.pnpm/prisma* /app/node_modules/.pnpm/
+RUN rm -rf /app/node_modules/.pnpm/@prisma* && cp -fr /temp-app/node_modules/.pnpm/@prisma* /app/node_modules/.pnpm/
 RUN cp -fr /temp-app/node_modules/.bin /app/node_modules/ && rm -rf /temp-app
 
 EXPOSE $PORT
