@@ -33,6 +33,7 @@ COPY web/.next/standalone ./
 COPY web/public ./public
 COPY web/.next/static ./.next/static
 COPY web/prisma ./prisma
+COPY web/prisma.config.ts ./
 COPY web/messages ./messages
 
 EXPOSE $PORT
