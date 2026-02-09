@@ -23,7 +23,7 @@ bashio::log.info "Node version: $(node --version)"
 cd /app || exit 1
 
 bashio::log.info "Running Prisma migration..."
-if ! OP_DB_URL="${OP_DB_URL}" npx prisma migrate deploy; then
+if ! OP_DB_URL="${OP_DB_URL}" pnpm exec prisma migrate deploy; then
   bashio::log.fatal "Prisma migration failed. Check the logs above for details."
   exit 1
 fi
