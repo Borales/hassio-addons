@@ -101,7 +101,6 @@ jobs:
             ./${{ matrix.addon }}/web/public/
             ./${{ matrix.addon }}/web/prisma/
             ./${{ matrix.addon }}/web/messages/
-            ./${{ matrix.addon }}/web/node_modules/
 
   build:
     needs: [init, prepare]
