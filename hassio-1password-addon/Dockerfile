@@ -38,7 +38,7 @@ COPY web/prisma ./prisma
 COPY web/prisma.config.ts ./
 COPY web/messages ./messages
 
-RUN mkdir /temp-app && cd /temp-app && pnpm install dotenv prisma @prisma/client
+RUN rm -rf /temp-app && mkdir /temp-app && cd /temp-app && pnpm install dotenv prisma @prisma/client
 RUN rm -fr /app/node_modules/dotenv && mv -f /temp-app/node_modules/dotenv ./node_modules/dotenv
 RUN rm -fr /app/node_modules/prisma && mv -f /temp-app/node_modules/prisma ./node_modules/prisma
 RUN cp -r /temp-app/node_modules/.pnpm/dotenv* /app/node_modules/.pnpm/
