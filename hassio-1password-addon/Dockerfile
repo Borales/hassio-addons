@@ -43,14 +43,5 @@ COPY web/prisma ./prisma
 COPY web/prisma.config.ts ./
 COPY web/messages ./messages
 
-# Copy prisma-related packages from build artifact (complete pnpm structure)
-# Includes .pnpm store, symlinks, and pnpm metadata
-COPY web/node_modules/.pnpm ./node_modules/.pnpm
-COPY web/node_modules/.modules.yaml ./node_modules/.modules.yaml
-COPY web/node_modules/prisma ./node_modules/prisma
-COPY web/node_modules/@prisma ./node_modules/@prisma
-COPY web/node_modules/dotenv ./node_modules/dotenv
-COPY web/node_modules/.bin/prisma ./node_modules/.bin/prisma
-
 EXPOSE $PORT
 CMD ["/run.sh"]
