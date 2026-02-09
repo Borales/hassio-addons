@@ -1,8 +1,8 @@
 {
   "name": "1password Secrets Storage",
   "version": "0.1.25",
-  "description": "Sync your secrets from 1password",
   "slug": "hassio_1password_secrets_storage",
+  "description": "Sync your secrets from 1password",
   "arch": ["aarch64", "amd64"],
   "url": "https://github.com/Borales/hassio-addons",
   "init": false,
