@@ -36,6 +36,7 @@ COPY web/.next/static ./.next/static
 COPY web/prisma ./prisma
 COPY web/prisma.config.ts ./
 COPY web/messages ./messages
+RUN npm install --no-save dotenv
 
 EXPOSE $PORT
 CMD ["/run.sh"]

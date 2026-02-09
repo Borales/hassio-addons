@@ -21,8 +21,6 @@ bashio::log.info "Running Prisma migrations on ${OP_DB_URL}..."
 bashio::log.info "Node version: $(node --version)"
 
 cd /app || exit 1
-bashio::log.info "Installing dotenv..."
-npm install --no-save dotenv
 
 bashio::log.info "Running Prisma migration..."
 if ! OP_DB_URL="${OP_DB_URL}" npx prisma migrate deploy; then
