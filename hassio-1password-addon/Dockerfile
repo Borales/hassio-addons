@@ -14,7 +14,7 @@ COPY --from=node /usr/local/bin /usr/local/bin
 COPY --from=onepassword /usr/local/bin /usr/local/bin
 
 RUN apk add --no-cache libc6-compat
-RUN npm i -g npm prisma dotenv
+RUN npm i -g npm
 
 # Copy data for add-on
 COPY run.sh /

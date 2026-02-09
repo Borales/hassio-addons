@@ -21,8 +21,9 @@ bashio::log.info "Running Prisma migrations on ${OP_DB_URL}..."
 bashio::log.info "Node version: $(node --version)"
 
 cd /app || exit 1
+npm install --no-save prisma dotenv
 
-if ! OP_DB_URL="${OP_DB_URL}" npx prisma migrate deploy; then
+if ! OP_DB_URL="${OP_DB_URL}" npm prisma migrate deploy; then
   bashio::log.fatal "Prisma migration failed. Check the logs above for details."
   exit 1
 fi
