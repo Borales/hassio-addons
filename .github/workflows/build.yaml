@@ -57,52 +57,8 @@ jobs:
             echo "No add-on had any monitored files changed (${{ env.MONITORED_FILES }})";
           fi
 
-  prepare:
-    name: Prepare ${{ matrix.addon }} add-on
-    needs: init
-    runs-on: ubuntu-latest
-    env:
-      NEXT_TELEMETRY_DISABLED: 1
-    permissions:
-      contents: read
-    if: needs.init.outputs.changed == 'true'
-    strategy:
-      matrix:
-        addon: ${{ fromJson(needs.init.outputs.changed_addons) }}
-    steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-node@v6.2.0
-        with:
-          node-version-file: "./${{ matrix.addon }}/web/.nvmrc"
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: latest
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        shell: bash
-        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v5.0.3
-        with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-      - run: pnpm install --frozen-lockfile
-        working-directory: ./${{ matrix.addon }}/web
-      - run: OP_DB_URL=1 pnpm build
-        working-directory: ./${{ matrix.addon }}/web
-      - uses: actions/upload-artifact@v6.0.0
-        with:
-          name: artifacts-${{ github.sha }}-${{ matrix.addon }}
-          include-hidden-files: true
-          path: |
-            ./${{ matrix.addon }}/web/.next/
-            ./${{ matrix.addon }}/web/public/
-            ./${{ matrix.addon }}/web/prisma/
-            ./${{ matrix.addon }}/web/messages/
   build:
-    needs: [init, prepare]
+    needs: init
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -146,13 +102,6 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: mkdir -p web/.next/static
-        working-directory: ./${{ matrix.addon }}
-      - name: Download artifact
-        uses: actions/download-artifact@v7.0.0
-        with:
-          name: artifacts-${{ github.sha }}-${{ matrix.addon }}
-          path: ./${{ matrix.addon }}/web/
       - name: Build ${{ matrix.addon }} add-on
         if: steps.check.outputs.build_arch == 'true'
         uses: home-assistant/builder@2025.11.0
