@@ -36,7 +36,9 @@ COPY web/.next/static ./.next/static
 COPY web/prisma ./prisma
 COPY web/prisma.config.ts ./
 COPY web/messages ./messages
-RUN npm install --no-save dotenv
+
+RUN mkdir /temp-app && cd /temp-app && npm install --no-save --no-package-lock dotenv
+RUN cp -r /temp-app/node_modules/dotenv ./node_modules/dotenv && rm -rf /temp-app
 
 EXPOSE $PORT
 CMD ["/run.sh"]
