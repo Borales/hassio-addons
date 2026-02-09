@@ -6,6 +6,7 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 const nextConfig: NextConfig = {
   cacheComponents: true,
   output: 'standalone',
+  assetPrefix: '.',
   poweredByHeader: false,
   devIndicators: {
     position: 'bottom-right'
