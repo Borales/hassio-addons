@@ -5,16 +5,15 @@ crond
 
 bashio::log.info "Setting the configuration for the 1Password addon..."
 
-CONFIG_PATH=/data/options.json
-
+export CONFIG_PATH=/data/options.json
 # Home assistant config folder
-HA_CONFIG_FOLDER=/config
-HA_URL=http://supervisor/core/api
+export HA_CONFIG_FOLDER=/config
+export HA_URL=http://supervisor/core/api
 
-OP_TTR="$(bashio::config 'checkIntervalMin')"
-OP_DB_URL="file:/data/onepassword_app_store.db"
-OP_SERVICE_ACCOUNT_TOKEN="$(bashio::config 'serviceAccountToken')"
-APP_LOG_LEVEL="$(bashio::config 'logLevel')"
+export OP_TTR="$(bashio::config 'checkIntervalMin')"
+export OP_DB_URL="file:/data/onepassword_app_store.db"
+export OP_SERVICE_ACCOUNT_TOKEN="$(bashio::config 'serviceAccountToken')"
+export APP_LOG_LEVEL="$(bashio::config 'logLevel')"
 
 # Run Prisma migrations
 bashio::log.info "Running Prisma migrations on ${OP_DB_URL}..."
