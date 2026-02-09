@@ -32,6 +32,8 @@ WORKDIR /app
 
 # Copy migration sub-app for running Prisma migrations
 COPY migration/package.json /migration/
+COPY migration/pnpm-lock.yaml /migration/
+COPY migration/pnpm-workspace.yaml /migration/
 COPY web/prisma.config.ts /migration/prisma.config.ts
 RUN cd /migration && pnpm install --frozen-lockfile --prod
 
