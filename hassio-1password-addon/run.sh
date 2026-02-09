@@ -22,7 +22,7 @@ bashio::log.info "Node version: $(node --version)"
 
 cd /app || exit 1
 
-if ! npm prisma migrate deploy; then
+if ! npx prisma migrate deploy; then
   bashio::log.fatal "Prisma migration failed. Check the logs above for details."
   exit 1
 fi

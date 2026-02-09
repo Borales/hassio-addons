@@ -28,13 +28,12 @@ RUN echo "*/1 * * * * /usr/bin/curl -s -S -X GET \"http://localhost:${PORT}/api/
 
 WORKDIR /app
 
-# Copy pre-built Next.js artifacts
+# Copy pre-built Next.js artifacts (standalone already includes minimal node_modules)
+COPY web/.next/standalone ./
 COPY web/public ./public
 COPY web/.next/static ./.next/static
-COPY web/.next/standalone ./
 COPY web/prisma ./prisma
 COPY web/messages ./messages
-COPY web/node_modules/ ./
 
 EXPOSE $PORT
 CMD ["/run.sh"]
