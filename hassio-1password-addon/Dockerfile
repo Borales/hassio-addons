@@ -28,22 +28,13 @@ RUN echo "*/1 * * * * /usr/bin/curl -s -S -X GET \"http://localhost:${PORT}/api/
 
 WORKDIR /app
 
+# Copy pre-built Next.js artifacts
 COPY web/public ./public
 COPY web/.next/static ./.next/static
 COPY web/.next/standalone ./
 COPY web/prisma ./prisma
 COPY web/messages ./messages
-COPY web/node_modules/.bin ./node_modules/.bin
-COPY web/node_modules/@prisma ./node_modules/@prisma
-COPY web/node_modules/prisma ./node_modules/prisma
-
-# Restore execute permissions for binaries
-RUN chmod +x node_modules/.bin/* && \
-    find node_modules/@prisma -type f -name "*.node" -exec chmod +x {} \; && \
-    find node_modules/@prisma -type f -name "query-engine-*" -exec chmod +x {} \; && \
-    find node_modules/@prisma -type f -name "migration-engine-*" -exec chmod +x {} \; && \
-    find node_modules/@prisma -type f -name "introspection-engine-*" -exec chmod +x {} \; && \
-    find node_modules/@prisma -type f -name "prisma-fmt-*" -exec chmod +x {} \;
+COPY web/node_modules/ ./
 
 EXPOSE $PORT
 CMD ["/run.sh"]
