@@ -20,16 +20,18 @@ APP_LOG_LEVEL="$(bashio::config 'logLevel')"
 bashio::log.info "Running Prisma migrations on ${OP_DB_URL}..."
 bashio::log.info "Node version: $(node --version)"
 
-cd /app || exit 1
+cd /migration || exit 1
 
 bashio::log.info "Running Prisma migration..."
-if ! OP_DB_URL="${OP_DB_URL}" pnpm exec prisma migrate deploy; then
+if ! OP_DB_URL="${OP_DB_URL}" pnpm run migrate --schema=/app/prisma/schema.prisma; then
   bashio::log.fatal "Prisma migration failed. Check the logs above for details."
   exit 1
 fi
 
 bashio::log.info "Prisma migrations completed successfully"
 
+cd /app || exit 1
+
 # run the web-app
 bashio::log.info "Starting the app..."
-cd /app && node server.js
+node server.js

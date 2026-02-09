@@ -30,6 +30,11 @@ RUN echo "*/1 * * * * /usr/bin/curl -s -S -X GET \"http://localhost:${PORT}/api/
 
 WORKDIR /app
 
+# Copy migration sub-app for running Prisma migrations
+COPY migration/package.json /migration/
+COPY migration/node_modules /migration/node_modules
+COPY web/prisma.config.ts /migration/prisma.config.ts
+
 # Copy pre-built Next.js artifacts (standalone already includes minimal node_modules)
 COPY web/.next/standalone ./
 COPY web/public ./public
@@ -38,12 +43,14 @@ COPY web/prisma ./prisma
 COPY web/prisma.config.ts ./
 COPY web/messages ./messages
 
-RUN apk add --no-cache rsync && \
-    mkdir /prisma-deps && cd /prisma-deps && \
-    pnpm install prisma dotenv && \
-    rsync -a node_modules/ /app/node_modules/ && \
-    rm -rf /prisma-deps && \
-    apk del rsync
+# Copy prisma-related packages from build artifact (complete pnpm structure)
+# Includes .pnpm store, symlinks, and pnpm metadata
+COPY web/node_modules/.pnpm ./node_modules/.pnpm
+COPY web/node_modules/.modules.yaml ./node_modules/.modules.yaml
+COPY web/node_modules/prisma ./node_modules/prisma
+COPY web/node_modules/@prisma ./node_modules/@prisma
+COPY web/node_modules/dotenv ./node_modules/dotenv
+COPY web/node_modules/.bin/prisma ./node_modules/.bin/prisma
 
 EXPOSE $PORT
 CMD ["/run.sh"]

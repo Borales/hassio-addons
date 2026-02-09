@@ -88,7 +88,11 @@ jobs:
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
-      - run: pnpm install --frozen-lockfile
+      - name: Install dependencies for migration
+        run: pnpm install --frozen-lockfile
+        working-directory: ./${{ matrix.addon }}/migration
+      - name: Install dependencies for App
+        run: pnpm install --frozen-lockfile
         working-directory: ./${{ matrix.addon }}/web
       - run: OP_DB_URL=1 pnpm build
         working-directory: ./${{ matrix.addon }}/web
@@ -101,7 +105,7 @@ jobs:
             ./${{ matrix.addon }}/web/public/
             ./${{ matrix.addon }}/web/prisma/
             ./${{ matrix.addon }}/web/messages/
-
+            ./${{ matrix.addon }}/migration/
   build:
     needs: [init, prepare]
     runs-on: ubuntu-latest
