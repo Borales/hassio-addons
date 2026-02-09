@@ -32,9 +32,8 @@ WORKDIR /app
 
 # Copy migration sub-app for running Prisma migrations
 COPY migration/package.json /migration/
-COPY migration/node_modules /migration/node_modules
 COPY web/prisma.config.ts /migration/prisma.config.ts
-RUN chmod -R a+x /migration/node_modules/.bin
+RUN cd /migration && pnpm install --frozen-lockfile --prod
 
 # Copy pre-built Next.js artifacts (standalone already includes minimal node_modules)
 COPY web/.next/standalone ./
