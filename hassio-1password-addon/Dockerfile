@@ -15,6 +15,7 @@ COPY --from=onepassword /usr/local/bin /usr/local/bin
 
 RUN apk add --no-cache libc6-compat
 RUN npm i -g npm
+RUN corepack enable pnpm
 
 # Copy data for add-on
 COPY run.sh /
@@ -37,8 +38,9 @@ COPY web/prisma ./prisma
 COPY web/prisma.config.ts ./
 COPY web/messages ./messages
 
-RUN mkdir /temp-app && cd /temp-app && npm install --no-save --no-package-lock dotenv
-RUN cp -r /temp-app/node_modules/dotenv ./node_modules/dotenv && rm -rf /temp-app
+RUN mkdir /temp-app && cd /temp-app && pnpm install dotenv
+RUN rm -fr /app/node_modules/dotenv && mv -f /temp-app/node_modules/dotenv ./node_modules/dotenv
+RUN cp -r /temp-app/node_modules/.pnpm/dotenv@* /app/node_modules/.pnpm/ && rm -rf /temp-app
 
 EXPOSE $PORT
 CMD ["/run.sh"]
