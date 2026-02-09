@@ -151,13 +151,13 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: mkdir -p web/.next
+      - run: mkdir -p web/.next/static migration
         working-directory: ./${{ matrix.addon }}
       - name: Download artifact
         uses: actions/download-artifact@v7.0.0
         with:
           name: artifacts-${{ github.sha }}-${{ matrix.addon }}
-          path: ./${{ matrix.addon }}/web/
+          path: ./${{ matrix.addon }}/
       - name: Build ${{ matrix.addon }} add-on
         if: steps.check.outputs.build_arch == 'true'
         uses: home-assistant/builder@2025.11.0
