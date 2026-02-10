@@ -1,7 +1,7 @@
 import { homeAssistantClient } from '@/service/client/homeassistant';
 import { logger } from '@/service/client/logger';
 import { syncService } from '@/service/sync.service';
-import { updateTag } from 'next/cache';
+import { revalidateTag } from 'next/cache';
 import { NextRequest } from 'next/server';
 
 // Call for cron-check and run the update
@@ -18,15 +18,15 @@ export async function GET(request: NextRequest) {
       result.changedGroups.length
     );
 
-    // Invalidate caches after successful sync
-    updateTag('op-items');
-    updateTag('op-metadata');
-    updateTag('secrets');
-    updateTag('rate-limits');
+    // Invalidate caches after successful sync (using 'max' profile for stale-while-revalidate)
+    revalidateTag('op-items', 'max');
+    revalidateTag('op-metadata', 'max');
+    revalidateTag('secrets', 'max');
+    revalidateTag('rate-limits', 'max');
 
     // Only invalidate groups if they were actually changed
     if (result.changedGroups.length > 0) {
-      updateTag('groups');
+      revalidateTag('groups', 'max');
     }
 
     return Response.json({

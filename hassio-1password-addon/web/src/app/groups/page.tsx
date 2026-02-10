@@ -1,41 +1,24 @@
+import { CreateFirstGroupLink } from '@/components/group/create-first-group-link';
 import { CreateGroupButton } from '@/components/group/create-group-button';
 import { GroupList } from '@/components/group/group-list';
-import { GroupModal } from '@/components/group/group-modal';
-import {
-  getCachedGroup,
-  getCachedGroups,
-  getCachedSecrets
-} from '@/lib/cached-data';
+import { GroupModalProvider } from '@/components/group/group-modal-provider';
+import { GroupModalWrapper } from '@/components/group/group-modal-wrapper';
+import { getCachedGroups, getCachedSecrets } from '@/lib/cached-data';
 import { Code } from '@heroui/react';
 import { getTranslations } from 'next-intl/server';
-import Link from 'next/link';
 
-export default async function GroupsPage(props: {
-  searchParams: Promise<Record<string, string>>;
-}) {
-  const searchParams = await props.searchParams;
-  const activeGroupId = searchParams.groupId || '';
-
+export default async function GroupsPage() {
   const t = await getTranslations('groups');
 
   // Fetch groups and secrets in parallel for optimal performance
-  const [groups, secrets, activeGroup] = await Promise.all([
+  const [groups, secrets] = await Promise.all([
     getCachedGroups(),
-    getCachedSecrets(),
-    activeGroupId && activeGroupId !== 'new'
-      ? getCachedGroup(activeGroupId)
-      : Promise.resolve(null)
+    getCachedSecrets()
   ]);
 
   return (
-    <>
-      {(activeGroupId === 'new' || activeGroup) && (
-        <GroupModal
-          group={activeGroup}
-          secrets={secrets}
-          isNew={activeGroupId === 'new'}
-        />
-      )}
+    <GroupModalProvider>
+      <GroupModalWrapper secrets={secrets} />
 
       {/* Page header */}
       <div className="mb-6 flex items-start justify-between">
@@ -62,12 +45,7 @@ export default async function GroupsPage(props: {
         <div className="border-divider rounded-lg border border-dashed py-16 text-center">
           <p className="text-default-400 text-sm">{t('noGroupsYet')}</p>
           <p className="mt-2">
-            <Link
-              href="./groups?groupId=new"
-              className="text-primary text-sm hover:underline"
-            >
-              {t('createFirstGroup')}
-            </Link>
+            <CreateFirstGroupLink />
           </p>
         </div>
       ) : (
@@ -80,6 +58,6 @@ export default async function GroupsPage(props: {
           <GroupList groups={groups} />
         </>
       )}
-    </>
+    </GroupModalProvider>
   );
 }

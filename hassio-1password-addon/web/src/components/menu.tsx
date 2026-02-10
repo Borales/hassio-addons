@@ -47,14 +47,18 @@ export const Menu = () => {
             </Link>
             <Link
               prefetch={false}
-              className={navLink({ active: pathname === '/groups' })}
+              className={navLink({
+                active: pathname.startsWith('/groups')
+              })}
               href="./groups"
             >
               {t('groups')}
             </Link>
             <Link
               prefetch={false}
-              className={navLink({ active: pathname === '/rate-limits' })}
+              className={navLink({
+                active: pathname.startsWith('/rate-limits')
+              })}
               href="./rate-limits"
             >
               {t('rateLimits')}

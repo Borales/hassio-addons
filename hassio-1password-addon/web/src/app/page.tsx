@@ -1,6 +1,7 @@
 import { CustomTimeAgo } from '@/components/date-formatter';
 import { HASecretList } from '@/components/ha-secret/secret-list';
-import { HASecretModal } from '@/components/ha-secret/secret-modal';
+import { SecretModalProvider } from '@/components/ha-secret/secret-modal-provider';
+import { SecretModalWrapper } from '@/components/ha-secret/secret-modal-wrapper';
 import { RateLimitWarningBanner } from '@/components/rate-limit/warning-banner';
 import { ServiceAccountWarning } from '@/components/service-account-warning';
 import { UpdateNowBtn } from '@/components/update-now';
@@ -9,7 +10,6 @@ import {
   getCachedNextUpdate,
   getCachedOpItems,
   getCachedRateLimitWarning,
-  getCachedSecret,
   getCachedSecrets
 } from '@/lib/cached-data';
 import { Code } from '@heroui/react';
@@ -18,7 +18,6 @@ import { getTranslations } from 'next-intl/server';
 export default async function Home(props: PageProps<'/'>) {
   const searchParams = await props.searchParams;
   const page: number = Number(searchParams.page || 1);
-  const activeSecretId = (searchParams.secretId || '') as string;
 
   const t = await getTranslations('home');
 
@@ -26,23 +25,14 @@ export default async function Home(props: PageProps<'/'>) {
   const hasServiceAccountToken = !!process.env.OP_SERVICE_ACCOUNT_TOKEN;
 
   // Fetch all data in parallel for optimal performance
-  const [
-    nextUpdate,
-    [items],
-    secrets,
-    allGroups,
-    activeSecret,
-    rateLimitWarning
-  ] = await Promise.all([
-    getCachedNextUpdate(),
-    getCachedOpItems({ pagination: { page, limit: 1000 } }),
-    getCachedSecrets(),
-    getCachedGroups(),
-    activeSecretId
-      ? getCachedSecret(activeSecretId)
-      : Promise.resolve(undefined),
-    getCachedRateLimitWarning()
-  ]);
+  const [nextUpdate, [items], secrets, allGroups, rateLimitWarning] =
+    await Promise.all([
+      getCachedNextUpdate(),
+      getCachedOpItems({ pagination: { page, limit: 1000 } }),
+      getCachedSecrets(),
+      getCachedGroups(),
+      getCachedRateLimitWarning()
+    ]);
 
   // Build a map of secretId -> groups for quick lookup
   const secretGroupsMap = new Map<
@@ -64,16 +54,14 @@ export default async function Home(props: PageProps<'/'>) {
   }));
 
   return (
-    <>
+    <SecretModalProvider>
       {!hasServiceAccountToken && <ServiceAccountWarning />}
 
       {rateLimitWarning.shouldShow && (
         <RateLimitWarningBanner warnings={rateLimitWarning.warnings} />
       )}
 
-      {activeSecret && (
-        <HASecretModal activeSecret={activeSecret} opItems={items || []} />
-      )}
+      <SecretModalWrapper opItems={items || []} />
 
       {/* Page header */}
       <div className="mb-6">
@@ -99,6 +87,6 @@ export default async function Home(props: PageProps<'/'>) {
         </span>
         <UpdateNowBtn />
       </div>
-    </>
+    </SecretModalProvider>
   );
 }

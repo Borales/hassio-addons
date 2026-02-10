@@ -14,10 +14,10 @@ import {
   Spinner
 } from '@heroui/react';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { OpSecretIcon } from '../op-secret/secret-icon';
 import { HASecretModalFieldList } from './secret-modal-field-list';
+import { useSecretModal } from './secret-modal-provider';
 import { HASecretModalSave } from './secret-modal-save';
 
 export type Item = Pick<
@@ -38,7 +38,7 @@ export const HASecretModal = ({
   opItems
 }: HASecretModalProps) => {
   const t = useTranslations('secrets.modal');
-  const nav = useRouter();
+  const { closeModal } = useSecretModal();
   const [opSecretId, setOpSecretId] = useState<string | number>(
     activeSecret?.itemId || ''
   );
@@ -93,9 +93,7 @@ export const HASecretModal = ({
       backdrop="blur"
       size="xl"
       isOpen={!!activeSecret}
-      onClose={() => {
-        nav.push('./');
-      }}
+      onClose={closeModal}
     >
       <ModalContent>
         {(onClose) => (

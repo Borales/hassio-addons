@@ -48,9 +48,6 @@ ENV PORT=8000
 ENV NEXT_TELEMETRY_DISABLED=1
 # ENV NODE_ENV production
 
-# Add crontab entry for fetching a url every minute
-RUN echo "*/1 * * * * /usr/bin/curl -s -S -X GET \"http://localhost:${PORT}/api/cron\" > /dev/null" >> /etc/crontabs/root
-
 WORKDIR /app
 
 # Copy migration sub-app for running Prisma migrations

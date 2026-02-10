@@ -16,11 +16,11 @@ import {
 } from '@heroui/react';
 import { PencilSimpleIcon, TrashIcon } from '@phosphor-icons/react';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
 import { Key, memo, useCallback, useMemo, useTransition } from 'react';
 import { ActionButtons } from '../ui/action-buttons';
 import { ChipList } from '../ui/chip-list';
 import { ConfirmDialog } from '../ui/confirm-dialog';
+import { useGroupModal } from './group-modal-provider';
 
 type GroupListProps = {
   groups: GroupWithSecrets[];
@@ -156,16 +156,7 @@ function GroupActionsCell({ group }: { group: GroupWithSecrets }) {
 
   return (
     <ActionButtons>
-      <Link href={`./groups?groupId=${group.id}`}>
-        <Button
-          isIconOnly
-          size="sm"
-          variant="light"
-          aria-label={t('editGroup')}
-        >
-          <PencilSimpleIcon size={16} />
-        </Button>
-      </Link>
+      <GroupEditButton group={group} />
       <ConfirmDialog
         message={tConfirm('deleteConfirm')}
         confirmLabel={tCommon('delete')}
@@ -186,5 +177,22 @@ function GroupActionsCell({ group }: { group: GroupWithSecrets }) {
         )}
       />
     </ActionButtons>
+  );
+}
+
+function GroupEditButton({ group }: { group: GroupWithSecrets }) {
+  const t = useTranslations('groups.actions');
+  const { openEditModal } = useGroupModal();
+
+  return (
+    <Button
+      isIconOnly
+      size="sm"
+      variant="light"
+      aria-label={t('editGroup')}
+      onPress={() => openEditModal(group)}
+    >
+      <PencilSimpleIcon size={16} />
+    </Button>
   );
 }

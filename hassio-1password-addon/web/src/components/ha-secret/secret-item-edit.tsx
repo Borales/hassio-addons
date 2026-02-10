@@ -3,26 +3,23 @@
 import { Button } from '@heroui/react';
 import { PencilIcon } from '@phosphor-icons/react/dist/ssr';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { Item } from './secret-modal';
+import { useSecretModal } from './secret-modal-provider';
 
 type HASecretItemEditProps = {
-  secretId: string;
+  secret: Item;
 };
 
-export const HASecretItemEdit = ({ secretId }: HASecretItemEditProps) => {
-  const pathname = usePathname();
+export const HASecretItemEdit = ({ secret }: HASecretItemEditProps) => {
   const t = useTranslations('common.actions');
+  const { openModal } = useSecretModal();
 
   return (
     <Button
       isIconOnly
       color="default"
       variant="light"
-      href={{ pathname, query: { secretId } } as any}
-      as={Link}
-      prefetch={false}
-      scroll={false}
+      onPress={() => openModal(secret)}
       size="sm"
       aria-label={t('edit')}
       title={t('edit')}

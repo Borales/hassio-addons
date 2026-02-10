@@ -201,7 +201,7 @@ LastUpdatedCell.displayName = 'LastUpdatedCell';
 const ActionsCell = memo(({ item }: { item: Item }) => {
   return (
     <ActionButtons>
-      {!item.isSkipped && <HASecretItemEdit secretId={item.id} />}
+      {!item.isSkipped && <HASecretItemEdit secret={item} />}
       <HASecretUnassign secretId={item.id} isAssigned={!!item.itemId} />
       <HASecretHideToggle secretId={item.id} isSkipped={item.isSkipped} />
     </ActionButtons>

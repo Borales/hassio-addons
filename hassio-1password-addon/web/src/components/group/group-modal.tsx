@@ -19,8 +19,8 @@ import {
 } from '@heroui/react';
 import { Secret as HaSecretItem } from '@prisma-generated/client';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
 import { useActionState, useEffect, useMemo, useState } from 'react';
+import { useGroupModal } from './group-modal-provider';
 
 type GroupModalProps = {
   group: GroupWithSecrets | null;
@@ -32,7 +32,7 @@ export const GroupModal = ({ group, secrets, isNew }: GroupModalProps) => {
   const t = useTranslations('groups.modal');
   const tCommon = useTranslations('common.actions');
   const tValidation = useTranslations('validation.groupName');
-  const router = useRouter();
+  const { closeModal } = useGroupModal();
   const [name, setName] = useState(group?.name || '');
   const [description, setDescription] = useState(group?.description || '');
   const [selectedSecrets, setSelectedSecrets] = useState<Set<string>>(
@@ -63,16 +63,12 @@ export const GroupModal = ({ group, secrets, isNew }: GroupModalProps) => {
   // Close modal on success
   useEffect(() => {
     if (state?.success) {
-      router.push('./groups');
+      closeModal();
     }
-  }, [state, router]);
-
-  const handleClose = () => {
-    router.push('./groups');
-  };
+  }, [state, closeModal]);
 
   return (
-    <Modal backdrop="blur" size="xl" isOpen={true} onClose={handleClose}>
+    <Modal backdrop="blur" size="xl" isOpen={true} onClose={closeModal}>
       <ModalContent>
         {(onClose) => (
           <form action={formAction}>
