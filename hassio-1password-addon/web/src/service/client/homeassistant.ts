@@ -49,18 +49,13 @@ export class HomeAssistantClient {
       return false;
     }
 
-    const payload = {
-      ...eventData,
-      timestamp: new Date().toISOString()
-    };
-
     try {
       this.logger.debug(
         'Firing HA event: %s with data: %o',
         eventType,
-        payload
+        eventData
       );
-      await this.client.post(`/events/${eventType}`, payload);
+      await this.client.post(`/events/${eventType}`, eventData);
       this.logger.info('Successfully fired HA event: %s', eventType);
       return true;
     } catch (error) {
@@ -156,13 +151,9 @@ export class HomeAssistantClient {
   /**
    * Fire event for a single secret being written.
    */
-  async fireSecretWrittenEvent(
-    secretName: string,
-    isNew: boolean
-  ): Promise<boolean> {
+  async fireSecretWrittenEvent(secretName: string): Promise<boolean> {
     return this.fireEvent('onepassword_secret_written', {
-      secretName,
-      isNew
+      secretName
     });
   }
 
@@ -171,12 +162,10 @@ export class HomeAssistantClient {
    */
   async fireGroupUpdatedEvent(
     groupName: string,
-    groupId: string,
     updatedSecrets: string[]
   ): Promise<boolean> {
     return this.fireEvent(`onepassword_group_${groupName}_updated`, {
       groupName,
-      groupId,
       updatedSecrets
     });
   }
@@ -198,15 +187,9 @@ export class HomeAssistantClient {
   /**
    * Fire event when a secret is assigned to a 1Password item.
    */
-  async fireSecretAssignedEvent(
-    secretName: string,
-    itemId: string,
-    reference: string
-  ): Promise<boolean> {
+  async fireSecretAssignedEvent(secretName: string): Promise<boolean> {
     return this.fireEvent('onepassword_secret_assigned', {
-      secretName,
-      itemId,
-      reference
+      secretName
     });
   }
 
@@ -235,19 +218,6 @@ export class HomeAssistantClient {
   }
 
   /**
-   * Fire event when a secret's skip status is toggled.
-   */
-  async fireSecretSkipToggledEvent(
-    secretName: string,
-    isSkipped: boolean
-  ): Promise<boolean> {
-    return this.fireEvent('onepassword_secret_skip_toggled', {
-      secretName,
-      isSkipped
-    });
-  }
-
-  /**
    * Fire group update events for all groups.
    * Handles the cycle internally to avoid repetitive code.
    *
@@ -263,7 +233,7 @@ export class HomeAssistantClient {
     try {
       await Promise.all(
         groups.map((group) =>
-          this.fireGroupUpdatedEvent(group.name, group.id, group.secrets)
+          this.fireGroupUpdatedEvent(group.name, group.secrets)
         )
       );
     } catch (error) {

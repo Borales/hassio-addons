@@ -7,10 +7,22 @@ import { NextRequest } from 'next/server';
 // Call for cron-check and run the update
 
 export async function GET(request: NextRequest) {
-  const force = request.nextUrl.searchParams.get('force') === 'true';
-
   try {
-    const result = await syncService.sync(force);
+    const result = await syncService.sync();
+
+    if (
+      result.changedSecrets.length === 0 &&
+      result.changedGroups.length === 0
+    ) {
+      logger.debug(
+        'No secrets or groups changed, skipping notification and cache invalidation'
+      );
+      return Response.json({
+        done: true,
+        changedSecrets: [],
+        changedGroups: []
+      });
+    }
 
     logger.info(
       'Sync completed: %d secrets updated, %d groups affected',
@@ -39,8 +51,7 @@ export async function GET(request: NextRequest) {
 
     // Fire error event to HA
     await homeAssistantClient.fireErrorEvent('sync_failed', {
-      error: error instanceof Error ? error.message : String(error),
-      forced: force
+      error: error instanceof Error ? error.message : String(error)
     });
 
     return Response.json(

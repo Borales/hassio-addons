@@ -4,7 +4,6 @@ import { GroupList } from '@/components/group/group-list';
 import { GroupModalProvider } from '@/components/group/group-modal-provider';
 import { GroupModalWrapper } from '@/components/group/group-modal-wrapper';
 import { getCachedGroups, getCachedSecrets } from '@/lib/cached-data';
-import { Code } from '@heroui/react';
 import { getTranslations } from 'next-intl/server';
 
 export default async function GroupsPage() {
@@ -29,16 +28,6 @@ export default async function GroupsPage() {
           <p className="text-default-500 mt-1 text-sm">{t('description')}</p>
         </div>
         <CreateGroupButton />
-      </div>
-
-      {/* Info banner */}
-      <div className="border-divider bg-default-50 dark:bg-default-100/20 mb-6 rounded-lg border px-4 py-3">
-        <p className="text-default-600 dark:text-default-400 text-sm">
-          <span className="font-medium">{t('eventFormat')}</span>{' '}
-          <Code size="sm" color="primary">
-            onepassword_group_&#123;name&#125;_updated
-          </Code>
-        </p>
       </div>
 
       {groups.length === 0 ? (

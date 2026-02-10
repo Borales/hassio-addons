@@ -59,6 +59,13 @@ export const Menu = () => {
             >
               {t('rateLimits')}
             </Link>
+            <Link
+              href="./help"
+              prefetch={false}
+              className={navLink({ active: pathname.endsWith('/help') })}
+            >
+              {t('help')}
+            </Link>
           </nav>
         </div>
         <div className="flex items-center gap-4">

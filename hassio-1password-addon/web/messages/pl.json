@@ -3,6 +3,7 @@
     "secrets": "Sekrety",
     "groups": "Grupy",
     "rateLimits": "Limity zapytań",
+    "help": "Pomoc",
     "github": "Odwiedź projekt na GitHub"
   },
   "home": {
@@ -180,6 +181,46 @@
       "createGroupFailed": "Nie udało się utworzyć grupy",
       "updateGroupFailed": "Nie udało się zaktualizować grupy",
       "deleteGroupFailed": "Nie udało się usunąć grupy"
+    }
+  },
+  "events": {
+    "info": {
+      "title": "Zdarzenia Home Assistant",
+      "description": "Ten dodatek wysyła niestandardowe zdarzenia do Home Assistant, których możesz używać w automatyzacjach i skryptach. Wszystkie zdarzenia zawierają pole znacznika czasu.",
+      "note": {
+        "title": "Użycie:",
+        "description": "Twórz automatyzacje w Home Assistant używając tych zdarzeń jako wyzwalaczy. Dostęp do danych zdarzenia z trigger.event.data w akcjach automatyzacji."
+      },
+      "examples": {
+        "title": "Przykłady automatyzacji",
+        "description": "Oto kilka praktycznych przykładów automatyzacji reagujących na zdarzenia sekretów 1Password:"
+      },
+      "events": {
+        "secretsSynced": {
+          "trigger": "Wywoływane po każdej udanej operacji synchronizacji. Zawiera listę zmienionych sekretów i grup."
+        },
+        "secretWritten": {
+          "trigger": "Wywoływane dla każdego pojedynczego sekretu zapisanego do secrets.yaml podczas synchronizacji."
+        },
+        "secretAssigned": {
+          "trigger": "Wywoływane, gdy sekret jest łączony z elementem 1Password przez interfejs użytkownika."
+        },
+        "secretUnassigned": {
+          "trigger": "Wywoływane, gdy sekret jest odłączany od elementu 1Password."
+        },
+        "secretSkipToggled": {
+          "trigger": "Wywoływane, gdy widoczność sekretu (ukryty/widoczny) jest przełączana w interfejsie użytkownika."
+        },
+        "itemRefreshed": {
+          "trigger": "Wywoływane, gdy element 1Password jest ręcznie odświeżany, wpływając na wszystkie połączone sekrety."
+        },
+        "groupUpdated": {
+          "trigger": "Wywoływane, gdy dowolny sekret w grupie jest aktualizowany. Symbol zastępczy {name} jest zastępowany nazwą grupy."
+        },
+        "error": {
+          "trigger": "Wywoływane, gdy wystąpi błąd podczas synchronizacji, wywołań API lub operacji."
+        }
+      }
     }
   }
 }

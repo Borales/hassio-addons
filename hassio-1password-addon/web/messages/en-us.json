@@ -3,6 +3,7 @@
     "secrets": "Secrets",
     "groups": "Groups",
     "rateLimits": "Rate Limits",
+    "help": "Help",
     "github": "Visit the project on GitHub"
   },
   "home": {
@@ -180,6 +181,46 @@
       "createGroupFailed": "Failed to create group",
       "updateGroupFailed": "Failed to update group",
       "deleteGroupFailed": "Failed to delete group"
+    }
+  },
+  "events": {
+    "info": {
+      "title": "Home Assistant Events",
+      "description": "This add-on fires custom events to Home Assistant that you can use in automations and scripts. All events include a timestamp field.",
+      "note": {
+        "title": "Usage:",
+        "description": "Create automations in Home Assistant using these events as triggers. Access event data with trigger.event.data in your automation actions."
+      },
+      "examples": {
+        "title": "Automation Examples",
+        "description": "Here are some practical examples of automations that respond to 1Password secret events:"
+      },
+      "events": {
+        "secretsSynced": {
+          "trigger": "Fired after every successful sync operation. Contains the list of changed secrets and groups."
+        },
+        "secretWritten": {
+          "trigger": "Fired for each individual secret written to secrets.yaml during sync."
+        },
+        "secretAssigned": {
+          "trigger": "Fired when a secret is linked to a 1Password item through the UI."
+        },
+        "secretUnassigned": {
+          "trigger": "Fired when a secret is unlinked from its 1Password item."
+        },
+        "secretSkipToggled": {
+          "trigger": "Fired when a secret's visibility (hidden/shown) is toggled in the UI."
+        },
+        "itemRefreshed": {
+          "trigger": "Fired when a 1Password item is manually refreshed, affecting all linked secrets."
+        },
+        "groupUpdated": {
+          "trigger": "Fired when any secret in a group is updated. The {name} placeholder is replaced with your group name."
+        },
+        "error": {
+          "trigger": "Fired when any error occurs during sync, API calls, or operations."
+        }
+      }
     }
   }
 }

@@ -3,6 +3,7 @@
     "secrets": "Geheimnisse",
     "groups": "Gruppen",
     "rateLimits": "Ratenbegrenzungen",
+    "help": "Hilfe",
     "github": "Projekt auf GitHub besuchen"
   },
   "home": {
@@ -180,6 +181,44 @@
       "createGroupFailed": "Erstellung der Gruppe fehlgeschlagen",
       "updateGroupFailed": "Aktualisierung der Gruppe fehlgeschlagen",
       "deleteGroupFailed": "Löschen der Gruppe fehlgeschlagen"
+    }
+  },
+  "events": {
+    "info": {
+      "title": "Home Assistant Ereignisse",
+      "description": "Dieses Add-on sendet benutzerdefinierte Ereignisse an Home Assistant, die Sie in Automatisierungen und Skripten verwenden können. Alle Ereignisse enthalten ein Zeitstempelfeld.",
+      "note": {
+        "title": "Verwendung:",
+        "description": "Erstellen Sie Automatisierungen in Home Assistant mit diesen Ereignissen als Auslöser. Greifen Sie auf Ereignisdaten mit trigger.event.data in Ihren Automatisierungsaktionen zu."
+      },      "examples": {
+        "title": "Automatisierungsbeispiele",
+        "description": "Hier sind einige praktische Beispiele für Automationen, die auf 1Password-Geheimnisereignisse reagieren:"
+      },      "events": {
+        "secretsSynced": {
+          "trigger": "Wird nach jeder erfolgreichen Synchronisierung ausgelöst. Enthält die Liste der geänderten Geheimnisse und Gruppen."
+        },
+        "secretWritten": {
+          "trigger": "Wird für jedes einzelne Geheimnis ausgelöst, das während der Synchronisierung in secrets.yaml geschrieben wird."
+        },
+        "secretAssigned": {
+          "trigger": "Wird ausgelöst, wenn ein Geheimnis über die Benutzeroberfläche mit einem 1Password-Element verknüpft wird."
+        },
+        "secretUnassigned": {
+          "trigger": "Wird ausgelöst, wenn die Verknüpfung eines Geheimnisses mit seinem 1Password-Element aufgehoben wird."
+        },
+        "secretSkipToggled": {
+          "trigger": "Wird ausgelöst, wenn die Sichtbarkeit (ausgeblendet/angezeigt) eines Geheimnisses in der Benutzeroberfläche umgeschaltet wird."
+        },
+        "itemRefreshed": {
+          "trigger": "Wird ausgelöst, wenn ein 1Password-Element manuell aktualisiert wird und alle verknüpften Geheimnisse betrifft."
+        },
+        "groupUpdated": {
+          "trigger": "Wird ausgelöst, wenn ein Geheimnis in einer Gruppe aktualisiert wird. Der Platzhalter {name} wird durch Ihren Gruppennamen ersetzt."
+        },
+        "error": {
+          "trigger": "Wird ausgelöst, wenn während der Synchronisierung, bei API-Aufrufen oder Operationen ein Fehler auftritt."
+        }
+      }
     }
   }
 }

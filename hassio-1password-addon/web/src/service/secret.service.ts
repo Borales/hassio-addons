@@ -129,8 +129,7 @@ export class HASecretService {
 
     // Fire events for each secret
     for (const secretName of secretNames) {
-      const isNew = !(secretName in existingSecrets);
-      await this.haClient.fireSecretWrittenEvent(secretName, isNew);
+      await this.haClient.fireSecretWrittenEvent(secretName);
     }
 
     // Find and fire group events

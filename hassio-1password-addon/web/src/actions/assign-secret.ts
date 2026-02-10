@@ -30,11 +30,7 @@ export const assignSecret = async (
     await haSecretService.assignSecret(haSecretId, opSecretId, ref);
 
     // Fire HA event
-    await homeAssistantClient.fireSecretAssignedEvent(
-      haSecretId,
-      opSecretId,
-      ref
-    );
+    await homeAssistantClient.fireSecretAssignedEvent(haSecretId);
 
     // Fire group events for any groups containing this secret
     const groups = await groupService.getGroupsForSecrets([haSecretId]);

@@ -3,6 +3,7 @@
     "secrets": "Geheimen",
     "groups": "Groepen",
     "rateLimits": "Tarieflimieten",
+    "help": "Hulp",
     "github": "Bezoek het project op GitHub"
   },
   "home": {
@@ -180,6 +181,44 @@
       "createGroupFailed": "Aanmaken van groep mislukt",
       "updateGroupFailed": "Bijwerken van groep mislukt",
       "deleteGroupFailed": "Verwijderen van groep mislukt"
+    }
+  },
+  "events": {
+    "info": {
+      "title": "Home Assistant Gebeurtenissen",
+      "description": "Deze add-on stuurt aangepaste gebeurtenissen naar Home Assistant die je kunt gebruiken in automatiseringen en scripts. Alle gebeurtenissen bevatten een tijdstempelveld.",
+      "note": {
+        "title": "Gebruik:",
+        "description": "Maak automatiseringen in Home Assistant met deze gebeurtenissen als triggers. Toegang tot gebeurtenisgegevens via trigger.event.data in je automatiseringsacties."
+      },      "examples": {
+        "title": "Automatiseringsvoorbeelden",
+        "description": "Hier zijn enkele praktische voorbeelden van automatiseringen die reageren op 1Password geheime gebeurtenissen:"
+      },      "events": {
+        "secretsSynced": {
+          "trigger": "Geactiveerd na elke succesvolle synchronisatiebewerking. Bevat de lijst van gewijzigde geheimen en groepen."
+        },
+        "secretWritten": {
+          "trigger": "Geactiveerd voor elk individueel geheim dat tijdens synchronisatie naar secrets.yaml wordt geschreven."
+        },
+        "secretAssigned": {
+          "trigger": "Geactiveerd wanneer een geheim via de UI wordt gekoppeld aan een 1Password-item."
+        },
+        "secretUnassigned": {
+          "trigger": "Geactiveerd wanneer een geheim wordt ontkoppeld van zijn 1Password-item."
+        },
+        "secretSkipToggled": {
+          "trigger": "Geactiveerd wanneer de zichtbaarheid (verborgen/getoond) van een geheim wordt omgeschakeld in de UI."
+        },
+        "itemRefreshed": {
+          "trigger": "Geactiveerd wanneer een 1Password-item handmatig wordt vernieuwd, wat alle gekoppelde geheimen beïnvloedt."
+        },
+        "groupUpdated": {
+          "trigger": "Geactiveerd wanneer een geheim in een groep wordt bijgewerkt. De placeholder {name} wordt vervangen door je groepsnaam."
+        },
+        "error": {
+          "trigger": "Geactiveerd wanneer er een fout optreedt tijdens synchronisatie, API-aanroepen of bewerkingen."
+        }
+      }
     }
   }
 }

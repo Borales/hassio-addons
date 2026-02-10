@@ -18,12 +18,6 @@ export async function toggleSkipSecret(formData: FormData) {
     const result = await haSecretService.toggleSkipSecret(haSecretId);
 
     if (result.secret) {
-      // Fire HA event
-      await homeAssistantClient.fireSecretSkipToggledEvent(
-        haSecretId,
-        result.secret.isSkipped ?? false
-      );
-
       // Fire group events for any groups containing this secret
       const groups = await groupService.getGroupsForSecrets([haSecretId]);
       await homeAssistantClient.fireGroupUpdatedEventsForSecrets(groups);
