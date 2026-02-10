@@ -1,6 +1,6 @@
 import { glob } from 'glob';
 import { readFile, writeFile } from 'node:fs/promises';
-import { stringify } from 'yaml';
+import { parse, stringify } from 'yaml';
 import { Logger, logger } from './logger';
 
 /**
@@ -18,20 +18,62 @@ export class SecretHelper {
 
   /**
    * Scan for secrets in the Home Assistant configuration folder.
+   * This includes both:
+   * 1. Secrets referenced via !secret in YAML files
+   * 2. Secrets already defined in secrets.yaml (used by add-ons)
    */
   async scanForSecrets() {
     const files = await glob(`${this.secretFolder}/**/*.yaml`);
-    const secrets = (
+    const referencedSecrets = (
       await Promise.all(files.map((file) => this.searchForSecrets(file)))
     ).filter((s) => s);
 
-    return (
-      secrets
-        // Flat the array of secrets per file into a single array
-        .flat()
-        // Remove duplicates (if any)
-        .filter((value, index, array) => array.indexOf(value) === index)
+    const uniqueReferencedSecrets = referencedSecrets
+      // Flat the array of secrets per file into a single array
+      .flat()
+      // Remove duplicates (if any)
+      .filter((value, index, array) => array.indexOf(value) === index);
+
+    // Also include secrets that exist in secrets.yaml
+    const existingSecretKeys = await this.getExistingSecretKeys();
+
+    // Merge both lists and remove duplicates
+    const allSecrets = [
+      ...uniqueReferencedSecrets,
+      ...existingSecretKeys
+    ].filter((value, index, array) => array.indexOf(value) === index);
+
+    this.logger.debug(
+      'Found %d referenced secrets and %d existing secrets in secrets.yaml (total: %d unique)',
+      uniqueReferencedSecrets.length,
+      existingSecretKeys.length,
+      allSecrets.length
     );
+
+    return allSecrets;
+  }
+
+  /**
+   * Get all secret keys currently defined in secrets.yaml.
+   * These may be used by add-ons even if not referenced in other YAML files.
+   */
+  async getExistingSecretKeys(): Promise<string[]> {
+    try {
+      const content = await this.readSecretsFromFile();
+      if (!content) {
+        return [];
+      }
+
+      const parsed = parse(content);
+      if (!parsed || typeof parsed !== 'object') {
+        return [];
+      }
+
+      return Object.keys(parsed);
+    } catch (error) {
+      this.logger.debug('Failed to parse secrets.yaml: %s', error);
+      return [];
+    }
   }
 
   /**

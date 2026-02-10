@@ -19,6 +19,14 @@ export class SyncService {
   ) {}
 
   async sync(force?: boolean) {
+    // Check if sync is needed based on TTR or force flag
+    const syncNeeded = await this.onePasswordService.isSyncNeeded();
+
+    if (!force && !syncNeeded) {
+      this.logger.debug('Sync not needed yet, skipping');
+      return { changedSecrets: [], changedGroups: [] };
+    }
+
     this.logger.debug('Syncing HA secrets');
     await this.haSecretService.syncSecrets();
     this.logger.debug('Syncing 1Password items');
@@ -52,13 +60,6 @@ export class SyncService {
 
     // Fire sync completed event
     await this.haClient.fireSecretsSyncedEvent(changedSecrets, changedGroups);
-
-    // Send notification about the changes
-    await this.haClient.sendNotification(
-      '1Password Secrets Updated',
-      `Updated ${changedSecrets.length} secret${changedSecrets.length === 1 ? '' : 's'}: ${changedSecrets.join(', ')}`,
-      'onepassword_sync_notification'
-    );
 
     return { changedSecrets, changedGroups };
   }

@@ -39,7 +39,7 @@ export const Menu = () => {
           </Link>
           <nav className="flex items-center gap-1">
             <Link
-              className={navLink({ active: pathname === '/' })}
+              className={navLink({ active: pathname.endsWith('/') })}
               href="./"
               prefetch={false}
             >
@@ -47,18 +47,14 @@ export const Menu = () => {
             </Link>
             <Link
               prefetch={false}
-              className={navLink({
-                active: pathname.startsWith('/groups')
-              })}
+              className={navLink({ active: pathname.endsWith('/groups') })}
               href="./groups"
             >
               {t('groups')}
             </Link>
             <Link
               prefetch={false}
-              className={navLink({
-                active: pathname.startsWith('/rate-limits')
-              })}
+              className={navLink({ active: pathname.endsWith('/rate-limits') })}
               href="./rate-limits"
             >
               {t('rateLimits')}
