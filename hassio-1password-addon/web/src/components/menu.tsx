@@ -28,7 +28,7 @@ export const Menu = () => {
     <header className="bg-background/80 border-divider sticky top-0 z-50 border-b backdrop-blur-md">
       <div className="container mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
         <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center" prefetch={false}>
+          <Link href="./" className="flex items-center" prefetch={false}>
             <Image
               src="/logo.png"
               width={120}

@@ -16,46 +16,46 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   icons: {
-    icon: '/favicon.ico',
+    icon: './favicon.ico',
     other: [
       {
         rel: 'mask-icon',
         color: 'black',
-        url: '/pinned-tab.svg'
+        url: './pinned-tab.svg'
       }
     ],
     shortcut: {
-      url: '/favicon.ico',
+      url: './favicon.ico',
       type: 'image/x-icon'
     },
     apple: [
       {
-        url: '/apple-touch-icon-ipad-pro.png',
+        url: './apple-touch-icon-ipad-pro.png',
         rel: 'apple-touch-icon-precomposed',
         sizes: '167x167'
       },
       {
-        url: '/apple-touch-icon-ipad-2x.png',
+        url: './apple-touch-icon-ipad-2x.png',
         rel: 'apple-touch-icon-precomposed',
         sizes: '152x152'
       },
       {
-        url: '/apple-touch-icon-iphone-2x.png',
+        url: './apple-touch-icon-iphone-2x.png',
         rel: 'apple-touch-icon-precomposed',
         sizes: '120x120'
       },
       {
-        url: '/apple-touch-icon-ipad.png',
+        url: './apple-touch-icon-ipad.png',
         rel: 'apple-touch-icon-precomposed',
         sizes: '76x76'
       },
       {
-        url: '/apple-touch-icon-iphone.png',
+        url: './apple-touch-icon-iphone.png',
         rel: 'apple-touch-icon-precomposed',
         sizes: '60x60'
       },
       {
-        url: '/apple-touch-icon-iphone-3x.png',
+        url: './apple-touch-icon-iphone-3x.png',
         rel: 'apple-touch-icon-precomposed',
         sizes: '180x180'
       }
