@@ -28,7 +28,7 @@ export const Menu = () => {
     <header className="bg-background/80 border-divider sticky top-0 z-50 border-b backdrop-blur-md">
       <div className="container mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
         <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center">
+          <Link href="/" className="flex items-center" prefetch={false}>
             <Image
               src="/logo.png"
               width={120}
@@ -38,16 +38,22 @@ export const Menu = () => {
             />
           </Link>
           <nav className="flex items-center gap-1">
-            <Link className={navLink({ active: pathname === '/' })} href="/">
+            <Link
+              className={navLink({ active: pathname === '/' })}
+              href="/"
+              prefetch={false}
+            >
               {t('secrets')}
             </Link>
             <Link
+              prefetch={false}
               className={navLink({ active: pathname === '/groups' })}
               href="/groups"
             >
               {t('groups')}
             </Link>
             <Link
+              prefetch={false}
               className={navLink({ active: pathname === '/rate-limits' })}
               href="/rate-limits"
             >
@@ -61,6 +67,7 @@ export const Menu = () => {
             target="_blank"
             title={t('github')}
             className="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm transition-colors"
+            prefetch={false}
           >
             <Avatar
               size="sm"
