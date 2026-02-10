@@ -63,12 +63,12 @@ export const GroupModal = ({ group, secrets, isNew }: GroupModalProps) => {
   // Close modal on success
   useEffect(() => {
     if (state?.success) {
-      router.push('/groups');
+      router.push('./groups');
     }
   }, [state, router]);
 
   const handleClose = () => {
-    router.push('/groups');
+    router.push('./groups');
   };
 
   return (

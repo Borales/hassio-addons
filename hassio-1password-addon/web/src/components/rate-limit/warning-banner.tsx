@@ -36,7 +36,7 @@ export const RateLimitWarningBanner = ({
         </>
       }
       endContent={
-        <Link href="/rate-limits" passHref>
+        <Link href="./rate-limits" passHref>
           <Button color="warning" size="sm" variant="flat">
             {t('viewDetails')}
           </Button>

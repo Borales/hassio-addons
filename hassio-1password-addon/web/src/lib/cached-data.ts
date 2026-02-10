@@ -19,9 +19,13 @@ import { haSecretService } from '@/service/secret.service';
 import { cacheLife, cacheTag } from 'next/cache';
 
 /**
- * Serialize data to plain objects, removing symbol properties
+ * Serialize data to plain objects, removing symbol properties.
+ * Handles undefined/null safely to prevent JSON.parse errors.
  */
-const serialize = <T>(data: T): T => JSON.parse(JSON.stringify(data));
+const serialize = <T>(data: T): T => {
+  if (data === undefined || data === null) return data as T;
+  return JSON.parse(JSON.stringify(data));
+};
 
 /**
  * Get all groups with caching

@@ -213,12 +213,12 @@ export class OnePasswordService {
   /**
    * Get the next update time from the database.
    */
-  async getNextUpdate() {
+  async getNextUpdate(): Promise<string | null> {
     const nextUpdate = await this.db.setting.findUnique({
       where: { id: NEXT_UPDATE_KEY }
     });
 
-    return nextUpdate?.value;
+    return nextUpdate?.value ?? null;
   }
 
   /**

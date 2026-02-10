@@ -94,7 +94,7 @@ export const HASecretModal = ({
       size="xl"
       isOpen={!!activeSecret}
       onClose={() => {
-        nav.push('/');
+        nav.push('./');
       }}
     >
       <ModalContent>
