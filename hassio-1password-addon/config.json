@@ -1,6 +1,6 @@
 {
   "name": "1password Secrets Storage",
-  "version": "0.1.29",
+  "version": "0.1.30",
   "slug": "hassio_1password_secrets_storage",
   "description": "Sync your secrets from 1password",
   "arch": ["aarch64", "amd64"],

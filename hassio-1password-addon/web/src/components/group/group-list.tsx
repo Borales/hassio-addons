@@ -156,7 +156,7 @@ function GroupActionsCell({ group }: { group: GroupWithSecrets }) {
 
   return (
     <ActionButtons>
-      <Link href={`/groups?groupId=${group.id}`}>
+      <Link href={`./groups?groupId=${group.id}`}>
         <Button
           isIconOnly
           size="sm"

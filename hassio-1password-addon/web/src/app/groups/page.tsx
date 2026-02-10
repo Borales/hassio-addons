@@ -63,7 +63,7 @@ export default async function GroupsPage(props: {
           <p className="text-default-400 text-sm">{t('noGroupsYet')}</p>
           <p className="mt-2">
             <Link
-              href="/groups?groupId=new"
+              href="./groups?groupId=new"
               className="text-primary text-sm hover:underline"
             >
               {t('createFirstGroup')}

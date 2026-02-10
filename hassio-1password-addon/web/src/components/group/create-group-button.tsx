@@ -8,7 +8,7 @@ import Link from 'next/link';
 export const CreateGroupButton = () => {
   const t = useTranslations('groups.actions');
   return (
-    <Link href="/groups?groupId=new">
+    <Link href="./groups?groupId=new">
       <Button
         size="sm"
         variant="flat"
