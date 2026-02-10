@@ -20,6 +20,7 @@ const nextConfig: NextConfig = {
     }
   },
   images: {
+    path: './_next/image',
     remotePatterns: [
       {
         protocol: 'https',
