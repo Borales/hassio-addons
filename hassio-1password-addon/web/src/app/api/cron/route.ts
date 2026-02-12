@@ -2,11 +2,14 @@ import { homeAssistantClient } from '@/service/client/homeassistant';
 import { logger } from '@/service/client/logger';
 import { syncService } from '@/service/sync.service';
 import { revalidateTag } from 'next/cache';
-import { NextRequest } from 'next/server';
+import { connection } from 'next/server';
 
 // Call for cron-check and run the update
 
-export async function GET(request: NextRequest) {
+export async function GET() {
+  // The next line is needed for Docker build
+  await connection();
+
   try {
     const result = await syncService.sync();
 
