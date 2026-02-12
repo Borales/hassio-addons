@@ -101,7 +101,7 @@ action:
       trigger: t('events.error.trigger'),
       example: {
         errorType: 'sync_failed',
-        message: 'Network connection timeout'
+        error: 'Network connection timeout'
       }
     }
   ];

@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [0.2.1] - 2026-02-15
 
 - Fixed a silent error in Docker build
 - Reduced log noise of rate limit updates from INFO to DEBUG
