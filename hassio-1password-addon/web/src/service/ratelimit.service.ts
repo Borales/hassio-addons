@@ -46,7 +46,7 @@ export class RateLimitService {
       update: { value: JSON.stringify(data) }
     });
 
-    this.logger.info('Rate limits updated: %o', { limits, account });
+    this.logger.debug('Rate limits updated: %o', { limits, account });
     return data;
   }
 
