@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "prisma": "^7.4.0",
-    "dotenv": "^17.2.4"
+    "dotenv": "^17.3.1"
   },
   "packageManager": "pnpm@10.29.3"
 }
