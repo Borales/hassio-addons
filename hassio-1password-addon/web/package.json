@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@1password/op-js": "^0.1.13",
-    "@heroui/react": "^2.8.8",
+    "@heroui/react": "^2.8.9",
     "@phosphor-icons/react": "^2.1.10",
     "@prisma/adapter-better-sqlite3": "^7.4.0",
     "@prisma/client": "^7.4.0",
