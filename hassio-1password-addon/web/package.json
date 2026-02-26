@@ -45,7 +45,7 @@
   "devDependencies": {
     "@react-aria/ssr": "^3.9.10",
     "@react-aria/visually-hidden": "^3.8.30",
-    "@tailwindcss/postcss": "^4.2.0",
+    "@tailwindcss/postcss": "^4.2.1",
     "@types/node": "^24.10.13",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
@@ -62,7 +62,7 @@
     "prisma": "^7.4.1",
     "tailwind-merge": "^3.4.0",
     "tailwind-variants": "^3.2.2",
-    "tailwindcss": "^4.2.0",
+    "tailwindcss": "^4.2.1",
     "typescript": "^5.9.3"
   },
   "packageManager": "pnpm@10.30.2"
