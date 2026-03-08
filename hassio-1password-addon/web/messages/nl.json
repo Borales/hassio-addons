@@ -190,10 +190,12 @@
       "note": {
         "title": "Gebruik:",
         "description": "Maak automatiseringen in Home Assistant met deze gebeurtenissen als triggers. Toegang tot gebeurtenisgegevens via trigger.event.data in je automatiseringsacties."
-      },      "examples": {
+      },
+      "examples": {
         "title": "Automatiseringsvoorbeelden",
         "description": "Hier zijn enkele praktische voorbeelden van automatiseringen die reageren op 1Password geheime gebeurtenissen:"
-      },      "events": {
+      },
+      "events": {
         "secretsSynced": {
           "trigger": "Geactiveerd na elke succesvolle synchronisatiebewerking. Bevat de lijst van gewijzigde geheimen en groepen."
         },

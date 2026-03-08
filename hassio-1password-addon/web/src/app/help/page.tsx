@@ -6,7 +6,7 @@ import { memo } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-export default async function Help() {
+export default function Help() {
   const t = useTranslations('events.info');
 
   const examples = [
@@ -175,16 +175,15 @@ action:
   );
 }
 
-const EventItem = memo(
-  ({
-    name,
-    trigger,
-    example
-  }: {
-    name: string;
-    trigger: string;
-    example: Record<string, unknown>;
-  }) => {
+const EventItem = memo(function EventItem({
+  name,
+  trigger,
+  example
+}: {
+  name: string;
+  trigger: string;
+  example: Record<string, unknown>;
+}) {
     return (
       <div className="border-divider flex flex-col gap-2 border-b pb-3 last:border-0 last:pb-0">
         <div className="flex items-center gap-2">

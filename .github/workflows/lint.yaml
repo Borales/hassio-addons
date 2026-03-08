@@ -32,10 +32,32 @@ jobs:
       matrix:
         path: ${{ fromJson(needs.find.outputs.addons) }}
     steps:
-      - name: ⤵️ Check out code from GitHub
+      - name: Check out code from GitHub
         uses: actions/checkout@v6.0.2
 
-      - name: 🚀 Run Home Assistant Add-on Lint
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: "./${{ matrix.path }}/web/.nvmrc"
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: "./${{ matrix.path }}/web"
+
+      - name: Run lint
+        run: pnpm lint
+        working-directory: "./${{ matrix.path }}/web"
+
+      - name: Run test coverage
+        run: pnpm test:coverage
+        working-directory: "./${{ matrix.path }}/web"
+
+      - name: Run Home Assistant Add-on Lint
         uses: frenck/action-addon-linter@v2.21
         with:
           path: "./${{ matrix.path }}"

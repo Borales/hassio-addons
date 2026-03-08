@@ -14,7 +14,7 @@ const groupNameSchema = createGroupNameSchema({
   required: 'Group name is required',
   invalid:
     'Group name must contain only lowercase letters, numbers, underscores, and hyphens',
-  tooShort: 'Group name must be at least 1 character',
+  tooShort: 'Group name must be at least 2 characters',
   tooLong: 'Group name must be at most 50 characters'
 });
 

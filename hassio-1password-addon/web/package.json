@@ -17,6 +17,9 @@
     "prettier:fix": "prettier --write ./src ./messages",
     "prisma:generate": "prisma generate",
     "start": "next start -p 8000",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -46,14 +49,17 @@
     "@react-aria/ssr": "^3.9.10",
     "@react-aria/visually-hidden": "^3.8.30",
     "@tailwindcss/postcss": "^4.2.0",
+    "@testing-library/react": "^16.3.2",
     "@types/node": "^24.10.13",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "@vitest/coverage-v8": "^4.0.18",
     "clsx": "^2.1.1",
     "eslint": "^9.39.3",
     "eslint-config-next": "^16.1.6",
     "eslint-config-prettier": "^10.1.8",
+    "happy-dom": "^20.7.0",
     "postcss": "^8.5.6",
     "prettier": "^3.8.1",
     "prettier-plugin-organize-imports": "^4.3.0",
@@ -63,7 +69,8 @@
     "tailwind-merge": "^3.4.0",
     "tailwind-variants": "^3.2.2",
     "tailwindcss": "^4.2.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
   },
   "packageManager": "pnpm@10.30.1"
 }
