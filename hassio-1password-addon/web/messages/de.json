@@ -190,10 +190,12 @@
       "note": {
         "title": "Verwendung:",
         "description": "Erstellen Sie Automatisierungen in Home Assistant mit diesen Ereignissen als Auslöser. Greifen Sie auf Ereignisdaten mit trigger.event.data in Ihren Automatisierungsaktionen zu."
-      },      "examples": {
+      },
+      "examples": {
         "title": "Automatisierungsbeispiele",
         "description": "Hier sind einige praktische Beispiele für Automationen, die auf 1Password-Geheimnisereignisse reagieren:"
-      },      "events": {
+      },
+      "events": {
         "secretsSynced": {
           "trigger": "Wird nach jeder erfolgreichen Synchronisierung ausgelöst. Enthält die Liste der geänderten Geheimnisse und Gruppen."
         },
