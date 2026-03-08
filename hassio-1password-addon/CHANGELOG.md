@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Added tests for the web interface
+
 ## 0.2.1
 
 - Fixed a silent error in Docker build
