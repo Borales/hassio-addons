@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardBody, Progress, ProgressProps } from '@heroui/react';
+import { Card, ProgressBar, ProgressBarProps } from '@heroui/react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { tv } from 'tailwind-variants';
@@ -9,7 +9,7 @@ const progressColor = tv({
   variants: {
     usage: {
       low: 'success',
-      medium: 'primary',
+      medium: 'accent',
       high: 'warning',
       critical: 'danger'
     }
@@ -46,7 +46,9 @@ export const UsageCard = ({
           ? 'medium'
           : 'low';
 
-  const color = progressColor({ usage: usageLevel }) as ProgressProps['color'];
+  const color = progressColor({
+    usage: usageLevel
+  }) as ProgressBarProps['color'];
 
   // Update countdown every minute
   useEffect(() => {
@@ -85,7 +87,7 @@ export const UsageCard = ({
 
   return (
     <Card>
-      <CardBody className="gap-4">
+      <Card.Content className="gap-4">
         <div>
           <h3 className="text-foreground text-lg font-semibold">{title}</h3>
           <p className="text-default-500 text-sm">{description}</p>
@@ -102,7 +104,7 @@ export const UsageCard = ({
             </span>
           </div>
 
-          <Progress
+          <ProgressBar
             value={percentage}
             color={color}
             size="md"
@@ -130,7 +132,7 @@ export const UsageCard = ({
             </div>
           )}
         </div>
-      </CardBody>
+      </Card.Content>
     </Card>
   );
 };

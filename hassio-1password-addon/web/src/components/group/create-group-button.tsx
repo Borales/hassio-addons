@@ -12,11 +12,11 @@ export const CreateGroupButton = () => {
   return (
     <Button
       size="sm"
-      variant="flat"
-      startContent={<PlusIcon weight="bold" size={14} />}
+      variant="secondary"
       className="bg-default-100 dark:bg-default-200 text-foreground"
       onPress={openCreateModal}
     >
+      <PlusIcon weight="bold" size={14} />
       {t('newGroup')}
     </Button>
   );

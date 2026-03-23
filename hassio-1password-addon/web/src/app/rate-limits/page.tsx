@@ -43,7 +43,7 @@ export default async function RateLimitsPage() {
 
       {/* Info banner */}
       <div className="border-divider bg-default-50 dark:bg-default-100/20 mb-6 rounded-lg border px-4 py-3">
-        <p className="text-default-600 dark:text-default-400 text-sm">
+        <p className="text-muted text-sm">
           {t('lastUpdated')}: <CustomTimeAgo date={timestamp} />
         </p>
       </div>

@@ -80,8 +80,11 @@ export const Menu = () => {
               size="sm"
               title={t('github')}
               className="bg-primary-900 text-default-100"
-              icon={<GithubLogoIcon size={18} weight="fill" />}
-            />
+            >
+              <Avatar.Fallback>
+                <GithubLogoIcon size={18} weight="fill" />
+              </Avatar.Fallback>
+            </Avatar>
           </Link>
           <LocaleSwitch />
           <ThemeSwitch />

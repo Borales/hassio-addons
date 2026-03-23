@@ -1,6 +1,7 @@
 'use client';
 
-import { Card, CardBody, Chip, Code } from '@heroui/react';
+import { Code } from '@/components/code';
+import { Card, Chip } from '@heroui/react';
 import { useTranslations } from 'next-intl';
 import { memo } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -116,7 +117,7 @@ action:
       </div>
 
       <Card>
-        <CardBody>
+        <Card.Content>
           <div className="flex flex-col gap-3">
             {events.map((event) => (
               <EventItem
@@ -134,7 +135,7 @@ action:
               {t('note.description')}
             </p>
           </div>
-        </CardBody>
+        </Card.Content>
       </Card>
 
       <div className="mt-6">
@@ -148,7 +149,7 @@ action:
         <div className="flex flex-col gap-4">
           {examples.map((example, index) => (
             <Card key={index}>
-              <CardBody>
+              <Card.Content>
                 <h4 className="text-foreground mb-3 text-lg font-semibold">
                   {example.name}
                 </h4>
@@ -166,7 +167,7 @@ action:
                     {example.content}
                   </SyntaxHighlighter>
                 </div>
-              </CardBody>
+              </Card.Content>
             </Card>
           ))}
         </div>
@@ -184,18 +185,17 @@ const EventItem = memo(function EventItem({
   trigger: string;
   example: Record<string, unknown>;
 }) {
-    return (
-      <div className="border-divider flex flex-col gap-2 border-b pb-3 last:border-0 last:pb-0">
-        <div className="flex items-center gap-2">
-          <Chip size="md" variant="flat" color="primary" className="font-mono">
-            {name}
-          </Chip>
-        </div>
-        <p className="text-default-600 text-sm">{trigger}</p>
-        <Code size="sm" className="text-xs leading-relaxed">
-          <pre>{JSON.stringify(example, null, 2)}</pre>
-        </Code>
+  return (
+    <div className="border-divider flex flex-col gap-2 border-b pb-3 last:border-0 last:pb-0">
+      <div className="flex items-center gap-2">
+        <Chip size="md" variant="soft" color="accent" className="font-mono">
+          {name}
+        </Chip>
       </div>
-    );
-  }
-);
+      <p className="text-default-600 text-sm">{trigger}</p>
+      <Code className="bg-default text-xs leading-relaxed">
+        <pre>{JSON.stringify(example, null, 2)}</pre>
+      </Code>
+    </div>
+  );
+});

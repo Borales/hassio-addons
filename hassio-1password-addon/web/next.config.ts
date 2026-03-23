@@ -6,7 +6,7 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 const nextConfig: NextConfig = {
   cacheComponents: true,
   output: 'standalone',
-  assetPrefix: '.',
+  assetPrefix: process.env.NODE_ENV === 'production' ? '.' : undefined,
   poweredByHeader: false,
   devIndicators: {
     position: 'bottom-right'

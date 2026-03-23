@@ -1,7 +1,6 @@
 @import 'tailwindcss';
-@plugin '../hero.ts';
+@import '@heroui/styles';
 
-@source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
 @custom-variant dark (&:is(.dark *));
 
 /* Better dark mode contrast and visual refinements */
@@ -24,5 +23,12 @@
   /* Better contrast for borders in dark mode */
   .dark .border-divider {
     border-color: rgba(255, 255, 255, 0.12);
+  }
+}
+
+@layer components {
+  .button,
+  .alert {
+    @apply rounded-sm;
   }
 }

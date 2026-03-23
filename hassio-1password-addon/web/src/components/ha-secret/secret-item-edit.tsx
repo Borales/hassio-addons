@@ -17,12 +17,10 @@ export const HASecretItemEdit = ({ secret }: HASecretItemEditProps) => {
   return (
     <Button
       isIconOnly
-      color="default"
-      variant="light"
+      variant="ghost"
       onPress={() => openModal(secret)}
       size="sm"
       aria-label={t('edit')}
-      title={t('edit')}
     >
       <PencilIcon />
     </Button>

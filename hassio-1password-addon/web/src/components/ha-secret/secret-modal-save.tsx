@@ -45,9 +45,8 @@ export const HASecretModalSave = ({
         <input type="hidden" name="ref" value={reference} />
 
         <Button
-          color="default"
+          variant="ghost"
           size="sm"
-          variant="light"
           onPress={onClose}
           isDisabled={isPending}
         >
@@ -55,9 +54,9 @@ export const HASecretModalSave = ({
         </Button>
         <Button
           type="submit"
-          color="primary"
+          variant="primary"
           size="sm"
-          isLoading={isPending}
+          isPending={isPending}
           isDisabled={!opSecretId || !reference}
         >
           {t('save')}

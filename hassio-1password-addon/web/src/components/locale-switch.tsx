@@ -1,13 +1,7 @@
 'use client';
 
 import { Locale, locales } from '@/config/locales';
-import {
-  Button,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger
-} from '@heroui/react';
+import { Dropdown } from '@heroui/react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { FC, useTransition } from 'react';
@@ -42,34 +36,29 @@ export const LocaleSwitch: FC<LocaleSwitchProps> = ({ className }) => {
   };
 
   return (
-    <Dropdown placement="bottom-end">
-      <DropdownTrigger>
-        <Button
-          variant="light"
-          isIconOnly
-          className={className}
-          aria-label={t('switchLocale')}
-          isDisabled={isPending}
-        >
-          <span className="text-2xl">{localeFlags[locale]}</span>
-        </Button>
-      </DropdownTrigger>
-      <DropdownMenu
+    <Dropdown>
+      <Dropdown.Trigger
+        className={className}
         aria-label={t('switchLocale')}
-        onAction={(key) => handleLocaleChange(key as Locale)}
-        selectedKeys={[locale]}
-        selectionMode="single"
-        disallowEmptySelection
+        isDisabled={isPending}
       >
-        {locales.map((loc) => (
-          <DropdownItem
-            key={loc}
-            startContent={<span className="text-lg">{localeFlags[loc]}</span>}
-          >
-            {t(loc)}
-          </DropdownItem>
-        ))}
-      </DropdownMenu>
+        <span className="text-2xl">{localeFlags[locale]}</span>
+      </Dropdown.Trigger>
+      <Dropdown.Popover placement="bottom end">
+        <Dropdown.Menu
+          aria-label={t('switchLocale')}
+          onAction={(key) => handleLocaleChange(key as Locale)}
+          selectedKeys={[locale]}
+          selectionMode="single"
+          disallowEmptySelection
+        >
+          {locales.map((loc) => (
+            <Dropdown.Item key={loc} textValue={t(loc)} id={loc}>
+              <span className="text-lg">{localeFlags[loc]}</span> {t(loc)}
+            </Dropdown.Item>
+          ))}
+        </Dropdown.Menu>
+      </Dropdown.Popover>
     </Dropdown>
   );
 };

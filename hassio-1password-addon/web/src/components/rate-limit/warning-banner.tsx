@@ -1,6 +1,7 @@
 'use client';
 
 import { Alert, Button } from '@heroui/react';
+import { WarningCircleIcon } from '@phosphor-icons/react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
@@ -25,23 +26,21 @@ export const RateLimitWarningBanner = ({
   const warningText = warnings.map((w) => warningLabels[w] || w).join(', ');
 
   return (
-    <Alert
-      color="warning"
-      variant="faded"
-      className="mb-4"
-      title={t('title')}
-      description={
-        <>
+    <Alert status="warning" className="mb-4 items-center">
+      <Alert.Indicator>
+        <WarningCircleIcon size={24} weight="bold" />
+      </Alert.Indicator>
+      <Alert.Content>
+        <Alert.Title>{t('title')}</Alert.Title>
+        <Alert.Description>
           {warningText} {t('description')}
-        </>
-      }
-      endContent={
-        <Link href="./rate-limits" passHref>
-          <Button color="warning" size="sm" variant="flat">
-            {t('viewDetails')}
-          </Button>
-        </Link>
-      }
-    />
+        </Alert.Description>
+      </Alert.Content>
+      <Link href="./rate-limits" passHref>
+        <Button size="sm" variant="tertiary">
+          {t('viewDetails')}
+        </Button>
+      </Link>
+    </Alert>
   );
 };
