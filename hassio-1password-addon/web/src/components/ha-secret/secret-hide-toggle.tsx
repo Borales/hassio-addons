@@ -21,11 +21,9 @@ export const HASecretHideToggle = ({
       <input type="hidden" name="haSecretId" value={secretId} />
       <Button
         isIconOnly
-        color="default"
-        variant="light"
+        variant="ghost"
         type="submit"
         size="sm"
-        title={isSkipped ? t('show') : t('hide')}
         aria-label={isSkipped ? t('show') : t('hide')}
       >
         {isSkipped ? <EyeIcon /> : <EyeSlashIcon />}

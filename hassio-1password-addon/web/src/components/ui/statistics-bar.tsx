@@ -11,16 +11,16 @@ const statItemStyles = tv({
   variants: {
     color: {
       default: {
-        base: 'text-default-500'
+        base: 'text-muted'
       },
       success: {
-        base: 'text-success-600 dark:text-success-400'
+        base: 'dark:text-success text-green-600'
       },
       warning: {
-        base: 'text-warning-600 dark:text-warning-400'
+        base: 'dark:text-warning text-orange-500'
       },
       muted: {
-        base: 'text-default-400'
+        base: 'text-muted'
       }
     }
   },

@@ -7,12 +7,11 @@ export const ServiceAccountWarning = () => {
   const t = useTranslations('serviceAccountWarning');
 
   return (
-    <Alert
-      color="danger"
-      variant="faded"
-      className="mb-4"
-      title={t('title')}
-      description={t('description')}
-    />
+    <Alert status="danger" className="mb-4">
+      <Alert.Content>
+        <Alert.Title>{t('title')}</Alert.Title>
+        <Alert.Description>{t('description')}</Alert.Description>
+      </Alert.Content>
+    </Alert>
   );
 };

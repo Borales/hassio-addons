@@ -2,21 +2,10 @@
 
 import { deleteGroup } from '@/actions/group-delete';
 import { GroupWithSecrets } from '@/service/group.service';
-import {
-  Button,
-  Chip,
-  Code,
-  Table,
-  TableBody,
-  TableCell,
-  TableColumn,
-  TableHeader,
-  TableRow,
-  Tooltip
-} from '@heroui/react';
+import { Button, Chip, Table, Tooltip } from '@heroui/react';
 import { PencilSimpleIcon, TrashIcon } from '@phosphor-icons/react';
 import { useTranslations } from 'next-intl';
-import { Key, memo, useCallback, useMemo, useTransition } from 'react';
+import { memo, useCallback, useTransition } from 'react';
 import { ActionButtons } from '../ui/action-buttons';
 import { ChipList } from '../ui/chip-list';
 import { ConfirmDialog } from '../ui/confirm-dialog';
@@ -29,66 +18,50 @@ type GroupListProps = {
 export const GroupList = ({ groups }: GroupListProps) => {
   const t = useTranslations('groups.list.columns');
 
-  const COLUMNS = useMemo(
-    () => [
-      { key: 'name', label: t('name') },
-      { key: 'secrets', label: t('secrets') },
-      { key: 'event', label: t('event') },
-      { key: 'actions', label: t('actions') }
-    ],
-    [t]
-  );
-
   return (
-    <Table aria-label="Groups" removeWrapper>
-      <TableHeader columns={COLUMNS}>
-        {(column) => (
-          <TableColumn
-            key={column.key}
-            align={column.key === 'actions' ? 'end' : 'start'}
-          >
-            {column.label}
-          </TableColumn>
-        )}
-      </TableHeader>
-      <TableBody items={groups}>
-        {(group) => (
-          <TableRow key={group.id}>
-            {(columnKey) => (
-              <TableCell>{renderCell(group, columnKey)}</TableCell>
+    <Table>
+      <Table.ScrollContainer>
+        <Table.Content aria-label="Groups">
+          <Table.Header>
+            <Table.Column isRowHeader>{t('name')}</Table.Column>
+            <Table.Column>{t('secrets')}</Table.Column>
+            <Table.Column>{t('event')}</Table.Column>
+            <Table.Column className="text-end">{t('actions')}</Table.Column>
+          </Table.Header>
+          <Table.Body items={groups}>
+            {(group) => (
+              <Table.Row key={group.id}>
+                <Table.Cell>
+                  <GroupNameCell group={group} />
+                </Table.Cell>
+                <Table.Cell>
+                  <LinkedSecretsCell secrets={group.secrets} />
+                </Table.Cell>
+                <Table.Cell>
+                  <EventNameCell groupName={group.name} />
+                </Table.Cell>
+                <Table.Cell>
+                  <GroupActionsCell group={group} />
+                </Table.Cell>
+              </Table.Row>
             )}
-          </TableRow>
-        )}
-      </TableBody>
+          </Table.Body>
+        </Table.Content>
+      </Table.ScrollContainer>
     </Table>
   );
 };
-
-function renderCell(group: GroupWithSecrets, columnKey: Key) {
-  switch (columnKey) {
-    case 'name':
-      return <GroupNameCell group={group} />;
-    case 'secrets':
-      return <LinkedSecretsCell secrets={group.secrets} />;
-    case 'event':
-      return <EventNameCell groupName={group.name} />;
-    case 'actions':
-      return <GroupActionsCell group={group} />;
-    default:
-      return null;
-  }
-}
 
 const GroupNameCell = memo(({ group }: { group: GroupWithSecrets }) => {
   return (
     <div className="min-w-0">
       <div className="flex items-center gap-2">
-        <span className="truncate text-sm font-medium">{group.name}</span>
-        {group.description && (
-          <Tooltip content={group.description} placement="top">
-            <span className="text-default-300 cursor-help text-xs">ⓘ</span>
-          </Tooltip>
-        )}
+        <Tooltip delay={100}>
+          <Tooltip.Trigger>
+            <span className="truncate text-sm font-bold">{group.name}</span>
+          </Tooltip.Trigger>
+          <Tooltip.Content placement="top">{group.description}</Tooltip.Content>
+        </Tooltip>
       </div>
     </div>
   );
@@ -106,15 +79,7 @@ const LinkedSecretsCell = memo(
 
     const renderChip = useCallback(
       (secret: { id: string; label: string }) => (
-        <Chip
-          key={secret.id}
-          size="sm"
-          variant="flat"
-          classNames={{
-            base: 'h-5 bg-default-100 dark:bg-default-200',
-            content: 'font-mono text-[10px] text-default-600 px-1.5'
-          }}
-        >
+        <Chip key={secret.id} size="sm" className="font-mono">
           {secret.label}
         </Chip>
       ),
@@ -135,7 +100,11 @@ const LinkedSecretsCell = memo(
 LinkedSecretsCell.displayName = 'LinkedSecretsCell';
 
 const EventNameCell = memo(({ groupName }: { groupName: string }) => {
-  return <Code color="primary">onepassword_group_{groupName}_updated</Code>;
+  return (
+    <Chip variant="soft" color="accent" className="font-mono" size="lg">
+      onepassword_group_{groupName}_updated
+    </Chip>
+  );
 });
 
 EventNameCell.displayName = 'EventNameCell';
@@ -166,10 +135,9 @@ function GroupActionsCell({ group }: { group: GroupWithSecrets }) {
           <Button
             isIconOnly
             size="sm"
-            variant="light"
-            color="danger"
+            variant="danger-soft"
             aria-label={t('deleteGroup')}
-            isLoading={isPending}
+            isPending={isPending}
             onPress={onOpen}
           >
             <TrashIcon size={16} />
@@ -188,7 +156,7 @@ function GroupEditButton({ group }: { group: GroupWithSecrets }) {
     <Button
       isIconOnly
       size="sm"
-      variant="light"
+      variant="ghost"
       aria-label={t('editGroup')}
       onPress={() => openEditModal(group)}
     >

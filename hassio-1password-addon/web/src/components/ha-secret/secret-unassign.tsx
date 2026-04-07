@@ -25,12 +25,10 @@ export const HASecretUnassign = ({
       <input type="hidden" name="haSecretId" value={secretId} />
       <Button
         isIconOnly
-        color="danger"
-        variant="light"
+        variant="danger-soft"
         type="submit"
         size="sm"
         aria-label={t('unassign')}
-        title={t('unassign')}
       >
         <LinkBreakIcon weight="bold" />
       </Button>

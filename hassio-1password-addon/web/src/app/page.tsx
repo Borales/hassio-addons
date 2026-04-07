@@ -1,3 +1,4 @@
+import { Code } from '@/components/code';
 import { CustomTimeAgo } from '@/components/date-formatter';
 import { HASecretList } from '@/components/ha-secret/secret-list';
 import { SecretModalProvider } from '@/components/ha-secret/secret-modal-provider';
@@ -12,7 +13,6 @@ import {
   getCachedRateLimitWarning,
   getCachedSecrets
 } from '@/lib/cached-data';
-import { Code } from '@heroui/react';
 import { getTranslations } from 'next-intl/server';
 
 export default async function Home(props: PageProps<'/'>) {
@@ -74,8 +74,8 @@ export default async function Home(props: PageProps<'/'>) {
       <HASecretList items={secretsWithGroups} />
 
       {/* Footer status bar */}
-      <div className="border-divider bg-default-50 dark:bg-default-100/20 flex items-center justify-between rounded-lg border px-4 py-3">
-        <span className="text-default-500 text-sm">
+      <div className="bg-default-50 dark:bg-default-100/20 flex items-center justify-between rounded-lg px-4 py-3">
+        <span className="text-muted text-sm">
           {nextUpdate && (
             <>
               {t('nextSync')} <CustomTimeAgo date={nextUpdate} />
