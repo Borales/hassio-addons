@@ -41,7 +41,7 @@ jobs:
           node-version-file: "./${{ matrix.path }}/web/.nvmrc"
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v5
         with:
           package_json_file: "./${{ matrix.path }}/web/package.json"
           run_install: false
