@@ -54,7 +54,7 @@
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@types/react-syntax-highlighter": "^15.5.13",
-    "@vitest/coverage-v8": "^4.1.5",
+    "@vitest/coverage-v8": "^4.1.9",
     "clsx": "^2.1.1",
     "eslint": "^9.39.4",
     "eslint-config-next": "^16.2.4",
@@ -70,7 +70,7 @@
     "tailwind-variants": "^3.2.2",
     "tailwindcss": "^4.3.1",
     "typescript": "^5.9.3",
-    "vitest": "^4.1.5"
+    "vitest": "^4.1.9"
   },
   "packageManager": "pnpm@10.32.1"
 }
