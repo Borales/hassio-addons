@@ -12,7 +12,7 @@ RUN corepack enable pnpm
 WORKDIR /build
 
 # Copy web app source
-COPY web/package.json web/.npmrc web/pnpm-lock.yaml web/pnpm-workspace.yaml web/next.config.ts ./
+COPY web/package.json web/pnpm-lock.yaml web/pnpm-workspace.yaml web/next.config.ts ./
 COPY web/prisma ./prisma
 COPY web/prisma.config.ts ./prisma.config.ts
 
