@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.3.0
 
 - Added tests for the web interface
 - Updated web dependencies and lockfile (including next-intl, vite, vitest, and form-data)
