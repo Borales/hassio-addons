@@ -8,8 +8,8 @@
     "migrate": "prisma migrate deploy"
   },
   "dependencies": {
-    "prisma": "^7.8.0",
-    "dotenv": "^17.4.2"
+    "dotenv": "^17.4.2",
+    "prisma": "^7.8.0"
   },
-  "packageManager": "pnpm@11.9.0"
+  "packageManager": "pnpm@11.13.1"
 }
