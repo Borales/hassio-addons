@@ -60,7 +60,7 @@
     "eslint-config-next": "^16.2.10",
     "eslint-config-prettier": "^10.1.8",
     "happy-dom": "^20.10.6",
-    "postcss": "^8.5.16",
+    "postcss": "^8.5.19",
     "prettier": "^3.9.4",
     "prettier-plugin-organize-imports": "^4.3.0",
     "prettier-plugin-package": "^2.0.0",
