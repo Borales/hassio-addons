@@ -1,7 +1,7 @@
 ARG BUILD_FROM
 
 FROM node:24.18.0-alpine AS node
-FROM 1password/op:2.34.1 AS onepassword
+FROM 1password/op:2.38.1 AS onepassword
 
 # Builder stage - build Next.js app with native modules for Alpine
 FROM node:24.18.0-alpine AS builder
