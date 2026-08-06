@@ -1,10 +1,10 @@
 ARG BUILD_FROM
 
-FROM node:24.18.1-alpine AS node
+FROM node:24.19.0-alpine AS node
 FROM 1password/op:2.38.1 AS onepassword
 
 # Builder stage - build Next.js app with native modules for Alpine
-FROM node:24.18.1-alpine AS builder
+FROM node:24.19.0-alpine AS builder
 
 RUN apk add --no-cache libc6-compat python3 make g++
 RUN corepack enable pnpm
