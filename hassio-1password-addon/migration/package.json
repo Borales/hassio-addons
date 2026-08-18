@@ -11,5 +11,5 @@
     "dotenv": "^17.4.2",
     "prisma": "^7.9.1"
   },
-  "packageManager": "pnpm@11.21.0"
+  "packageManager": "pnpm@11.22.0"
 }
