@@ -60,7 +60,7 @@ importers:
         specifier: ^16.1.1
         version: 16.1.1(react@19.2.8)
       sharp:
-        specifier: ^0.35.3
+        specifier: ^0.35.4
         version: 0.35.4(@types/node@24.13.3)
       winston:
         specifier: ^3.19.0
