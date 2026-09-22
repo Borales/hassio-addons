@@ -61,7 +61,7 @@
     "eslint-config-prettier": "^10.1.8",
     "happy-dom": "^20.11.6",
     "postcss": "^8.5.26",
-    "prettier": "^3.9.6",
+    "prettier": "^3.9.8",
     "prettier-plugin-organize-imports": "^4.3.0",
     "prettier-plugin-package": "^2.0.0",
     "prettier-plugin-tailwindcss": "^0.8.1",
