@@ -49,7 +49,7 @@
     "@react-aria/ssr": "^3.9.10",
     "@react-aria/visually-hidden": "^3.8.31",
     "@tailwindcss/postcss": "^4.3.3",
-    "@testing-library/react": "^16.3.2",
+    "@testing-library/react": "^16.3.3",
     "@types/node": "^24.13.6",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
