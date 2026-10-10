@@ -36,8 +36,8 @@ importers:
         specifier: ^13.0.6
         version: 13.0.6
       home-assistant-js-websocket:
-        specifier: ^9.7.0
-        version: 9.7.0
+        specifier: ^9.7.1
+        version: 9.7.1
       next:
         specifier: ^16.4.0
         version: 16.4.0(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@24.13.6)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -3619,8 +3619,8 @@ packages:
   highlightjs-vue@1.0.0:
     resolution: {integrity: sha512-PDEfEF102G23vHmPhLyPboFCD+BkMGu+GuJe2d9/eH4FsCwvgBpnc9n0pGE+ffKdph38s6foEZiEjdgHdzp+IA==}
 
-  home-assistant-js-websocket@9.7.0:
-    resolution: {integrity: sha512-AE/VtwY+sKi7B3934KuIgvj2g06QY9aFVdd2zh1r5ygbpMo2TZbvN9Zoma8L2wHNYFsngTRiZxYOnLlCysIOzA==}
+  home-assistant-js-websocket@9.7.1:
+    resolution: {integrity: sha512-zOAiyF+gUc/IsiswYdWKns6SCBbvWb8iJtMX9+Dk0wlbdfcp+I38T2Vx36krWeWMk/GPwoSiYwCs5hk/+Hsn7w==}
 
   html-escaper@2.0.2:
     resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
@@ -9294,7 +9294,7 @@ snapshots:
 
   highlightjs-vue@1.0.0: {}
 
-  home-assistant-js-websocket@9.7.0: {}
+  home-assistant-js-websocket@9.7.1: {}
 
   html-escaper@2.0.2: {}
 
