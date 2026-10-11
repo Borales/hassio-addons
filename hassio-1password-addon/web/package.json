@@ -39,7 +39,7 @@
     "prisma-extension-pagination": "^0.7.6",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
-    "react-syntax-highlighter": "^16.1.1",
+    "react-syntax-highlighter": "^16.1.2",
     "sharp": "^0.35.5",
     "winston": "^3.19.0",
     "yaml": "^2.9.1",
