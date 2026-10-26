@@ -1,5 +1,4 @@
 import './globals.css';
-
 import { Menu } from '@/components/menu';
 import { fontSans } from '@/config/fonts';
 import { siteConfig } from '@/config/site';

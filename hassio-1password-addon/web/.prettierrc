@@ -6,7 +6,7 @@
   "useTabs": false,
   "endOfLine": "auto",
   "plugins": [
-    "prettier-plugin-organize-imports",
+    "@ianvs/prettier-plugin-sort-imports",
     "prettier-plugin-package",
     "prettier-plugin-tailwindcss"
   ],

@@ -1,5 +1,5 @@
-import { glob } from 'glob';
 import { readFile, writeFile } from 'node:fs/promises';
+import { glob } from 'glob';
 import { parse, stringify } from 'yaml';
 import { Logger, logger } from './logger';
 
