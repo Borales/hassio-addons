@@ -1,6 +1,6 @@
 'use client';
 
-import { useFormatter } from 'next-intl';
+import { useFormatter, useNow } from 'next-intl';
 
 type DateFormatterProps = {
   date: Date | string;
@@ -9,7 +9,7 @@ type DateFormatterProps = {
 export const CustomTimeAgo = ({ date }: DateFormatterProps) => {
   const format = useFormatter();
   const dateObj = new Date(date);
-  const now = new Date();
+  const now = useNow();
   const diffInSeconds = Math.floor((now.getTime() - dateObj.getTime()) / 1000);
 
   // Show relative time for recent dates (< 7 days)

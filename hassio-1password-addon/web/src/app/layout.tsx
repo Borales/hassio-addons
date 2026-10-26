@@ -73,6 +73,7 @@ export const viewport: Viewport = {
 async function I18nProvider({ children }: { children: React.ReactNode }) {
   const messages = await getMessages();
   const locale = await getLocale();
+  // oxlint-disable-next-line react/purity -- async server component, renders once per request
   const now = new Date();
 
   return (
