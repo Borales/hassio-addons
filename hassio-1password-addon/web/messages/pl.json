@@ -4,62 +4,82 @@
     "groups": "Grupy",
     "rateLimits": "Limity zapytań",
     "help": "Pomoc",
-    "github": "Odwiedź projekt na GitHub"
+    "github": "Odwiedź projekt na GitHub",
+    "main": "Menu główne",
+    "more": "Więcej opcji",
+    "githubShort": "Projekt na GitHubie",
+    "rateLimitsShort": "Limity"
   },
   "home": {
     "title": "Sekrety Home Assistant",
     "description": "Zarządzaj i synchronizuj sekrety z 1Password do Home Assistant",
-    "nextSync": "Następna synchronizacja:",
+    "nextSync": "Następna synchronizacja za <clock>{time}</clock>",
     "notSyncedYet": "Jeszcze nie zsynchronizowano",
-    "updateNow": "Synchronizuj teraz"
+    "updateNow": "Synchronizuj teraz",
+    "lastSynced": "Ostatnia synchronizacja <time></time>",
+    "syncing": "Synchronizacja z 1Password…",
+    "syncingShort": "Trwa",
+    "syncShort": "Sync",
+    "syncPill": "Następna synchronizacja za {time}. Synchronizuj teraz",
+    "notSyncedPill": "Jeszcze nie zsynchronizowano. Synchronizuj teraz"
   },
   "serviceAccountWarning": {
-    "title": "Wymagany token konta serwisowego 1Password",
-    "description": "Skonfiguruj token konta serwisowego 1Password w konfiguracji dodatku, aby włączyć synchronizację sekretów."
+    "title": "Wymagany token konta usługi 1Password",
+    "description": "Dodaj <code>OP_SERVICE_ACCOUNT_TOKEN</code> w konfiguracji dodatku, aby rozpocząć synchronizację sekretów. Do tego czasu nic nie zostanie zapisane w <code>secrets.yaml</code>.",
+    "setup": "Jak skonfigurować"
   },
   "groups": {
     "title": "Grupy Zdarzeń",
-    "description": "Połącz sekrety, aby otrzymać pojedyncze zdarzenie, gdy którykolwiek sekret w grupie zostanie zaktualizowany",
-    "eventFormat": "Format zdarzenia:",
-    "noGroupsYet": "Nie utworzono jeszcze żadnych grup",
-    "createFirstGroup": "Utwórz pierwszą grupę →",
+    "description": "Połącz sekrety, aby otrzymać jedno zdarzenie Home Assistant, gdy którykolwiek sekret w grupie zostanie zaktualizowany.",
+    "noGroupsYet": "Brak grup",
     "groupCount": "{count, plural, =1 {grupa} few {grupy} other {grup}}",
     "modal": {
-      "createTitle": "Utwórz nową grupę",
-      "editTitle": "Edytuj grupę: {name}",
+      "createTitle": "Nowa grupa zdarzeń",
+      "editTitle": "Edytuj grupę",
       "nameLabel": "Nazwa grupy",
-      "namePlaceholder": "moja_usluga",
-      "nameDescription": "Tylko małe litery, cyfry, podkreślenia i myślniki. Zostanie użyte w nazwie zdarzenia.",
-      "descriptionLabel": "Opis",
-      "descriptionPlaceholder": "Opcjonalny opis dla tej grupy",
+      "nameDescription": "Małe litery, cyfry, podkreślenia i myślniki. Używana w nazwie zdarzenia.",
+      "descriptionLabel": "Opis (opcjonalnie)",
       "secretsLabel": "Sekrety",
-      "secretsPlaceholder": "Wybierz sekrety do uwzględnienia",
-      "secretsDescription": "Wybierz sekrety, które powinny wyzwalać zdarzenie tej grupy po aktualizacji.",
-      "eventNameLabel": "Nazwa zdarzenia",
-      "selectedSecretsLabel": "Wybrano: {count, plural, =0 {brak sekretów} =1 {1 sekret} few {{count} sekrety} other {{count} sekretów}}"
+      "selectedCount": "Wybrano: {count}",
+      "selectAll": "Zaznacz wszystko",
+      "selectShown": "Zaznacz widoczne",
+      "clear": "Wyczyść",
+      "filterSecrets": "Filtruj sekrety",
+      "noSecretsMatch": "Brak sekretów pasujących do „{query}”",
+      "duplicate": "Grupa o nazwie „{name}” już istnieje",
+      "selectAtLeastOne": "Wybierz co najmniej jeden sekret",
+      "eventHint": "Zdarzenie wysyłane, gdy zmieni się którykolwiek z wybranych sekretów",
+      "copyEvent": "Kopiuj nazwę zdarzenia",
+      "createAction": "Utwórz grupę"
     },
     "list": {
       "columns": {
-        "name": "Nazwa grupy",
-        "secrets": "Powiązane sekrety",
-        "event": "Nazwa zdarzenia",
+        "name": "Grupa",
+        "secrets": "Sekrety",
+        "event": "Zdarzenie Home Assistant",
         "actions": "Akcje"
       },
       "noSecrets": "Brak powiązanych sekretów",
-      "deleteConfirm": "Czy na pewno chcesz usunąć tę grupę?"
+      "moreSecrets": "+{count} więcej",
+      "copyEvent": "Kopiuj nazwę zdarzenia"
     },
     "actions": {
       "newGroup": "Nowa grupa",
-      "editGroup": "Edytuj grupę",
-      "deleteGroup": "Usuń grupę"
+      "editGroup": "Edytuj",
+      "editAria": "Edytuj {name}",
+      "deleteAria": "Usuń {name}"
+    },
+    "emptyBody": "Grupa wysyła <event></event>, gdy zmieni się którykolwiek z jej sekretów - przydatne do restartu integracji po zmianie danych logowania.",
+    "delete": {
+      "title": "Usunąć grupę „{name}”?",
+      "body": "Automatyzacje nasłuchujące <event></event> przestaną się uruchamiać. {count, plural, one {Znajdujący się w niej sekret nie zostanie zmieniony.} few {Znajdujące się w niej sekrety (#) nie zostaną zmienione.} many {Znajdujące się w niej sekrety (#) nie zostaną zmienione.} other {Znajdujące się w niej sekrety (#) nie zostaną zmienione.}}"
     }
   },
   "rateLimits": {
     "title": "Limity zapytań 1Password",
     "description": "Monitoruj użycie API i limity konta usługowego 1Password",
-    "noDataYet": "Brak dostępnych danych o limitach. Dane zostaną pobrane automatycznie.",
-    "lastUpdated": "Ostatnia aktualizacja",
-    "refreshButton": "Odśwież teraz",
+    "noDataYet": "Dane o użyciu są pobierane automatycznie po pierwszej udanej synchronizacji z 1Password.",
+    "refreshButton": "Odśwież",
     "daily": {
       "title": "Dzienne zapytania",
       "description": "Łączna liczba zapytań API dziennie (wszystkie konta usługowe łącznie)"
@@ -69,18 +89,19 @@
       "description": "Operacje odczytu na godzinę (to konto usługowe)"
     },
     "card": {
-      "usage": "Użycie",
       "percentUsed": "{percent}% wykorzystane",
-      "remaining": "{count} pozostało",
+      "remaining": "{count, number} pozostało",
       "progressLabel": "{title} wykorzystanie: {percentage}%",
       "noReset": "Brak aktywnego limitu",
       "resetsInHours": "Reset za {hours}h {minutes}m",
-      "resetsInMinutes": "Reset za {minutes}m"
+      "resetsInMinutes": "Reset za {minutes}m",
+      "high": "Wysokie",
+      "nearLimit": "Blisko limitu"
     },
     "warning": {
-      "title": "Ostrzeżenie limitu zapytań 1Password",
-      "description": "zbliża się do 90% limitu.",
-      "viewDetails": "Wyświetl szczegóły",
+      "title": "Zbliżasz się do limitu zapytań 1Password",
+      "description": "{limits}: powyżej 90% limitu. Synchronizacja zostanie wstrzymana po osiągnięciu limitu.",
+      "viewDetails": "Pokaż użycie",
       "labels": {
         "daily": "Dzienne zapytania",
         "hourlyReads": "Odczyty godzinowe"
@@ -90,16 +111,19 @@
       "title": "O limitach zapytań",
       "description": "1Password wymusza limity zapytań dla użycia API konta usługowego, aby zapewnić stabilność systemu. Limity te różnią się w zależności od poziomu konta.",
       "dailyLimit": "Dzienny limit",
-      "requests": "{count} zapytań",
+      "requests": "{count, number} zapytań",
       "hourlyReadLimit": "Godzinowy limit odczytu",
-      "readOnlyNote": "To dodatek tylko odczytuje dane z 1Password."
-    }
+      "readOnlyNote": "To dodatek tylko odczytuje dane z 1Password.",
+      "account": "Konto"
+    },
+    "noDataTitle": "Brak danych o limitach",
+    "checked": "Sprawdzono <time></time>"
   },
   "secrets": {
     "list": {
       "columns": {
         "secretKey": "Klucz sekretu",
-        "reference": "Referencja 1Password",
+        "reference": "Element 1Password",
         "lastUpdated": "Ostatnia aktualizacja",
         "actions": "Akcje"
       },
@@ -107,37 +131,85 @@
         "hidden": "Ukryty",
         "assigned": "Przypisany",
         "unassigned": "Nieprzypisany",
-        "notLinked": "Niepołączony"
+        "broken": "Zerwane powiązanie"
       },
-      "statistics": {
-        "total": "wszystkie",
-        "assigned": "przypisane",
-        "unassigned": "nieprzypisane",
-        "hidden": "ukryte"
+      "ariaLabel": "Sekrety Home Assistant",
+      "filters": {
+        "all": "Wszystkie",
+        "broken": "Zerwane",
+        "assigned": "Przypisane",
+        "unassigned": "Nieprzypisane",
+        "hidden": "Ukryte"
       },
-      "ariaLabel": "Sekrety Home Assistant"
+      "filterLabel": "Filtruj według statusu",
+      "searchPlaceholder": "Szukaj kluczy, elementów, grup",
+      "searchLabel": "Szukaj sekretów",
+      "clearSearch": "Wyczyść wyszukiwanie",
+      "assignAction": "Przypisz element 1Password",
+      "hiddenNotSynced": "Ukryty · bez synchronizacji",
+      "noMatch": "Brak pasujących sekretów",
+      "noMatchQuery": "Nic nie pasuje do „{query}”.",
+      "noMatchFilter": "Nic nie pasuje do tego filtra.",
+      "clearFilters": "Wyczyść wyszukiwanie i filtry",
+      "empty": {
+        "title": "Nie znaleziono sekretów w secrets.yaml",
+        "body": "Dodaj klucze do <code>secrets.yaml</code> (np. <code>mqtt_password: \"\"</code>) i odwołuj się do nich przez <code>!secret</code>. Pojawią się tutaj po następnej synchronizacji, gotowe do powiązania z 1Password."
+      },
+      "actions": {
+        "change": "Zmień element",
+        "hide": "Ukryj i pomiń synchronizację",
+        "show": "Pokaż i synchronizuj ponownie",
+        "copyReference": "Kopiuj odniesienie 1Password",
+        "unassign": "Usuń przypisanie",
+        "changeAria": "Zmień element 1Password dla {name}",
+        "unassignAria": "Usuń przypisanie {name}",
+        "hideAria": "Ukryj {name}",
+        "showAria": "Pokaż {name}"
+      },
+      "updated": "Zaktualizowano <time></time>",
+      "neverSynced": "Nigdy nie synchronizowano",
+      "fieldAria": "pole {label}"
     },
     "modal": {
-      "title": "Przypisz",
-      "searchLabel": "Szukaj elementów 1Password",
-      "searchPlaceholder": "Wpisz, aby wyszukać...",
-      "loadingItems": "Ładowanie elementów 1Password...",
-      "fieldItemLabel": "Pole 1password",
-      "fieldItemPlaceholder": "Nie znaleziono pól."
+      "searchLabel": "Szukaj według tytułu, nazwy użytkownika lub sejfu",
+      "loadingItems": "Wczytywanie pól",
+      "fieldItemPlaceholder": "Nie znaleziono pól.",
+      "assignTitle": "Przypisz element 1Password",
+      "changeTitle": "Zmień element 1Password",
+      "item": "Element 1Password",
+      "field": "Pole",
+      "changeItem": "Zmień",
+      "itemCount": "{count, plural, one {# element} few {# elementy} many {# elementów} other {# elementu}}",
+      "noItems": "Brak elementów 1Password pasujących do „{query}”",
+      "otpHidden": "Pól haseł jednorazowych nie można zapisać w secrets.yaml, dlatego są ukryte.",
+      "preview": "Synchronizowane do secrets.yaml",
+      "syncsNext": "Wartość zostanie zsynchronizowana przy następnym uruchomieniu"
+    },
+    "broken": {
+      "banner": "{count, plural, one {1 sekret stracił powiązanie z 1Password} few {# sekrety straciły powiązanie z 1Password} many {# sekretów straciło powiązanie z 1Password} other {# sekretu straciło powiązanie z 1Password}}",
+      "bannerBody": "<wide>1Password nie może znaleźć elementu lub pola, do którego się odnoszą.</wide> <code>secrets.yaml</code> zachowuje ostatnią zsynchronizowaną wartość, dopóki nie powiążesz ich ponownie.",
+      "show": "{count, plural, one {Pokaż} few {Pokaż je} many {Pokaż je} other {Pokaż je}}",
+      "field": "Pole „{field}” nie istnieje już w {item}",
+      "item": "„{item}” usunięto lub przeniesiono poza {vault}",
+      "vault": "Konto usługi nie może odczytać sejfu {vault}",
+      "short": {
+        "field": "Nie znaleziono pola",
+        "item": "Nie znaleziono elementu",
+        "vault": "Brak dostępu do sejfu"
+      },
+      "relink": "Powiąż ponownie",
+      "relinkTitle": "Powiąż ponownie element 1Password",
+      "was": "Było"
     }
   },
   "theme": {
     "switchToDark": "Przełącz na tryb ciemny",
-    "switchToLight": "Przełącz na tryb jasny"
+    "switchToLight": "Przełącz na tryb jasny",
+    "lightMode": "Tryb jasny",
+    "darkMode": "Tryb ciemny"
   },
   "locale": {
-    "switchLocale": "Przełącz język",
-    "en-us": "Angielski (USA)",
-    "en-gb": "Angielski (Wielka Brytania)",
-    "pl": "Polski",
-    "uk": "Ukraiński",
-    "nl": "Niderlandzki",
-    "de": "Niemiecki"
+    "switchLocale": "Przełącz język"
   },
   "common": {
     "loading": "Ładowanie...",
@@ -151,9 +223,9 @@
       "unassign": "Odepnij",
       "show": "Pokaż",
       "hide": "Ukryj",
-      "refresh": "Odśwież"
+      "refresh": "Odśwież",
+      "close": "Zamknij"
     },
-
     "errors": {
       "required": "To pole jest wymagane"
     }
@@ -162,7 +234,7 @@
     "groupName": {
       "required": "Nazwa grupy jest wymagana",
       "invalid": "Nazwa grupy może zawierać tylko małe litery, cyfry, podkreślenia i myślniki",
-      "tooShort": "Nazwa grupy musi mieć co najmniej 1 znak",
+      "tooShort": "Nazwa grupy musi mieć co najmniej 2 znaki",
       "tooLong": "Nazwa grupy może mieć maksymalnie 50 znaków"
     }
   },
@@ -186,14 +258,11 @@
   "events": {
     "info": {
       "title": "Zdarzenia Home Assistant",
-      "description": "Ten dodatek wysyła niestandardowe zdarzenia do Home Assistant, których możesz używać w automatyzacjach i skryptach. Wszystkie zdarzenia zawierają pole znacznika czasu.",
-      "note": {
-        "title": "Użycie:",
-        "description": "Twórz automatyzacje w Home Assistant używając tych zdarzeń jako wyzwalaczy. Dostęp do danych zdarzenia z trigger.event.data w akcjach automatyzacji."
-      },
+      "description": "Ten dodatek wysyła niestandardowe zdarzenia, których możesz używać jako wyzwalaczy automatyzacji. Każde zdarzenie zawiera pole <code>timestamp</code>; dane odczytasz przez <code>trigger.event.data</code>.",
       "examples": {
         "title": "Przykłady automatyzacji",
-        "description": "Oto kilka praktycznych przykładów automatyzacji reagujących na zdarzenia sekretów 1Password:"
+        "restartAddon": "Restart dodatku po zmianie jego sekretu",
+        "notifyGroup": "Powiadomienie o aktualizacji grupy sekretów"
       },
       "events": {
         "secretsSynced": {
@@ -215,12 +284,37 @@
           "trigger": "Wywoływane, gdy element 1Password jest ręcznie odświeżany, wpływając na wszystkie połączone sekrety."
         },
         "groupUpdated": {
-          "trigger": "Wywoływane, gdy dowolny sekret w grupie jest aktualizowany. Symbol zastępczy {name} jest zastępowany nazwą grupy."
+          "trigger": "Wysyłane, gdy zaktualizowany zostanie dowolny sekret w grupie. {name} jest zastępowane nazwą grupy."
         },
         "error": {
           "trigger": "Wywoływane, gdy wystąpi błąd podczas synchronizacji, wywołań API lub operacji."
         }
-      }
+      },
+      "examplePayload": "Przykładowe dane",
+      "copyEvent": "Kopiuj nazwę zdarzenia",
+      "copyYaml": "Kopiuj YAML"
+    },
+    "sections": {
+      "sync": "Synchronizacja",
+      "groups": "Grupy",
+      "ui": "Zmiany wprowadzone w tym dodatku",
+      "errors": "Błędy"
     }
+  },
+  "toast": {
+    "assigned": "Przypisano <code>{name}</code>",
+    "updated": "Zaktualizowano <code>{name}</code>",
+    "relinked": "Ponownie powiązano <code>{name}</code>",
+    "unassigned": "Usunięto przypisanie <code>{name}</code>",
+    "hidden": "Ukryto i pominięto <code>{name}</code>",
+    "shown": "<code>{name}</code> będzie znów synchronizowany",
+    "undo": "Cofnij",
+    "copied": "Skopiowano",
+    "syncComplete": "Synchronizacja zakończona - {count, plural, =0 {bez zmian} one {zaktualizowano 1 sekret} few {zaktualizowano # sekrety} many {zaktualizowano # sekretów} other {zaktualizowano # sekretu}}",
+    "syncFailed": "Synchronizacja nie powiodła się",
+    "groupCreated": "Utworzono grupę <code>{name}</code>",
+    "groupSaved": "Zapisano grupę <code>{name}</code>",
+    "groupDeleted": "Usunięto grupę <code>{name}</code>",
+    "undoFailed": "Nie udało się cofnąć"
   }
 }

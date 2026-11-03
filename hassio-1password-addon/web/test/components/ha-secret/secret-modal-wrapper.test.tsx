@@ -1,69 +1,55 @@
 // @vitest-environment happy-dom
-vi.mock('@/components/ha-secret/secret-modal-provider', () => ({
-  useSecretModal: vi.fn()
-}));
+import { buildSecretRows } from '@/lib/secret-status';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { makeItem } from '../../helpers/fixtures';
 
 vi.mock('@/components/ha-secret/secret-modal', () => ({
   HASecretModal: ({
     activeSecret,
     opItems
   }: {
-    activeSecret: any;
-    opItems: any[];
+    activeSecret: { id: string };
+    opItems: unknown[];
   }) => (
-    <div
-      data-testid="ha-secret-modal"
-      data-secret-id={activeSecret?.id}
-      data-op-items-count={opItems?.length}
-    />
+    <div role="dialog">
+      {activeSecret.id}|{opItems.length}
+    </div>
   )
 }));
 
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
-
-import { useSecretModal } from '@/components/ha-secret/secret-modal-provider';
+import {
+  SecretModalProvider,
+  useSecretModal
+} from '@/components/ha-secret/secret-modal-provider';
 import { SecretModalWrapper } from '@/components/ha-secret/secret-modal-wrapper';
 
-const mockOpItems = [
-  { id: 'op-1', title: 'Op Item 1' },
-  { id: 'op-2', title: 'Op Item 2' }
-] as any[];
+const [row] = buildSecretRows([{ id: 'my_key' }], []);
+
+const Controls = () => {
+  const { openModal, closeModal } = useSecretModal();
+  return (
+    <>
+      <button onClick={() => openModal(row)}>open</button>
+      <button onClick={closeModal}>close</button>
+    </>
+  );
+};
 
 describe('SecretModalWrapper', () => {
-  it('renders null when activeSecret is null', () => {
-    vi.mocked(useSecretModal).mockReturnValue({
-      activeSecret: null,
-      openModal: vi.fn(),
-      closeModal: vi.fn()
-    });
+  it('mounts the modal for the active secret only', () => {
+    render(
+      <SecretModalProvider>
+        <Controls />
+        <SecretModalWrapper opItems={[makeItem()]} />
+      </SecretModalProvider>
+    );
+    expect(screen.queryByRole('dialog')).toBeNull();
 
-    const { container } = render(<SecretModalWrapper opItems={mockOpItems} />);
-    expect(container.firstChild).toBeNull();
-  });
+    fireEvent.click(screen.getByRole('button', { name: 'open' }));
+    expect(screen.getByRole('dialog').textContent).toBe('my_key|1');
 
-  it('renders HASecretModal when activeSecret is set', () => {
-    const mockSecret = { id: 'secret-1', name: 'My Secret' } as any;
-    vi.mocked(useSecretModal).mockReturnValue({
-      activeSecret: mockSecret,
-      openModal: vi.fn(),
-      closeModal: vi.fn()
-    });
-
-    render(<SecretModalWrapper opItems={mockOpItems} />);
-    expect(screen.getByTestId('ha-secret-modal')).toBeDefined();
-  });
-
-  it('passes opItems to HASecretModal', () => {
-    const mockSecret = { id: 'secret-1', name: 'My Secret' } as any;
-    vi.mocked(useSecretModal).mockReturnValue({
-      activeSecret: mockSecret,
-      openModal: vi.fn(),
-      closeModal: vi.fn()
-    });
-
-    render(<SecretModalWrapper opItems={mockOpItems} />);
-    const modal = screen.getByTestId('ha-secret-modal');
-    expect(modal.getAttribute('data-op-items-count')).toBe('2');
+    fireEvent.click(screen.getByRole('button', { name: 'close' }));
+    expect(screen.queryByRole('dialog')).toBeNull();
   });
 });

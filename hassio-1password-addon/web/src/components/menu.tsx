@@ -1,90 +1,137 @@
 'use client';
 
 import { siteConfig } from '@/config/site';
-import { Avatar } from '@heroui/react';
-import { GithubLogoIcon } from '@phosphor-icons/react';
+import {
+  ArrowSquareOutIcon,
+  DotsThreeIcon,
+  GithubLogoIcon
+} from '@phosphor-icons/react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { tv } from 'tailwind-variants';
-import { LocaleSwitch } from './locale-switch';
-import { ThemeSwitch } from './theme-switch';
+import { LocaleSelect, LocaleSwitch } from './locale-switch';
+import { navItems } from './nav-items';
+import { MobileSyncPill } from './sync/mobile-sync-pill';
+import { ThemeMenuItem, ThemeSwitch } from './theme-switch';
 
-const navLink = tv({
-  base: 'text-default-500 hover:text-foreground hover:bg-default-100/50 rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
-  variants: {
-    active: {
-      true: 'bg-default-100 text-foreground dark:bg-default-200'
-    }
-  }
-});
+type MenuProps = {
+  /** Next scheduled sync; `undefined` until the status has loaded. */
+  nextUpdate?: string | null;
+};
 
-export const Menu = () => {
+const closeDropdown = () => (document.activeElement as HTMLElement)?.blur();
+
+const MobileMoreMenu = () => {
+  const t = useTranslations('menu');
+
+  return (
+    <div className="dropdown dropdown-end md:hidden">
+      <div
+        tabIndex={0}
+        role="button"
+        className="btn btn-ghost btn-sm btn-square"
+        aria-label={t('more')}
+      >
+        <DotsThreeIcon size={18} />
+      </div>
+      <div
+        tabIndex={0}
+        className="dropdown-content bg-base-200 rounded-box hairline z-30 mt-1 w-64 border p-1.5 shadow-xl"
+      >
+        <ul className="menu menu-sm w-full p-0">
+          <li>
+            <ThemeMenuItem onToggle={closeDropdown} />
+          </li>
+          <li>
+            <a
+              href={siteConfig.repo}
+              target="_blank"
+              rel="noreferrer"
+              className="py-2.5"
+            >
+              <GithubLogoIcon size={16} />
+              {t('githubShort')}
+              <ArrowSquareOutIcon size={12} className="text-muted ml-auto" />
+            </a>
+          </li>
+        </ul>
+        <LocaleSelect />
+      </div>
+    </div>
+  );
+};
+
+export const Menu = ({ nextUpdate }: MenuProps) => {
   const pathname = usePathname();
   const t = useTranslations('menu');
 
   return (
-    <header className="bg-background/80 border-divider sticky top-0 z-50 border-b backdrop-blur-md">
-      <div className="container mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
-        <div className="flex items-center gap-8">
-          <Link href="./" className="flex items-center" prefetch={false}>
-            <Image
-              src="/logo.png"
-              width={120}
-              height={36}
-              alt={siteConfig.name}
-              className="dark:brightness-110"
-            />
-          </Link>
-          <nav className="flex items-center gap-1">
+    <header className="hairline sticky top-0 z-30 border-b bg-[color-mix(in_oklab,var(--color-base-100)_86%,transparent)] backdrop-blur">
+      <div className="mx-auto flex h-14 max-w-7xl items-center gap-3 px-4 sm:gap-4 sm:px-8">
+        <Link
+          href="./"
+          prefetch={false}
+          className="flex shrink-0 items-center gap-2.5"
+          aria-label={`${siteConfig.name}, version ${siteConfig.version}`}
+        >
+          <Image
+            src="/logo.png"
+            width={250}
+            height={74}
+            sizes="81px"
+            alt="1Password"
+            className="brand-logo"
+            style={{ width: 'auto' }}
+            loading="eager"
+          />
+          <span className="text-muted translate-y-px font-mono text-[11px]">
+            v{siteConfig.version}
+          </span>
+        </Link>
+
+        <nav
+          className="pill-nav ml-5 hidden items-center gap-0.5 md:flex"
+          aria-label={t('main')}
+        >
+          {navItems.map(({ key, href, icon: Icon, isActive }) => (
             <Link
-              className={navLink({ active: pathname.endsWith('/') })}
-              href="./"
+              key={key}
+              href={href}
               prefetch={false}
+              aria-current={isActive(pathname) ? 'page' : undefined}
+              className="rounded-field flex items-center gap-1.5 px-3 py-1.5 text-[13px] whitespace-nowrap transition"
             >
-              {t('secrets')}
+              <Icon size={14} />
+              {t(key)}
             </Link>
-            <Link
-              prefetch={false}
-              className={navLink({ active: pathname.endsWith('/groups') })}
-              href="./groups"
+          ))}
+        </nav>
+
+        <div className="ml-auto flex items-center gap-1">
+          {nextUpdate !== undefined && (
+            <MobileSyncPill nextUpdate={nextUpdate} />
+          )}
+          <MobileMoreMenu />
+
+          <div className="hidden items-center gap-0.5 md:flex">
+            <LocaleSwitch />
+            <span
+              className="tooltip tooltip-bottom"
+              data-tip={t('githubShort')}
             >
-              {t('groups')}
-            </Link>
-            <Link
-              prefetch={false}
-              className={navLink({ active: pathname.endsWith('/rate-limits') })}
-              href="./rate-limits"
-            >
-              {t('rateLimits')}
-            </Link>
-            <Link
-              href="./help"
-              prefetch={false}
-              className={navLink({ active: pathname.endsWith('/help') })}
-            >
-              {t('help')}
-            </Link>
-          </nav>
-        </div>
-        <div className="flex items-center gap-4">
-          <Link
-            href="https://github.com/Borales/hassio-addons"
-            target="_blank"
-            title={t('github')}
-            className="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm transition-colors"
-            prefetch={false}
-          >
-            <Avatar
-              size="sm"
-              title={t('github')}
-              className="bg-primary-900 text-default-100"
-              icon={<GithubLogoIcon size={18} weight="fill" />}
-            />
-          </Link>
-          <LocaleSwitch />
-          <ThemeSwitch />
+              <a
+                href={siteConfig.repo}
+                target="_blank"
+                rel="noreferrer"
+                className="btn btn-ghost btn-sm btn-square"
+                aria-label={t('github')}
+              >
+                <GithubLogoIcon size={16} />
+              </a>
+            </span>
+            <ThemeSwitch />
+          </div>
         </div>
       </div>
     </header>

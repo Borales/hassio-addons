@@ -1,196 +1,100 @@
 // @vitest-environment happy-dom
-
-vi.mock('next-intl', () => ({
-  useTranslations: (_ns: string) => (key: string) => key
-}));
-
-vi.mock('@heroui/react', () => ({
-  Select: ({
-    children,
-    label,
-    items,
-    placeholder,
-    onSelectionChange
-  }: {
-    children: (item: any) => React.ReactNode;
-    label?: string;
-    items?: any[];
-    placeholder?: string;
-    onSelectionChange?: (keys: any) => void;
-  }) => (
-    <div
-      data-testid="select"
-      data-label={label}
-      data-placeholder={placeholder}
-      onClick={() => onSelectionChange && onSelectionChange(new Set(['test']))}
-    >
-      {Array.isArray(items) ? items.map(children) : null}
-    </div>
-  ),
-  SelectItem: ({
-    children,
-    description,
-    textValue
-  }: {
-    children: React.ReactNode;
-    description?: string;
-    textValue?: string;
-  }) => (
-    <div
-      data-testid="select-item"
-      data-description={description}
-      data-text={textValue}
-    >
-      {children}
-    </div>
-  )
-}));
-
-vi.mock('@1password/op-js', () => ({}));
-
+import type { Field, ResponseFieldType } from '@1password/op-js';
 import { fireEvent, render, screen } from '@testing-library/react';
-import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
+import { makeField } from '../../helpers/fixtures';
 
-import { HASecretModalFieldList } from '@/components/ha-secret/secret-modal-field-list';
+vi.mock('next-intl', () => import('../../helpers/next-intl'));
 
-const makeField = (
-  overrides: Partial<{
-    id: string;
-    type: string;
-    value: string;
-    label: string;
-    reference: string;
-  }> = {}
-) =>
-  ({
-    id: 'field-id',
-    type: 'CONCEALED' as any,
-    value: 'secret-value',
-    label: 'My Field',
-    reference: 'op://vault/item/field',
-    ...overrides
-  }) as any;
+import {
+  getUsableFields,
+  HASecretModalFieldList
+} from '@/components/ha-secret/secret-modal-field-list';
+
+const password = makeField('password');
+const username = makeField('username', { type: 'STRING', value: 'octocat' });
+const otp = makeField('one-time', { type: 'OTP', value: '123456' });
+// The CLI can answer with UNKNOWN, though op-js leaves it out of Field's type.
+const unknown = makeField('mystery', {
+  type: 'UNKNOWN' as ResponseFieldType as Field['type']
+});
+const empty = makeField('empty', { value: '' });
+
+describe('getUsableFields', () => {
+  it('drops OTP, unknown and empty fields', () => {
+    expect(getUsableFields([password, otp, unknown, empty, username])).toEqual([
+      password,
+      username
+    ]);
+  });
+
+  it('accepts a missing list', () => {
+    expect(getUsableFields()).toEqual([]);
+  });
+});
 
 describe('HASecretModalFieldList', () => {
-  it('renders a Select with the translated label', () => {
+  const setup = (
+    fields = [password, username],
+    selected: string | null = null
+  ) => {
+    const onSelect = vi.fn();
     render(
       <HASecretModalFieldList
-        reference={new Set()}
-        fields={[makeField()]}
-        onSelectionChange={undefined}
+        fields={fields}
+        selected={selected}
+        onSelect={onSelect}
       />
     );
-    const select = screen.getByTestId('select');
-    expect(select).toBeDefined();
-    // useTranslations returns key, so t('fieldItemLabel') => 'fieldItemLabel'
-    expect(select.getAttribute('data-label')).toBe('fieldItemLabel');
+    return onSelect;
+  };
+
+  const radio = (label: string) =>
+    screen
+      .getByText(label)
+      .closest('label')
+      ?.querySelector('input') as HTMLInputElement;
+
+  it('lists each usable field with its value', () => {
+    setup();
+
+    expect(screen.getByRole('radiogroup', { name: 'field' })).toBeDefined();
+    expect(screen.getAllByRole('radio')).toHaveLength(2);
+    expect(screen.getByText('********')).toBeDefined();
+    expect(screen.getByText('octocat')).toBeDefined();
   });
 
-  it('filters out OTP type fields', () => {
-    render(
-      <HASecretModalFieldList
-        reference={new Set()}
-        fields={[
-          makeField({ type: 'OTP', label: 'OTP Field' }),
-          makeField({ label: 'Normal Field' })
-        ]}
-        onSelectionChange={undefined}
-      />
-    );
-    const items = screen.getAllByTestId('select-item');
-    expect(items.length).toBe(1);
-    expect(items[0].textContent).toBe('Normal Field');
+  it('checks the selected field', () => {
+    setup([password, username], username.reference!);
+
+    expect(radio('username').checked).toBe(true);
+    expect(radio('password').checked).toBe(false);
   });
 
-  it('filters out UNKNOWN type fields', () => {
-    render(
-      <HASecretModalFieldList
-        reference={new Set()}
-        fields={[
-          makeField({ type: 'UNKNOWN', label: 'Unknown Field' }),
-          makeField({ label: 'Valid Field' })
-        ]}
-        onSelectionChange={undefined}
-      />
-    );
-    const items = screen.getAllByTestId('select-item');
-    expect(items.length).toBe(1);
-    expect(items[0].textContent).toBe('Valid Field');
+  it('reports the reference of the picked field', () => {
+    const onSelect = setup();
+
+    fireEvent.click(radio('username'));
+
+    expect(onSelect).toHaveBeenCalledWith(username.reference);
   });
 
-  it('filters out fields with no value', () => {
-    render(
-      <HASecretModalFieldList
-        reference={new Set()}
-        fields={[
-          makeField({ value: '', label: 'Empty Field' }),
-          makeField({ label: 'Has Value' })
-        ]}
-        onSelectionChange={undefined}
-      />
-    );
-    const items = screen.getAllByTestId('select-item');
-    expect(items.length).toBe(1);
-    expect(items[0].textContent).toBe('Has Value');
+  it('hides OTP fields, with a note', () => {
+    setup([password, otp]);
+
+    expect(screen.queryByText('one-time')).toBeNull();
+    expect(screen.getByText('otpHidden')).toBeDefined();
   });
 
-  it('renders remaining valid fields as SelectItems', () => {
-    render(
-      <HASecretModalFieldList
-        reference={new Set()}
-        fields={[
-          makeField({ label: 'Field 1', reference: 'op://v/i/f1' }),
-          makeField({ label: 'Field 2', reference: 'op://v/i/f2' }),
-          makeField({ type: 'OTP', label: 'OTP Field' })
-        ]}
-        onSelectionChange={undefined}
-      />
-    );
-    const items = screen.getAllByTestId('select-item');
-    expect(items.length).toBe(2);
-    expect(items[0].textContent).toBe('Field 1');
-    expect(items[1].textContent).toBe('Field 2');
+  it('has no note without an OTP field', () => {
+    setup();
+    expect(screen.queryByText('otpHidden')).toBeNull();
   });
 
-  it('shows placeholder when fields array is empty', () => {
-    render(
-      <HASecretModalFieldList
-        reference={new Set()}
-        fields={[]}
-        onSelectionChange={undefined}
-      />
-    );
-    const select = screen.getByTestId('select');
-    // t('fieldItemPlaceholder') => 'fieldItemPlaceholder'
-    expect(select.getAttribute('data-placeholder')).toBe(
-      'fieldItemPlaceholder'
-    );
-  });
+  it('says so when no field can be used', () => {
+    setup([otp, unknown, empty]);
 
-  it('does not show placeholder when fields are present', () => {
-    render(
-      <HASecretModalFieldList
-        reference={new Set()}
-        fields={[makeField()]}
-        onSelectionChange={undefined}
-      />
-    );
-    const select = screen.getByTestId('select');
-    expect(select.getAttribute('data-placeholder')).toBeNull();
-  });
-
-  it('passes onSelectionChange to Select', () => {
-    const onSelectionChange = vi.fn();
-    render(
-      <HASecretModalFieldList
-        reference={new Set()}
-        fields={[makeField()]}
-        onSelectionChange={onSelectionChange}
-      />
-    );
-    const select = screen.getByTestId('select');
-    fireEvent.click(select);
-    expect(onSelectionChange).toHaveBeenCalledTimes(1);
+    expect(screen.getByText('fieldItemPlaceholder')).toBeDefined();
+    expect(screen.queryByRole('radiogroup')).toBeNull();
   });
 });

@@ -1,12 +1,12 @@
 'use client';
 
-import { Alert, Button } from '@heroui/react';
+import { WarningIcon } from '@phosphor-icons/react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
-interface RateLimitWarningBannerProps {
+type RateLimitWarningBannerProps = {
   warnings: string[];
-}
+};
 
 export const RateLimitWarningBanner = ({
   warnings
@@ -25,23 +25,24 @@ export const RateLimitWarningBanner = ({
   const warningText = warnings.map((w) => warningLabels[w] || w).join(', ');
 
   return (
-    <Alert
-      color="warning"
-      variant="faded"
-      className="mb-4"
-      title={t('title')}
-      description={
-        <>
-          {warningText} {t('description')}
-        </>
-      }
-      endContent={
-        <Link href="./rate-limits" passHref>
-          <Button color="warning" size="sm" variant="flat">
-            {t('viewDetails')}
-          </Button>
-        </Link>
-      }
-    />
+    <div
+      className="alert alert-warning alert-soft text-base-content mt-5"
+      role="alert"
+    >
+      <WarningIcon size={20} className="text-unassigned" />
+      <div>
+        <h3 className="text-unassigned font-semibold">{t('title')}</h3>
+        <div className="mt-0.5 text-[13px] opacity-85">
+          {t('description', { limits: warningText })}
+        </div>
+      </div>
+      <Link
+        href="./rate-limits"
+        prefetch={false}
+        className="btn btn-sm btn-ghost"
+      >
+        {t('viewDetails')}
+      </Link>
+    </div>
   );
 };

@@ -4,140 +4,212 @@
     "groups": "Groups",
     "rateLimits": "Rate Limits",
     "help": "Help",
-    "github": "Visit the project on GitHub"
+    "github": "Visit the project on GitHub",
+    "main": "Main",
+    "more": "More options",
+    "githubShort": "Project on GitHub",
+    "rateLimitsShort": "Limits"
   },
   "home": {
     "title": "Home Assistant Secrets",
     "description": "Manage and synchronise your secrets from 1Password to Home Assistant",
-    "nextSync": "Next sync:",
+    "nextSync": "Next sync in <clock>{time}</clock>",
     "notSyncedYet": "Not synchronised yet",
-    "updateNow": "Sync Now"
+    "updateNow": "Sync now",
+    "lastSynced": "Last synced <time></time>",
+    "syncing": "Syncing with 1Password…",
+    "syncingShort": "Syncing",
+    "syncShort": "Sync",
+    "syncPill": "Next sync in {time}. Sync now",
+    "notSyncedPill": "Not synchronised yet. Sync now"
   },
   "serviceAccountWarning": {
-    "title": "1Password Service Account Token Required",
-    "description": "Please configure your 1Password service account token in the add-on configuration to enable secret synchronisation."
+    "title": "1Password service account token required",
+    "description": "Add <code>OP_SERVICE_ACCOUNT_TOKEN</code> in the add-on configuration to start syncing secrets. Until then, nothing is written to <code>secrets.yaml</code>.",
+    "setup": "How to set up"
   },
   "groups": {
     "title": "Event Groups",
-    "description": "Combine secrets to receive a single event when any secret in the group updates",
-    "eventFormat": "Event format:",
-    "noGroupsYet": "No groups created yet",
-    "createFirstGroup": "Create your first group →",
+    "description": "Combine secrets to receive a single Home Assistant event when any secret in the group updates.",
+    "noGroupsYet": "No groups yet",
     "groupCount": "{count, plural, =1 {group} other {groups}}",
     "modal": {
-      "createTitle": "Create New Group",
-      "editTitle": "Edit Group: {name}",
-      "nameLabel": "Group Name",
-      "namePlaceholder": "my_service",
-      "nameDescription": "Lowercase letters, numbers, underscores, and hyphens only. This will be used in the event name.",
-      "descriptionLabel": "Description",
-      "descriptionPlaceholder": "Optional description for this group",
+      "createTitle": "New event group",
+      "editTitle": "Edit group",
+      "nameLabel": "Group name",
+      "nameDescription": "Lowercase letters, numbers, underscores and hyphens. Used in the event name.",
+      "descriptionLabel": "Description (optional)",
       "secretsLabel": "Secrets",
-      "secretsPlaceholder": "Select secrets to include",
-      "secretsDescription": "Select the secrets that should trigger this group's event when updated.",
-      "eventNameLabel": "Event name",
-      "selectedSecretsLabel": "Selected: {count, plural, =0 {no secrets} =1 {1 secret} other {{count} secrets}}"
+      "selectedCount": "{count} selected",
+      "selectAll": "Select all",
+      "selectShown": "Select shown",
+      "clear": "Clear",
+      "filterSecrets": "Filter secrets",
+      "noSecretsMatch": "No secrets match “{query}”",
+      "duplicate": "A group named “{name}” already exists",
+      "selectAtLeastOne": "Select at least one secret",
+      "eventHint": "Event fired when any selected secret changes",
+      "copyEvent": "Copy event name",
+      "createAction": "Create group"
     },
     "list": {
       "columns": {
-        "name": "Group Name",
-        "secrets": "Linked Secrets",
-        "event": "Event Name",
+        "name": "Group",
+        "secrets": "Secrets",
+        "event": "Home Assistant event",
         "actions": "Actions"
       },
       "noSecrets": "No secrets linked",
-      "deleteConfirm": "Are you sure you want to delete this group?"
+      "moreSecrets": "+{count} more",
+      "copyEvent": "Copy event name"
     },
     "actions": {
-      "newGroup": "New Group",
-      "editGroup": "Edit group",
-      "deleteGroup": "Delete group"
+      "newGroup": "New group",
+      "editGroup": "Edit",
+      "editAria": "Edit {name}",
+      "deleteAria": "Delete {name}"
+    },
+    "emptyBody": "A group fires <event></event> whenever any of its secrets changes - handy for restarting one integration when its credentials rotate.",
+    "delete": {
+      "title": "Delete group “{name}”?",
+      "body": "Automations listening for <event></event> will stop firing. {count, plural, =1 {The secret in it is not affected.} other {The # secrets in it are not affected.}}"
     }
   },
   "rateLimits": {
     "title": "1Password Rate Limits",
-    "description": "Monitor your 1Password service account API usage and limits",
-    "noDataYet": "No rate limit data available yet. Data will be fetched automatically.",
-    "lastUpdated": "Last updated",
-    "refreshButton": "Refresh Now",
+    "description": "Monitor your 1Password service account API usage and limits.",
+    "noDataYet": "Usage is fetched automatically after the first successful sync with 1Password.",
+    "refreshButton": "Refresh",
     "daily": {
-      "title": "Daily Requests",
-      "description": "Total API requests per day (all service accounts combined)"
+      "title": "Daily requests",
+      "description": "Total API requests per day, all service accounts combined"
     },
     "hourlyReads": {
-      "title": "Hourly Reads",
-      "description": "Read operations per hour (this service account)"
+      "title": "Hourly reads",
+      "description": "Read operations per hour, this service account"
     },
     "card": {
-      "usage": "Usage",
       "percentUsed": "{percent}% used",
-      "remaining": "{count} remaining",
+      "remaining": "{count, number} remaining",
       "progressLabel": "{title} usage: {percentage}%",
       "noReset": "No active limit",
       "resetsInHours": "Resets in {hours}h {minutes}m",
-      "resetsInMinutes": "Resets in {minutes}m"
+      "resetsInMinutes": "Resets in {minutes}m",
+      "high": "High",
+      "nearLimit": "Near limit"
     },
     "warning": {
-      "title": "1Password rate limit warning",
-      "description": "approaching 90% of limit.",
-      "viewDetails": "View details",
+      "title": "Approaching the 1Password rate limit",
+      "description": "{limits} are above 90% of the limit. Syncing pauses when the limit is reached.",
+      "viewDetails": "View usage",
       "labels": {
         "daily": "Daily requests",
         "hourlyReads": "Hourly reads"
       }
     },
     "info": {
-      "title": "About Rate Limits",
+      "title": "About rate limits",
       "description": "1Password enforces rate limits on service account API usage to ensure system stability. These limits vary by account tier.",
       "dailyLimit": "Daily limit",
-      "requests": "{count} requests",
+      "requests": "{count, number} requests",
       "hourlyReadLimit": "Hourly read limit",
-      "readOnlyNote": "This add-on only reads data from 1Password."
-    }
+      "readOnlyNote": "This add-on only reads data from 1Password.",
+      "account": "Account"
+    },
+    "noDataTitle": "No rate limit data yet",
+    "checked": "Checked <time></time>"
   },
   "secrets": {
     "list": {
       "columns": {
-        "secretKey": "Secret Key",
-        "reference": "1Password Reference",
-        "lastUpdated": "Last Updated",
+        "secretKey": "Secret key",
+        "reference": "1Password item",
+        "lastUpdated": "Last updated",
         "actions": "Actions"
       },
       "status": {
         "hidden": "Hidden",
         "assigned": "Assigned",
         "unassigned": "Unassigned",
-        "notLinked": "Not linked"
+        "broken": "Broken link"
       },
-      "statistics": {
-        "total": "total",
-        "assigned": "assigned",
-        "unassigned": "unassigned",
-        "hidden": "hidden"
+      "ariaLabel": "Home Assistant secrets",
+      "filters": {
+        "all": "All",
+        "broken": "Broken",
+        "assigned": "Assigned",
+        "unassigned": "Unassigned",
+        "hidden": "Hidden"
       },
-      "ariaLabel": "Home Assistant secrets"
+      "filterLabel": "Filter by status",
+      "searchPlaceholder": "Search keys, items, groups",
+      "searchLabel": "Search secrets",
+      "clearSearch": "Clear search",
+      "assignAction": "Assign 1Password item",
+      "hiddenNotSynced": "Hidden · not synced",
+      "noMatch": "No secrets match",
+      "noMatchQuery": "Nothing matches “{query}”.",
+      "noMatchFilter": "Nothing matches this filter.",
+      "clearFilters": "Clear search and filters",
+      "empty": {
+        "title": "No secrets found in secrets.yaml",
+        "body": "Add keys to <code>secrets.yaml</code> (e.g. <code>mqtt_password: \"\"</code>) and reference them with <code>!secret</code>. They'll appear here on the next sync, ready to link to 1Password."
+      },
+      "actions": {
+        "change": "Change item",
+        "hide": "Hide and skip sync",
+        "show": "Show and sync again",
+        "copyReference": "Copy 1Password reference",
+        "unassign": "Unassign",
+        "changeAria": "Change 1Password item for {name}",
+        "unassignAria": "Unassign {name}",
+        "hideAria": "Hide {name}",
+        "showAria": "Show {name}"
+      },
+      "updated": "Updated <time></time>",
+      "neverSynced": "Never synced",
+      "fieldAria": "field {label}"
     },
     "modal": {
-      "title": "Assign",
-      "searchLabel": "Search 1Password items",
-      "searchPlaceholder": "Type to search...",
-      "loadingItems": "Loading 1Password items...",
-      "fieldItemLabel": "1password field",
-      "fieldItemPlaceholder": "No fields found."
+      "searchLabel": "Search by title, username or vault",
+      "loadingItems": "Loading fields",
+      "fieldItemPlaceholder": "No fields found.",
+      "assignTitle": "Assign 1Password item",
+      "changeTitle": "Change 1Password item",
+      "item": "1Password item",
+      "field": "Field",
+      "changeItem": "Change",
+      "itemCount": "{count, plural, =1 {# item} other {# items}}",
+      "noItems": "No 1Password items match “{query}”",
+      "otpHidden": "One-time password fields can't be written to secrets.yaml and are hidden.",
+      "preview": "Synced to secrets.yaml",
+      "syncsNext": "Value syncs on the next run"
+    },
+    "broken": {
+      "banner": "{count, plural, =1 {1 secret lost its 1Password link} other {# secrets lost their 1Password link}}",
+      "bannerBody": "<wide>1Password can't find the item or field they point to.</wide> <code>secrets.yaml</code> keeps the last synced value until you re-link them.",
+      "show": "{count, plural, =1 {Show it} other {Show them}}",
+      "field": "Field “{field}” no longer exists in {item}",
+      "item": "“{item}” was deleted or moved out of {vault}",
+      "vault": "The service account can't read the {vault} vault",
+      "short": {
+        "field": "Field not found",
+        "item": "Item not found",
+        "vault": "No vault access"
+      },
+      "relink": "Re-link",
+      "relinkTitle": "Re-link 1Password item",
+      "was": "Was"
     }
   },
   "theme": {
     "switchToDark": "Switch to dark mode",
-    "switchToLight": "Switch to light mode"
+    "switchToLight": "Switch to light mode",
+    "lightMode": "Light mode",
+    "darkMode": "Dark mode"
   },
   "locale": {
-    "switchLocale": "Switch language",
-    "en-us": "English (US)",
-    "en-gb": "English (UK)",
-    "pl": "Polish",
-    "uk": "Ukrainian",
-    "nl": "Dutch",
-    "de": "German"
+    "switchLocale": "Switch language"
   },
   "common": {
     "loading": "Loading...",
@@ -151,9 +223,9 @@
       "unassign": "Unassign",
       "show": "Show",
       "hide": "Hide",
-      "refresh": "Refresh"
+      "refresh": "Refresh",
+      "close": "Close"
     },
-
     "errors": {
       "required": "This field is required"
     }
@@ -162,7 +234,7 @@
     "groupName": {
       "required": "Group name is required",
       "invalid": "Group name must contain only lowercase letters, numbers, underscores, and hyphens",
-      "tooShort": "Group name must be at least 1 character",
+      "tooShort": "Group name must be at least 2 characters",
       "tooLong": "Group name must be at most 50 characters"
     }
   },
@@ -186,14 +258,11 @@
   "events": {
     "info": {
       "title": "Home Assistant Events",
-      "description": "This add-on fires custom events to Home Assistant that you can use in automations and scripts. All events include a timestamp field.",
-      "note": {
-        "title": "Usage:",
-        "description": "Create automations in Home Assistant using these events as triggers. Access event data with trigger.event.data in your automation actions."
-      },
+      "description": "This add-on fires custom events you can use as automation triggers. Every event includes a <code>timestamp</code> field; read the payload with <code>trigger.event.data</code>.",
       "examples": {
         "title": "Automation Examples",
-        "description": "Here are some practical examples of automations that respond to 1Password secret events:"
+        "restartAddon": "Restart an add-on when its secret changes",
+        "notifyGroup": "Notify when a group of secrets is updated"
       },
       "events": {
         "secretsSynced": {
@@ -215,12 +284,37 @@
           "trigger": "Fired when a 1Password item is manually refreshed, affecting all linked secrets."
         },
         "groupUpdated": {
-          "trigger": "Fired when any secret in a group is updated. The {name} placeholder is replaced with your group name."
+          "trigger": "Fired when any secret in a group is updated. {name} is replaced with your group name."
         },
         "error": {
           "trigger": "Fired when any error occurs during synchronisation, API calls, or operations."
         }
-      }
+      },
+      "examplePayload": "Example payload",
+      "copyEvent": "Copy event name",
+      "copyYaml": "Copy YAML"
+    },
+    "sections": {
+      "sync": "Sync",
+      "groups": "Groups",
+      "ui": "Changes made in this add-on",
+      "errors": "Errors"
     }
+  },
+  "toast": {
+    "assigned": "<code>{name}</code> assigned",
+    "updated": "<code>{name}</code> updated",
+    "relinked": "<code>{name}</code> re-linked",
+    "unassigned": "Unassigned <code>{name}</code>",
+    "hidden": "<code>{name}</code> hidden and skipped",
+    "shown": "<code>{name}</code> will sync again",
+    "undo": "Undo",
+    "copied": "Copied",
+    "syncComplete": "Sync complete - {count, plural, =0 {no changes} =1 {1 secret updated} other {# secrets updated}}",
+    "syncFailed": "Sync failed",
+    "groupCreated": "Created group <code>{name}</code>",
+    "groupSaved": "Saved group <code>{name}</code>",
+    "groupDeleted": "Deleted group <code>{name}</code>",
+    "undoFailed": "Couldn't undo"
   }
 }

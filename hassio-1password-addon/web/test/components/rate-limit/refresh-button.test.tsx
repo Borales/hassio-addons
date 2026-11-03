@@ -1,101 +1,42 @@
 // @vitest-environment happy-dom
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { act, fireEvent, render, screen } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { deferred } from '../../helpers/fixtures';
 
-vi.mock('next-intl', () => ({
-  useTranslations: (_ns: string) => (key: string) => key
-}));
-
-vi.mock('@heroui/react', () => ({
-  Button: ({
-    children,
-    isLoading,
-    size,
-    variant,
-    type,
-    startContent,
-    className
-  }: {
-    children: React.ReactNode;
-    isLoading?: boolean;
-    size?: string;
-    variant?: string;
-    type?: string;
-    startContent?: React.ReactNode;
-    className?: string;
-  }) => (
-    <button
-      type={type as 'submit' | 'button' | 'reset'}
-      data-loading={isLoading ? 'true' : 'false'}
-      data-size={size}
-      data-variant={variant}
-      className={className}
-    >
-      {startContent}
-      {children}
-    </button>
-  )
-}));
-
-vi.mock('@phosphor-icons/react', () => ({
-  ArrowsClockwiseIcon: ({ size }: { size?: number }) => (
-    <svg data-testid="arrows-clockwise-icon" data-size={size} />
-  )
-}));
-
-vi.mock('react-dom', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('react-dom')>();
-  return {
-    ...actual,
-    useFormStatus: vi.fn(() => ({ pending: false }))
-  };
-});
-
+vi.mock('next-intl', () => import('../../helpers/next-intl'));
 vi.mock('@/actions/refresh-ratelimits', () => ({
   refreshRateLimits: vi.fn()
 }));
 
+import { refreshRateLimits } from '@/actions/refresh-ratelimits';
 import { RefreshButton } from '@/components/rate-limit/refresh-button';
-import { useFormStatus } from 'react-dom';
+
+const button = () =>
+  screen.getByRole<HTMLButtonElement>('button', { name: 'refreshButton' });
 
 describe('RefreshButton', () => {
-  it('renders a form element', () => {
-    const { container } = render(<RefreshButton />);
-    const form = container.querySelector('form');
-    expect(form).toBeDefined();
+  beforeEach(() => {
+    vi.clearAllMocks();
   });
 
-  it('renders a submit button with translated label', () => {
+  it('refreshes the rate limits on click', async () => {
+    vi.mocked(refreshRateLimits).mockResolvedValue({ success: true } as never);
     render(<RefreshButton />);
-    const button = screen.getByRole('button');
-    expect(button).toBeDefined();
-    expect(button.textContent).toContain('refreshButton');
+
+    await act(async () => fireEvent.click(button()));
+
+    expect(refreshRateLimits).toHaveBeenCalledOnce();
   });
 
-  it('shows the ArrowsClockwiseIcon when not pending', () => {
-    vi.mocked(useFormStatus).mockReturnValue({ pending: false } as ReturnType<
-      typeof useFormStatus
-    >);
+  it('is locked while the refresh runs', async () => {
+    const pending = deferred<never>();
+    vi.mocked(refreshRateLimits).mockReturnValue(pending.promise);
     render(<RefreshButton />);
-    const icon = screen.getByTestId('arrows-clockwise-icon');
-    expect(icon).toBeDefined();
-  });
 
-  it('hides the ArrowsClockwiseIcon when pending', () => {
-    vi.mocked(useFormStatus).mockReturnValue({ pending: true } as ReturnType<
-      typeof useFormStatus
-    >);
-    render(<RefreshButton />);
-    const icon = screen.queryByTestId('arrows-clockwise-icon');
-    expect(icon).toBeNull();
-  });
+    await act(async () => fireEvent.click(button()));
+    expect(button().disabled).toBe(true);
 
-  it('shows loading state on button when pending', () => {
-    vi.mocked(useFormStatus).mockReturnValue({ pending: true } as ReturnType<
-      typeof useFormStatus
-    >);
-    render(<RefreshButton />);
-    const button = screen.getByRole('button');
-    expect(button.getAttribute('data-loading')).toBe('true');
+    await act(async () => pending.resolve({ success: true } as never));
+    expect(button().disabled).toBe(false);
   });
 });

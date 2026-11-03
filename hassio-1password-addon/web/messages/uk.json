@@ -4,62 +4,82 @@
     "groups": "Групи",
     "rateLimits": "Ліміти запитів",
     "help": "Допомога",
-    "github": "Відвідати проєкт на GitHub"
+    "github": "Відвідати проєкт на GitHub",
+    "main": "Головне меню",
+    "more": "Більше опцій",
+    "githubShort": "Проєкт на GitHub",
+    "rateLimitsShort": "Ліміти"
   },
   "home": {
     "title": "Секрети Home Assistant",
     "description": "Керуйте та синхронізуйте свої секрети з 1Password до Home Assistant",
-    "nextSync": "Наступна синхронізація:",
+    "nextSync": "Наступна синхронізація через <clock>{time}</clock>",
     "notSyncedYet": "Ще не синхронізовано",
-    "updateNow": "Синхронізувати зараз"
+    "updateNow": "Синхронізувати зараз",
+    "lastSynced": "Остання синхронізація <time></time>",
+    "syncing": "Синхронізація з 1Password…",
+    "syncingShort": "Триває",
+    "syncShort": "Sync",
+    "syncPill": "Наступна синхронізація через {time}. Синхронізувати зараз",
+    "notSyncedPill": "Ще не синхронізовано. Синхронізувати зараз"
   },
   "serviceAccountWarning": {
-    "title": "Потрібен токен службового облікового запису 1Password",
-    "description": "Будь ласка, налаштуйте токен службового облікового запису 1Password у конфігурації додатку, щоб увімкнути синхронізацію секретів."
+    "title": "Потрібен токен сервісного облікового запису 1Password",
+    "description": "Додайте <code>OP_SERVICE_ACCOUNT_TOKEN</code> у конфігурації додатка, щоб почати синхронізацію секретів. Доти нічого не записується до <code>secrets.yaml</code>.",
+    "setup": "Як налаштувати"
   },
   "groups": {
     "title": "Групи подій",
-    "description": "Об'єднайте секрети, щоб отримувати одну подію, коли будь-який секрет у групі оновлюється",
-    "eventFormat": "Формат події:",
-    "noGroupsYet": "Групи ще не створені",
-    "createFirstGroup": "Створити першу групу →",
+    "description": "Об’єднайте секрети, щоб отримувати одну подію Home Assistant, коли оновлюється будь-який секрет у групі.",
+    "noGroupsYet": "Груп ще немає",
     "groupCount": "{count, plural, =1 {група} few {групи} other {груп}}",
     "modal": {
-      "createTitle": "Створити нову групу",
-      "editTitle": "Редагувати групу: {name}",
+      "createTitle": "Нова група подій",
+      "editTitle": "Редагувати групу",
       "nameLabel": "Назва групи",
-      "namePlaceholder": "my_service",
-      "nameDescription": "Тільки малі літери, цифри, підкреслення та дефіси. Буде використано в назві події.",
-      "descriptionLabel": "Опис",
-      "descriptionPlaceholder": "Необов'язковий опис для цієї групи",
+      "nameDescription": "Малі літери, цифри, підкреслення та дефіси. Використовується в назві події.",
+      "descriptionLabel": "Опис (необов’язково)",
       "secretsLabel": "Секрети",
-      "secretsPlaceholder": "Виберіть секрети для включення",
-      "secretsDescription": "Виберіть секрети, які повинні ініціювати подію цієї групи при оновленні.",
-      "eventNameLabel": "Назва події",
-      "selectedSecretsLabel": "Вибрано: {count, plural, =0 {немає секретів} =1 {1 секрет} few {{count} секрети} other {{count} секретів}}"
+      "selectedCount": "Вибрано: {count}",
+      "selectAll": "Вибрати всі",
+      "selectShown": "Вибрати показані",
+      "clear": "Очистити",
+      "filterSecrets": "Фільтрувати секрети",
+      "noSecretsMatch": "Немає секретів, що відповідають «{query}»",
+      "duplicate": "Група з назвою «{name}» вже існує",
+      "selectAtLeastOne": "Виберіть принаймні один секрет",
+      "eventHint": "Подія, що надсилається, коли змінюється будь-який вибраний секрет",
+      "copyEvent": "Копіювати назву події",
+      "createAction": "Створити групу"
     },
     "list": {
       "columns": {
-        "name": "Назва групи",
-        "secrets": "Пов'язані секрети",
-        "event": "Назва події",
+        "name": "Група",
+        "secrets": "Секрети",
+        "event": "Подія Home Assistant",
         "actions": "Дії"
       },
       "noSecrets": "Немає пов'язаних секретів",
-      "deleteConfirm": "Ви впевнені, що хочете видалити цю групу?"
+      "moreSecrets": "Ще +{count}",
+      "copyEvent": "Копіювати назву події"
     },
     "actions": {
       "newGroup": "Нова група",
-      "editGroup": "Редагувати групу",
-      "deleteGroup": "Видалити групу"
+      "editGroup": "Редагувати",
+      "editAria": "Редагувати {name}",
+      "deleteAria": "Видалити {name}"
+    },
+    "emptyBody": "Група надсилає <event></event>, коли змінюється будь-який з її секретів - зручно для перезапуску інтеграції після зміни облікових даних.",
+    "delete": {
+      "title": "Видалити групу «{name}»?",
+      "body": "Автоматизації, що очікують <event></event>, більше не запускатимуться. {count, plural, one {Секрет у ній не буде змінено.} few {Секрети в ній (#) не буде змінено.} many {Секрети в ній (#) не буде змінено.} other {Секрети в ній (#) не буде змінено.}}"
     }
   },
   "rateLimits": {
     "title": "Ліміти запитів 1Password",
     "description": "Відстежуйте використання API та ліміти сервісного облікового запису 1Password",
-    "noDataYet": "Дані про ліміти ще не доступні. Дані будуть отримані автоматично.",
-    "lastUpdated": "Останнє оновлення",
-    "refreshButton": "Оновити зараз",
+    "noDataYet": "Дані про використання завантажуються автоматично після першої успішної синхронізації з 1Password.",
+    "refreshButton": "Оновити",
     "daily": {
       "title": "Денні запити",
       "description": "Загальна кількість запитів API на день (усі сервісні облікові записи разом)"
@@ -69,18 +89,19 @@
       "description": "Операції читання на годину (цей сервісний обліковий запис)"
     },
     "card": {
-      "usage": "Використання",
       "percentUsed": "{percent}% використано",
-      "remaining": "{count} залишилось",
+      "remaining": "{count, number} залишилось",
       "progressLabel": "{title} використання: {percentage}%",
       "noReset": "Немає активного ліміту",
       "resetsInHours": "Скидання через {hours}г {minutes}хв",
-      "resetsInMinutes": "Скидання через {minutes}хв"
+      "resetsInMinutes": "Скидання через {minutes}хв",
+      "high": "Високе",
+      "nearLimit": "Майже ліміт"
     },
     "warning": {
-      "title": "Попередження про ліміт запитів 1Password",
-      "description": "наближається до 90% ліміту.",
-      "viewDetails": "Переглянути деталі",
+      "title": "Наближається ліміт запитів 1Password",
+      "description": "{limits}: понад 90% ліміту. Синхронізація призупиниться після досягнення ліміту.",
+      "viewDetails": "Переглянути використання",
       "labels": {
         "daily": "Денні запити",
         "hourlyReads": "Годинне читання"
@@ -90,16 +111,19 @@
       "title": "Про ліміти запитів",
       "description": "1Password застосовує ліміти запитів для використання API сервісного облікового запису для забезпечення стабільності системи. Ці ліміти відрізняються залежно від рівня облікового запису.",
       "dailyLimit": "Денний ліміт",
-      "requests": "{count} запитів",
+      "requests": "{count, number} запитів",
       "hourlyReadLimit": "Годинний ліміт читання",
-      "readOnlyNote": "Цей додаток лише читає дані з 1Password."
-    }
+      "readOnlyNote": "Цей додаток лише читає дані з 1Password.",
+      "account": "Обліковий запис"
+    },
+    "noDataTitle": "Даних про ліміти ще немає",
+    "checked": "Перевірено <time></time>"
   },
   "secrets": {
     "list": {
       "columns": {
         "secretKey": "Ключ секрету",
-        "reference": "Посилання 1Password",
+        "reference": "Запис 1Password",
         "lastUpdated": "Останнє оновлення",
         "actions": "Дії"
       },
@@ -107,37 +131,85 @@
         "hidden": "Прихований",
         "assigned": "Призначено",
         "unassigned": "Не призначено",
-        "notLinked": "Не пов'язано"
+        "broken": "Розірваний зв’язок"
       },
-      "statistics": {
-        "total": "всього",
-        "assigned": "призначено",
-        "unassigned": "не призначено",
-        "hidden": "приховано"
+      "ariaLabel": "Секрети Home Assistant",
+      "filters": {
+        "all": "Усі",
+        "broken": "Розірвані",
+        "assigned": "Призначені",
+        "unassigned": "Не призначені",
+        "hidden": "Приховані"
       },
-      "ariaLabel": "Секрети Home Assistant"
+      "filterLabel": "Фільтрувати за статусом",
+      "searchPlaceholder": "Пошук ключів, записів, груп",
+      "searchLabel": "Пошук секретів",
+      "clearSearch": "Очистити пошук",
+      "assignAction": "Призначити запис 1Password",
+      "hiddenNotSynced": "Приховано · не синхронізується",
+      "noMatch": "Немає відповідних секретів",
+      "noMatchQuery": "Нічого не відповідає «{query}».",
+      "noMatchFilter": "Нічого не відповідає цьому фільтру.",
+      "clearFilters": "Очистити пошук і фільтри",
+      "empty": {
+        "title": "У secrets.yaml не знайдено секретів",
+        "body": "Додайте ключі до <code>secrets.yaml</code> (напр. <code>mqtt_password: \"\"</code>) і посилайтеся на них через <code>!secret</code>. Вони з’являться тут після наступної синхронізації, готові до зв’язування з 1Password."
+      },
+      "actions": {
+        "change": "Змінити запис",
+        "hide": "Приховати й не синхронізувати",
+        "show": "Показати й синхронізувати знову",
+        "copyReference": "Копіювати посилання 1Password",
+        "unassign": "Скасувати призначення",
+        "changeAria": "Змінити запис 1Password для {name}",
+        "unassignAria": "Скасувати призначення {name}",
+        "hideAria": "Приховати {name}",
+        "showAria": "Показати {name}"
+      },
+      "updated": "Оновлено <time></time>",
+      "neverSynced": "Ніколи не синхронізовано",
+      "fieldAria": "поле {label}"
     },
     "modal": {
-      "title": "Призначити",
-      "searchLabel": "Пошук елементів 1Password",
-      "searchPlaceholder": "Введіть для пошуку...",
-      "loadingItems": "Завантаження елементів 1Password...",
-      "fieldItemLabel": "Поле 1password",
-      "fieldItemPlaceholder": "Поля не знайдено."
+      "searchLabel": "Пошук за назвою, ім’ям користувача або сховищем",
+      "loadingItems": "Завантаження полів",
+      "fieldItemPlaceholder": "Поля не знайдено.",
+      "assignTitle": "Призначити запис 1Password",
+      "changeTitle": "Змінити запис 1Password",
+      "item": "Запис 1Password",
+      "field": "Поле",
+      "changeItem": "Змінити",
+      "itemCount": "{count, plural, one {# запис} few {# записи} many {# записів} other {# запису}}",
+      "noItems": "Немає записів 1Password, що відповідають «{query}»",
+      "otpHidden": "Поля одноразових паролів не можна записати до secrets.yaml, тому вони приховані.",
+      "preview": "Синхронізується до secrets.yaml",
+      "syncsNext": "Значення синхронізується під час наступного запуску"
+    },
+    "broken": {
+      "banner": "{count, plural, one {# секрет втратив зв’язок з 1Password} few {# секрети втратили зв’язок з 1Password} many {# секретів втратили зв’язок з 1Password} other {# секрету втратили зв’язок з 1Password}}",
+      "bannerBody": "<wide>1Password не може знайти запис або поле, на які вони посилаються.</wide> <code>secrets.yaml</code> зберігає останнє синхронізоване значення, доки ви не зв’яжете їх знову.",
+      "show": "{count, plural, one {Показати} few {Показати їх} many {Показати їх} other {Показати їх}}",
+      "field": "Поле «{field}» більше не існує в {item}",
+      "item": "«{item}» видалено або переміщено зі сховища {vault}",
+      "vault": "Сервісний обліковий запис не може прочитати сховище {vault}",
+      "short": {
+        "field": "Поле не знайдено",
+        "item": "Запис не знайдено",
+        "vault": "Немає доступу до сховища"
+      },
+      "relink": "Зв’язати знову",
+      "relinkTitle": "Зв’язати запис 1Password знову",
+      "was": "Було"
     }
   },
   "theme": {
     "switchToDark": "Перейти на темну тему",
-    "switchToLight": "Перейти на світлу тему"
+    "switchToLight": "Перейти на світлу тему",
+    "lightMode": "Світла тема",
+    "darkMode": "Темна тема"
   },
   "locale": {
-    "switchLocale": "Змінити мову",
-    "en-us": "Англійська (США)",
-    "en-gb": "Англійська (Велика Британія)",
-    "pl": "Польська",
-    "uk": "Українська",
-    "nl": "Нідерландська",
-    "de": "Німецька"
+    "switchLocale": "Змінити мову"
   },
   "common": {
     "loading": "Завантаження...",
@@ -151,9 +223,9 @@
       "unassign": "Скасувати призначення",
       "show": "Показати",
       "hide": "Приховати",
-      "refresh": "Оновити"
+      "refresh": "Оновити",
+      "close": "Закрити"
     },
-
     "errors": {
       "required": "Це поле обов'язкове"
     }
@@ -162,7 +234,7 @@
     "groupName": {
       "required": "Назва групи обов'язкова",
       "invalid": "Назва групи повинна містити лише малі літери, цифри, підкреслення та дефіси",
-      "tooShort": "Назва групи повинна містити принаймні 1 символ",
+      "tooShort": "Назва групи повинна містити принаймні 2 символи",
       "tooLong": "Назва групи повинна містити не більше 50 символів"
     }
   },
@@ -186,14 +258,11 @@
   "events": {
     "info": {
       "title": "Події Home Assistant",
-      "description": "Цей додаток надсилає користувацькі події до Home Assistant, які ви можете використовувати в автоматизаціях та скриптах. Усі події містять поле позначки часу.",
-      "note": {
-        "title": "Використання:",
-        "description": "Створюйте автоматизації в Home Assistant, використовуючи ці події як тригери. Доступ до даних подій через trigger.event.data у діях автоматизації."
-      },
+      "description": "Цей додаток надсилає користувацькі події, які можна використовувати як тригери автоматизацій. Кожна подія містить поле <code>timestamp</code>; дані читайте через <code>trigger.event.data</code>.",
       "examples": {
         "title": "Приклади автоматизації",
-        "description": "Ось кілька практичних прикладів автоматизацій, які реагують на події секретів 1Password:"
+        "restartAddon": "Перезапуск додатка, коли змінюється його секрет",
+        "notifyGroup": "Сповіщення про оновлення групи секретів"
       },
       "events": {
         "secretsSynced": {
@@ -215,12 +284,37 @@
           "trigger": "Спрацьовує, коли елемент 1Password вручну оновлюється, впливаючи на всі пов'язані секрети."
         },
         "groupUpdated": {
-          "trigger": "Спрацьовує, коли будь-який секрет у групі оновлюється. Заповнювач {name} замінюється назвою вашої групи."
+          "trigger": "Надсилається, коли оновлюється будь-який секрет у групі. {name} замінюється назвою вашої групи."
         },
         "error": {
           "trigger": "Спрацьовує, коли виникає помилка під час синхронізації, викликів API або операцій."
         }
-      }
+      },
+      "examplePayload": "Приклад даних",
+      "copyEvent": "Копіювати назву події",
+      "copyYaml": "Копіювати YAML"
+    },
+    "sections": {
+      "sync": "Синхронізація",
+      "groups": "Групи",
+      "ui": "Зміни, зроблені в цьому додатку",
+      "errors": "Помилки"
     }
+  },
+  "toast": {
+    "assigned": "<code>{name}</code> призначено",
+    "updated": "<code>{name}</code> оновлено",
+    "relinked": "<code>{name}</code> зв’язано знову",
+    "unassigned": "Скасовано призначення <code>{name}</code>",
+    "hidden": "<code>{name}</code> приховано та пропущено",
+    "shown": "<code>{name}</code> знову синхронізуватиметься",
+    "undo": "Скасувати",
+    "copied": "Скопійовано",
+    "syncComplete": "Синхронізацію завершено - {count, plural, =0 {без змін} one {оновлено # секрет} few {оновлено # секрети} many {оновлено # секретів} other {оновлено # секрету}}",
+    "syncFailed": "Не вдалося синхронізувати",
+    "groupCreated": "Групу <code>{name}</code> створено",
+    "groupSaved": "Групу <code>{name}</code> збережено",
+    "groupDeleted": "Групу <code>{name}</code> видалено",
+    "undoFailed": "Не вдалося скасувати"
   }
 }

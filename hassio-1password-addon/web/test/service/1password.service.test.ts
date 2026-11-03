@@ -221,6 +221,50 @@ describe('OnePasswordService', () => {
     });
   });
 
+  describe('getLastSync', () => {
+    it('returns null before the first sync', async () => {
+      vi.mocked(mockDb.setting.findUnique).mockResolvedValue(null);
+
+      await expect(service.getLastSync()).resolves.toBeNull();
+    });
+
+    it('is one TTR before the next scheduled sync', async () => {
+      vi.mocked(mockDb.setting.findUnique).mockResolvedValue({
+        value: '2026-01-01T00:05:00.000Z'
+      });
+
+      await expect(service.getLastSync()).resolves.toBe(
+        '2026-01-01T00:00:00.000Z'
+      );
+    });
+  });
+
+  describe('getRecentlyUpdatedItems', () => {
+    it('skips a reference that fails to read and keeps the others', async () => {
+      vi.mocked(mockDb.secret.findMany).mockResolvedValue([
+        { id: 'broken', reference: 'op://Vault/Item/missing' },
+        { id: 'healthy', reference: 'op://Vault/Item/password' }
+      ]);
+      vi.mocked(mockClient.readItemByReference).mockImplementation(
+        (reference: string) => {
+          if (reference.endsWith('missing')) {
+            throw new Error('"missing" isn\'t a field in the "Item" item');
+          }
+          return 'value';
+        }
+      );
+
+      await expect(service.getRecentlyUpdatedItems()).resolves.toEqual({
+        healthy: 'value'
+      });
+      expect(mockLogger.error).toHaveBeenCalledWith(
+        expect.any(String),
+        'broken',
+        expect.any(Error)
+      );
+    });
+  });
+
   describe('syncItem', () => {
     it('does nothing when the item is not found in 1Password', async () => {
       vi.mocked(mockClient.getItem).mockReturnValue(undefined as unknown as ReturnType<OnePasswordClient['getItem']>);

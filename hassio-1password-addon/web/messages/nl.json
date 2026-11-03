@@ -4,62 +4,82 @@
     "groups": "Groepen",
     "rateLimits": "Tarieflimieten",
     "help": "Hulp",
-    "github": "Bezoek het project op GitHub"
+    "github": "Bezoek het project op GitHub",
+    "main": "Hoofdmenu",
+    "more": "Meer opties",
+    "githubShort": "Project op GitHub",
+    "rateLimitsShort": "Limieten"
   },
   "home": {
     "title": "Home Assistant Geheimen",
     "description": "Beheer en synchroniseer je geheimen van 1Password naar Home Assistant",
-    "nextSync": "Volgende synchronisatie:",
+    "nextSync": "Volgende synchronisatie over <clock>{time}</clock>",
     "notSyncedYet": "Nog niet gesynchroniseerd",
-    "updateNow": "Nu synchroniseren"
+    "updateNow": "Nu synchroniseren",
+    "lastSynced": "Laatst gesynchroniseerd <time></time>",
+    "syncing": "Synchroniseren met 1Password…",
+    "syncingShort": "Bezig",
+    "syncShort": "Sync",
+    "syncPill": "Volgende synchronisatie over {time}. Nu synchroniseren",
+    "notSyncedPill": "Nog niet gesynchroniseerd. Nu synchroniseren"
   },
   "serviceAccountWarning": {
-    "title": "1Password Service Account Token Vereist",
-    "description": "Configureer je 1Password service account token in de add-on configuratie om geheimen synchronisatie mogelijk te maken."
+    "title": "1Password-serviceaccounttoken vereist",
+    "description": "Voeg <code>OP_SERVICE_ACCOUNT_TOKEN</code> toe aan de add-onconfiguratie om geheimen te synchroniseren. Tot die tijd wordt er niets naar <code>secrets.yaml</code> geschreven.",
+    "setup": "Instructies"
   },
   "groups": {
     "title": "Gebeurtenisgroepen",
-    "description": "Combineer geheimen om één gebeurtenis te ontvangen wanneer een geheim in de groep wordt bijgewerkt",
-    "eventFormat": "Gebeurtenisformaat:",
-    "noGroupsYet": "Nog geen groepen aangemaakt",
-    "createFirstGroup": "Maak je eerste groep →",
+    "description": "Combineer geheimen om één Home Assistant-gebeurtenis te ontvangen wanneer een geheim in de groep wordt bijgewerkt.",
+    "noGroupsYet": "Nog geen groepen",
     "groupCount": "{count, plural, =1 {groep} other {groepen}}",
     "modal": {
-      "createTitle": "Nieuwe groep maken",
-      "editTitle": "Groep bewerken: {name}",
+      "createTitle": "Nieuwe gebeurtenisgroep",
+      "editTitle": "Groep bewerken",
       "nameLabel": "Groepsnaam",
-      "namePlaceholder": "mijn_service",
-      "nameDescription": "Alleen kleine letters, cijfers, underscores en koppeltekens. Dit wordt gebruikt in de gebeurtenisnaam.",
-      "descriptionLabel": "Omschrijving",
-      "descriptionPlaceholder": "Optionele omschrijving voor deze groep",
+      "nameDescription": "Kleine letters, cijfers, underscores en koppeltekens. Wordt gebruikt in de gebeurtenisnaam.",
+      "descriptionLabel": "Beschrijving (optioneel)",
       "secretsLabel": "Geheimen",
-      "secretsPlaceholder": "Selecteer geheimen om op te nemen",
-      "secretsDescription": "Selecteer de geheimen die de gebeurtenis van deze groep moeten activeren bij een update.",
-      "eventNameLabel": "Gebeurtenisnaam",
-      "selectedSecretsLabel": "Geselecteerd: {count, plural, =0 {geen geheimen} =1 {1 geheim} other {{count} geheimen}}"
+      "selectedCount": "{count} geselecteerd",
+      "selectAll": "Alles selecteren",
+      "selectShown": "Getoonde selecteren",
+      "clear": "Wissen",
+      "filterSecrets": "Geheimen filteren",
+      "noSecretsMatch": "Geen geheimen komen overeen met “{query}”",
+      "duplicate": "Er bestaat al een groep met de naam “{name}”",
+      "selectAtLeastOne": "Selecteer minstens één geheim",
+      "eventHint": "Gebeurtenis die wordt verstuurd wanneer een geselecteerd geheim verandert",
+      "copyEvent": "Gebeurtenisnaam kopiëren",
+      "createAction": "Groep maken"
     },
     "list": {
       "columns": {
-        "name": "Groepsnaam",
-        "secrets": "Gekoppelde geheimen",
-        "event": "Gebeurtenisnaam",
+        "name": "Groep",
+        "secrets": "Geheimen",
+        "event": "Home Assistant-gebeurtenis",
         "actions": "Acties"
       },
       "noSecrets": "Geen gekoppelde geheimen",
-      "deleteConfirm": "Weet je zeker dat je deze groep wilt verwijderen?"
+      "moreSecrets": "+{count} meer",
+      "copyEvent": "Gebeurtenisnaam kopiëren"
     },
     "actions": {
       "newGroup": "Nieuwe groep",
-      "editGroup": "Groep bewerken",
-      "deleteGroup": "Groep verwijderen"
+      "editGroup": "Bewerken",
+      "editAria": "{name} bewerken",
+      "deleteAria": "{name} verwijderen"
+    },
+    "emptyBody": "Een groep verstuurt <event></event> zodra een van haar geheimen verandert - handig om een integratie te herstarten wanneer de inloggegevens wijzigen.",
+    "delete": {
+      "title": "Groep “{name}” verwijderen?",
+      "body": "Automatiseringen die luisteren naar <event></event> worden niet meer gestart. {count, plural, =1 {Het geheim erin blijft ongewijzigd.} other {De # geheimen erin blijven ongewijzigd.}}"
     }
   },
   "rateLimits": {
     "title": "1Password Tarieflimieten",
     "description": "Bewaak het API-gebruik en de limieten van je 1Password-serviceaccount",
-    "noDataYet": "Nog geen tarieflimieten beschikbaar. Gegevens worden automatisch opgehaald.",
-    "lastUpdated": "Laatst bijgewerkt",
-    "refreshButton": "Nu vernieuwen",
+    "noDataYet": "Het gebruik wordt automatisch opgehaald na de eerste geslaagde synchronisatie met 1Password.",
+    "refreshButton": "Vernieuwen",
     "daily": {
       "title": "Dagelijkse verzoeken",
       "description": "Totaal aantal API-verzoeken per dag (alle serviceaccounts gecombineerd)"
@@ -69,18 +89,19 @@
       "description": "Leesbewerkingen per uur (dit serviceaccount)"
     },
     "card": {
-      "usage": "Gebruik",
       "percentUsed": "{percent}% gebruikt",
-      "remaining": "{count} resterend",
+      "remaining": "{count, number} resterend",
       "progressLabel": "{title} gebruik: {percentage}%",
       "noReset": "Geen actieve limiet",
       "resetsInHours": "Reset over {hours}u {minutes}m",
-      "resetsInMinutes": "Reset over {minutes}m"
+      "resetsInMinutes": "Reset over {minutes}m",
+      "high": "Hoog",
+      "nearLimit": "Bijna op limiet"
     },
     "warning": {
-      "title": "1Password tarieflimietwarning",
-      "description": "nadert 90% van de limiet.",
-      "viewDetails": "Details weergeven",
+      "title": "1Password-limiet bijna bereikt",
+      "description": "{limits}: boven 90% van de limiet. De synchronisatie pauzeert wanneer de limiet is bereikt.",
+      "viewDetails": "Gebruik bekijken",
       "labels": {
         "daily": "Dagelijkse verzoeken",
         "hourlyReads": "Uurlijkse leesbewerkingen"
@@ -90,16 +111,19 @@
       "title": "Over tarieflimieten",
       "description": "1Password hanteert tarieflimieten voor API-gebruik van serviceaccounts om de systeemstabiliteit te waarborgen. Deze limieten variëren per accountniveau.",
       "dailyLimit": "Daglimiet",
-      "requests": "{count} verzoeken",
+      "requests": "{count, number} verzoeken",
       "hourlyReadLimit": "Uurlijks leeslimiet",
-      "readOnlyNote": "Deze add-on leest alleen gegevens van 1Password."
-    }
+      "readOnlyNote": "Deze add-on leest alleen gegevens van 1Password.",
+      "account": "Account"
+    },
+    "noDataTitle": "Nog geen limietgegevens",
+    "checked": "Gecontroleerd <time></time>"
   },
   "secrets": {
     "list": {
       "columns": {
         "secretKey": "Geheime sleutel",
-        "reference": "1Password referentie",
+        "reference": "1Password-item",
         "lastUpdated": "Laatst bijgewerkt",
         "actions": "Acties"
       },
@@ -107,37 +131,85 @@
         "hidden": "Verborgen",
         "assigned": "Toegewezen",
         "unassigned": "Niet toegewezen",
-        "notLinked": "Niet gekoppeld"
+        "broken": "Verbroken koppeling"
       },
-      "statistics": {
-        "total": "totaal",
-        "assigned": "toegewezen",
-        "unassigned": "niet toegewezen",
-        "hidden": "verborgen"
+      "ariaLabel": "Home Assistant geheimen",
+      "filters": {
+        "all": "Alle",
+        "broken": "Verbroken",
+        "assigned": "Toegewezen",
+        "unassigned": "Niet toegewezen",
+        "hidden": "Verborgen"
       },
-      "ariaLabel": "Home Assistant geheimen"
+      "filterLabel": "Filteren op status",
+      "searchPlaceholder": "Zoek sleutels, items, groepen",
+      "searchLabel": "Geheimen zoeken",
+      "clearSearch": "Zoekopdracht wissen",
+      "assignAction": "1Password-item toewijzen",
+      "hiddenNotSynced": "Verborgen · niet gesynchroniseerd",
+      "noMatch": "Geen overeenkomende geheimen",
+      "noMatchQuery": "Niets komt overeen met “{query}”.",
+      "noMatchFilter": "Niets komt overeen met dit filter.",
+      "clearFilters": "Zoekopdracht en filters wissen",
+      "empty": {
+        "title": "Geen geheimen gevonden in secrets.yaml",
+        "body": "Voeg sleutels toe aan <code>secrets.yaml</code> (bijv. <code>mqtt_password: \"\"</code>) en verwijs ernaar met <code>!secret</code>. Ze verschijnen hier bij de volgende synchronisatie, klaar om aan 1Password te koppelen."
+      },
+      "actions": {
+        "change": "Item wijzigen",
+        "hide": "Verbergen en niet synchroniseren",
+        "show": "Tonen en weer synchroniseren",
+        "copyReference": "1Password-referentie kopiëren",
+        "unassign": "Toewijzing opheffen",
+        "changeAria": "1Password-item voor {name} wijzigen",
+        "unassignAria": "Toewijzing van {name} opheffen",
+        "hideAria": "{name} verbergen",
+        "showAria": "{name} tonen"
+      },
+      "updated": "Bijgewerkt <time></time>",
+      "neverSynced": "Nooit gesynchroniseerd",
+      "fieldAria": "veld {label}"
     },
     "modal": {
-      "title": "Toewijzen",
-      "searchLabel": "Zoek 1Password items",
-      "searchPlaceholder": "Typ om te zoeken...",
-      "loadingItems": "1Password items laden...",
-      "fieldItemLabel": "1password veld",
-      "fieldItemPlaceholder": "Geen velden gevonden."
+      "searchLabel": "Zoek op titel, gebruikersnaam of kluis",
+      "loadingItems": "Velden laden",
+      "fieldItemPlaceholder": "Geen velden gevonden.",
+      "assignTitle": "1Password-item toewijzen",
+      "changeTitle": "1Password-item wijzigen",
+      "item": "1Password-item",
+      "field": "Veld",
+      "changeItem": "Wijzigen",
+      "itemCount": "{count, plural, =1 {# item} other {# items}}",
+      "noItems": "Geen 1Password-items komen overeen met “{query}”",
+      "otpHidden": "Velden met eenmalige wachtwoorden kunnen niet naar secrets.yaml worden geschreven en zijn verborgen.",
+      "preview": "Gesynchroniseerd naar secrets.yaml",
+      "syncsNext": "De waarde wordt bij de volgende run gesynchroniseerd"
+    },
+    "broken": {
+      "banner": "{count, plural, =1 {1 geheim is zijn 1Password-koppeling kwijt} other {# geheimen zijn hun 1Password-koppeling kwijt}}",
+      "bannerBody": "<wide>1Password kan het item of veld waarnaar ze verwijzen niet vinden.</wide> <code>secrets.yaml</code> behoudt de laatst gesynchroniseerde waarde totdat je ze opnieuw koppelt.",
+      "show": "{count, plural, =1 {Tonen} other {Alle tonen}}",
+      "field": "Veld “{field}” bestaat niet meer in {item}",
+      "item": "“{item}” is verwijderd of verplaatst uit {vault}",
+      "vault": "Het serviceaccount kan de kluis {vault} niet lezen",
+      "short": {
+        "field": "Veld niet gevonden",
+        "item": "Item niet gevonden",
+        "vault": "Geen kluistoegang"
+      },
+      "relink": "Opnieuw koppelen",
+      "relinkTitle": "1Password-item opnieuw koppelen",
+      "was": "Was"
     }
   },
   "theme": {
     "switchToDark": "Schakel over naar donkere modus",
-    "switchToLight": "Schakel over naar lichte modus"
+    "switchToLight": "Schakel over naar lichte modus",
+    "lightMode": "Lichte modus",
+    "darkMode": "Donkere modus"
   },
   "locale": {
-    "switchLocale": "Taal wijzigen",
-    "en-us": "Engels (VS)",
-    "en-gb": "Engels (VK)",
-    "pl": "Pools",
-    "uk": "Oekraïens",
-    "nl": "Nederlands",
-    "de": "Duits"
+    "switchLocale": "Taal wijzigen"
   },
   "common": {
     "loading": "Laden...",
@@ -151,9 +223,9 @@
       "unassign": "Toewijzing opheffen",
       "show": "Tonen",
       "hide": "Verbergen",
-      "refresh": "Vernieuwen"
+      "refresh": "Vernieuwen",
+      "close": "Sluiten"
     },
-
     "errors": {
       "required": "Dit veld is verplicht"
     }
@@ -162,7 +234,7 @@
     "groupName": {
       "required": "Groepsnaam is verplicht",
       "invalid": "Groepsnaam mag alleen kleine letters, cijfers, underscores en koppeltekens bevatten",
-      "tooShort": "Groepsnaam moet minimaal 1 karakter lang zijn",
+      "tooShort": "Groepsnaam moet minimaal 2 karakters lang zijn",
       "tooLong": "Groepsnaam mag maximaal 50 karakters lang zijn"
     }
   },
@@ -186,14 +258,11 @@
   "events": {
     "info": {
       "title": "Home Assistant Gebeurtenissen",
-      "description": "Deze add-on stuurt aangepaste gebeurtenissen naar Home Assistant die je kunt gebruiken in automatiseringen en scripts. Alle gebeurtenissen bevatten een tijdstempelveld.",
-      "note": {
-        "title": "Gebruik:",
-        "description": "Maak automatiseringen in Home Assistant met deze gebeurtenissen als triggers. Toegang tot gebeurtenisgegevens via trigger.event.data in je automatiseringsacties."
-      },
+      "description": "Deze add-on verstuurt aangepaste gebeurtenissen die je als trigger voor automatiseringen kunt gebruiken. Elke gebeurtenis bevat een veld <code>timestamp</code>; lees de gegevens met <code>trigger.event.data</code>.",
       "examples": {
         "title": "Automatiseringsvoorbeelden",
-        "description": "Hier zijn enkele praktische voorbeelden van automatiseringen die reageren op 1Password geheime gebeurtenissen:"
+        "restartAddon": "Een add-on herstarten wanneer het geheim verandert",
+        "notifyGroup": "Melding wanneer een groep geheimen wordt bijgewerkt"
       },
       "events": {
         "secretsSynced": {
@@ -215,12 +284,37 @@
           "trigger": "Geactiveerd wanneer een 1Password-item handmatig wordt vernieuwd, wat alle gekoppelde geheimen beïnvloedt."
         },
         "groupUpdated": {
-          "trigger": "Geactiveerd wanneer een geheim in een groep wordt bijgewerkt. De placeholder {name} wordt vervangen door je groepsnaam."
+          "trigger": "Wordt verstuurd wanneer een geheim in een groep wordt bijgewerkt. {name} wordt vervangen door je groepsnaam."
         },
         "error": {
           "trigger": "Geactiveerd wanneer er een fout optreedt tijdens synchronisatie, API-aanroepen of bewerkingen."
         }
-      }
+      },
+      "examplePayload": "Voorbeeldgegevens",
+      "copyEvent": "Gebeurtenisnaam kopiëren",
+      "copyYaml": "YAML kopiëren"
+    },
+    "sections": {
+      "sync": "Synchronisatie",
+      "groups": "Groepen",
+      "ui": "Wijzigingen in deze add-on",
+      "errors": "Fouten"
     }
+  },
+  "toast": {
+    "assigned": "<code>{name}</code> toegewezen",
+    "updated": "<code>{name}</code> bijgewerkt",
+    "relinked": "<code>{name}</code> opnieuw gekoppeld",
+    "unassigned": "Toewijzing van <code>{name}</code> opgeheven",
+    "hidden": "<code>{name}</code> verborgen en overgeslagen",
+    "shown": "<code>{name}</code> wordt weer gesynchroniseerd",
+    "undo": "Ongedaan maken",
+    "copied": "Gekopieerd",
+    "syncComplete": "Synchronisatie voltooid - {count, plural, =0 {geen wijzigingen} =1 {1 geheim bijgewerkt} other {# geheimen bijgewerkt}}",
+    "syncFailed": "Synchronisatie mislukt",
+    "groupCreated": "Groep <code>{name}</code> gemaakt",
+    "groupSaved": "Groep <code>{name}</code> opgeslagen",
+    "groupDeleted": "Groep <code>{name}</code> verwijderd",
+    "undoFailed": "Ongedaan maken mislukt"
   }
 }

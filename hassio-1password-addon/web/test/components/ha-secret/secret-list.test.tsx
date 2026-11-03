@@ -1,260 +1,459 @@
 // @vitest-environment happy-dom
-import { render, screen } from '@testing-library/react';
-import React from 'react';
-import { describe, expect, it, vi } from 'vitest';
+import { buildSecretRows } from '@/lib/secret-status';
+import { fireEvent, render, screen, within } from '@testing-library/react';
+import { ReactNode } from 'react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { makeField, makeGroup, makeItem } from '../../helpers/fixtures';
 
-vi.mock('next-intl', () => ({
-  useTranslations: (_ns: string) => (key: string) => key
-}));
-
-vi.mock('@/hooks/use-secret-statistics', () => ({
-  useSecretStatistics: vi.fn((items: unknown[]) => ({
-    total: items.length,
-    assigned: 0,
-    unassigned: items.length,
-    skipped: 0
-  }))
-}));
-
-vi.mock('@/components/ui/statistics-bar', () => ({
-  StatisticsBar: ({
-    stats
-  }: {
-    stats: Array<{ label: string; value: number }>;
-  }) => (
-    <div data-testid="statistics-bar">
-      {stats.map((s) => (
-        <span key={s.label} data-testid={`stat-${s.label}`}>
-          {s.value}
-        </span>
-      ))}
-    </div>
-  )
-}));
-
-vi.mock('@/components/ui/status-indicator', () => ({
-  StatusIndicator: ({ status, label }: { status: string; label: string }) => (
-    <span
-      data-testid="status-indicator"
-      data-status={status}
-      data-label={label}
-    />
-  )
-}));
-
-vi.mock('@/components/ui/chip-list', () => ({
-  ChipList: ({ items }: { items: Array<{ id: string; label: string }> }) => (
-    <div data-testid="chip-list" data-count={items.length} />
-  )
-}));
-
-vi.mock('@/components/ui/action-buttons', () => ({
-  ActionButtons: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="action-buttons">{children}</div>
-  )
-}));
-
-vi.mock('@/components/date-formatter', () => ({
-  CustomTimeAgo: ({ date }: { date: Date | string }) => (
-    <time data-testid="time-ago">{String(date)}</time>
-  )
-}));
-
-vi.mock('@/components/ha-secret/secret-hide-toggle', () => ({
-  HASecretHideToggle: ({ secretId }: { secretId: string }) => (
-    <button data-testid="hide-toggle" data-secret-id={secretId} />
-  )
-}));
-
-vi.mock('@/components/ha-secret/secret-item-edit', () => ({
-  HASecretItemEdit: ({ secret }: { secret: { id: string } }) => (
-    <button data-testid="item-edit" data-secret-id={secret.id} />
-  )
-}));
-
-vi.mock('@/components/ha-secret/secret-unassign', () => ({
-  HASecretUnassign: ({ secretId }: { secretId: string }) => (
-    <button data-testid="secret-unassign" data-secret-id={secretId} />
-  )
-}));
-
-vi.mock('@heroui/react', () => ({
-  Chip: ({ children }: { children: React.ReactNode }) => (
-    <span data-testid="chip">{children}</span>
-  ),
-  Code: ({ children }: { children: React.ReactNode }) => (
-    <code data-testid="code">{children}</code>
-  ),
-  Table: ({
-    children,
-    'aria-label': ariaLabel
-  }: {
-    children: React.ReactNode;
-    'aria-label'?: string;
-  }) => <table aria-label={ariaLabel}>{children}</table>,
-  TableHeader: ({
-    children,
-    columns
-  }: {
-    children: (col: { key: string; label: string }) => React.ReactElement;
-    columns: Array<{ key: string; label: string }>;
-  }) => (
-    <thead>
-      <tr>{columns.map(children)}</tr>
-    </thead>
-  ),
-  TableColumn: ({ children }: { children: React.ReactNode }) => (
-    <th>{children}</th>
-  ),
-  TableBody: ({
-    children,
-    items
-  }: {
-    children: (item: unknown) => React.ReactElement;
-    items: unknown[];
-  }) => <tbody>{items.map(children)}</tbody>,
-  TableRow: ({
-    children
-  }: {
-    children: (key: string) => React.ReactElement;
-  }) => (
-    <tr>
-      {['secretKey', 'reference', 'lastUpdated', 'actions'].map((key) => (
-        <React.Fragment key={key}>{children(key)}</React.Fragment>
-      ))}
-    </tr>
-  ),
-  TableCell: ({ children }: { children: React.ReactNode }) => (
-    <td>{children}</td>
-  )
-}));
+vi.mock('next-intl', () => import('../../helpers/next-intl'));
+vi.mock('@/actions/assign-secret', () => ({ assignSecret: vi.fn() }));
+vi.mock('@/actions/unassign-secret', () => ({ unassignSecret: vi.fn() }));
+vi.mock('@/actions/toggle-skip-secret', () => ({ toggleSkipSecret: vi.fn() }));
 
 import { HASecretList } from '@/components/ha-secret/secret-list';
+import {
+  SecretModalProvider,
+  useSecretModal
+} from '@/components/ha-secret/secret-modal-provider';
+import { ToastProvider } from '@/components/ui/toast-provider';
 
-type Item = {
-  id: string;
-  isSkipped: boolean | null;
-  itemId: string | null;
-  updatedAt: Date | null;
-  reference: string | null;
-  groups?: Array<{ id: string; name: string }>;
-};
+const REFERENCE = 'op://Smart Home/Mi Home/password';
 
-const makeItem = (overrides: Partial<Item> = {}): Item => ({
-  id: 'my_secret',
-  isSkipped: false,
-  itemId: null,
-  updatedAt: null,
-  reference: null,
-  groups: [],
-  ...overrides
+const item = makeItem({
+  fields: [makeField('password', { label: 'password', reference: REFERENCE })]
 });
 
+const healthy = [
+  {
+    id: 'mqtt_password',
+    reference: REFERENCE,
+    itemId: item.id,
+    updatedAt: new Date()
+  },
+  { id: 'wifi_password' },
+  { id: 'old_token', isSkipped: true }
+];
+const broken = [
+  {
+    id: 'gone_field',
+    reference: 'op://Smart Home/Mi Home/gone',
+    itemId: item.id
+  },
+  { id: 'gone_item', reference: 'op://Smart Home/Deleted/password' },
+  { id: 'gone_vault', reference: 'op://Lost/Deleted/password' }
+];
+
+const groups = [makeGroup('xiaomi', ['mqtt_password'])];
+
+const healthyRows = buildSecretRows(healthy, [item], groups);
+const allRows = buildSecretRows([...healthy, ...broken], [item], groups);
+
+const HEALTHY_IDS = healthy.map(({ id }) => id);
+const ALL_IDS = [...HEALTHY_IDS, ...broken.map(({ id }) => id)];
+
+const ActiveSecretProbe = () => (
+  <output data-testid="active-secret">
+    {useSecretModal().activeSecret?.id}
+  </output>
+);
+
+const tree = (
+  rows: typeof allRows,
+  banners: Record<string, ReactNode> = {}
+) => (
+  <ToastProvider>
+    <SecretModalProvider>
+      <HASecretList items={rows} {...banners} />
+      <ActiveSecretProbe />
+    </SecretModalProvider>
+  </ToastProvider>
+);
+
+const setup = (rows = allRows, banners?: Record<string, ReactNode>) =>
+  render(tree(rows, banners));
+
+const table = () => within(screen.getByRole('table'));
+const phoneList = () => within(screen.getByRole('list', { name: 'ariaLabel' }));
+
+/** Keys listed in the desktop table, of those expected to exist. */
+const shownKeys = (ids = ALL_IDS) =>
+  ids.filter((id) => table().queryByText(id) !== null);
+
+const row = (id: string) => table().getByText(id).closest('tr') as HTMLElement;
+const phoneRow = (id: string) =>
+  phoneList().getByText(id).closest('li') as HTMLElement;
+
+const segments = () =>
+  within(screen.getByRole('group', { name: 'filterLabel' }));
+const segment = (key: string) =>
+  segments().queryByRole('button', { name: new RegExp(`^filters\\.${key}`) });
+const pressSegment = (key: string) => fireEvent.click(segment(key)!);
+const isPressed = (key: string) =>
+  segment(key)?.getAttribute('aria-pressed') === 'true';
+
+const searchBox = () =>
+  screen.getByRole<HTMLInputElement>('searchbox', { name: 'searchLabel' });
+const typeSearch = (value: string) =>
+  fireEvent.change(searchBox(), { target: { value } });
+
+const activeSecret = () => screen.getByTestId('active-secret').textContent;
+
 describe('HASecretList', () => {
-  it('renders the statistics bar', () => {
-    render(<HASecretList items={[]} />);
-    expect(screen.getByTestId('statistics-bar')).toBeDefined();
+  beforeEach(() => {
+    vi.clearAllMocks();
   });
 
-  it('renders column headers', () => {
-    render(<HASecretList items={[]} />);
-    expect(screen.getByText('columns.secretKey')).toBeDefined();
-    expect(screen.getByText('columns.reference')).toBeDefined();
-    expect(screen.getByText('columns.lastUpdated')).toBeDefined();
-    expect(screen.getByText('columns.actions')).toBeDefined();
+  describe('filter segments', () => {
+    it.each([
+      ['all', 6],
+      ['broken', 3],
+      ['unassigned', 1],
+      ['assigned', 1],
+      ['hidden', 1]
+    ])('counts %s as %i', (key, count) => {
+      setup();
+      expect(segment(key)?.textContent).toBe(`filters.${key}${count}`);
+    });
+
+    it('starts on All', () => {
+      setup();
+
+      expect(isPressed('all')).toBe(true);
+      expect(shownKeys()).toEqual(ALL_IDS);
+    });
+
+    it.each([
+      ['broken', ['gone_field', 'gone_item', 'gone_vault']],
+      ['unassigned', ['wifi_password']],
+      ['assigned', ['mqtt_password']],
+      ['hidden', ['old_token']]
+    ])('narrows the list to %s', (key, expected) => {
+      setup();
+
+      pressSegment(key);
+
+      expect(isPressed(key)).toBe(true);
+      expect(isPressed('all')).toBe(false);
+      expect(shownKeys()).toEqual(expected);
+    });
+
+    it('only offers Broken when something is broken', () => {
+      setup(healthyRows);
+      expect(segment('broken')).toBeNull();
+    });
+
+    it('falls back to All when the Broken count reaches zero', () => {
+      const { rerender } = setup();
+      pressSegment('broken');
+      expect(shownKeys()).toHaveLength(3);
+
+      rerender(tree(healthyRows));
+
+      expect(segment('broken')).toBeNull();
+      expect(isPressed('all')).toBe(true);
+      expect(shownKeys(HEALTHY_IDS)).toEqual(HEALTHY_IDS);
+    });
   });
 
-  it('renders a row for each item', () => {
-    const items = [makeItem({ id: 'secret_a' }), makeItem({ id: 'secret_b' })];
-    render(<HASecretList items={items} />);
-    expect(screen.getByText('secret_a')).toBeDefined();
-    expect(screen.getByText('secret_b')).toBeDefined();
+  describe('search', () => {
+    it.each([
+      ['the key', 'WIFI', ['wifi_password']],
+      ['the item', 'mi home', ['mqtt_password', 'gone_field']],
+      ['the vault', 'lost', ['gone_vault']],
+      ['a group', 'xiaomi', ['mqtt_password']]
+    ])('matches %s', (_field, query, expected) => {
+      setup();
+
+      typeSearch(query);
+
+      expect(shownKeys()).toEqual(expected);
+    });
+
+    it('combines with the filter', () => {
+      setup();
+
+      pressSegment('broken');
+      typeSearch('mi home');
+
+      expect(shownKeys()).toEqual(['gone_field']);
+    });
+
+    it('offers to clear the search', () => {
+      setup();
+
+      typeSearch('wifi');
+      fireEvent.click(screen.getByRole('button', { name: 'clearSearch' }));
+
+      expect(searchBox().value).toBe('');
+      expect(shownKeys()).toEqual(ALL_IDS);
+    });
+
+    it('has nothing to clear while empty', () => {
+      setup();
+      expect(screen.queryByRole('button', { name: 'clearSearch' })).toBeNull();
+    });
   });
 
-  it('renders status indicator for each item', () => {
-    const items = [makeItem()];
-    render(<HASecretList items={items} />);
-    expect(screen.getByTestId('status-indicator')).toBeDefined();
+  describe('"/" shortcut', () => {
+    const pressSlash = () => fireEvent.keyDown(window, { key: '/' });
+
+    it('focuses the search, without typing the slash', () => {
+      setup();
+
+      const notPrevented = pressSlash();
+
+      expect(document.activeElement).toBe(searchBox());
+      expect(notPrevented).toBe(false);
+    });
+
+    it('ignores other keys', () => {
+      setup();
+
+      fireEvent.keyDown(window, { key: 'a' });
+
+      expect(document.activeElement).not.toBe(searchBox());
+    });
+
+    it.each([
+      ['an input', <input key="field" aria-label="other" />],
+      ['a textarea', <textarea key="field" aria-label="other" />]
+    ])('leaves typing in %s alone', (_tag, field) => {
+      render(
+        <>
+          {tree(allRows)}
+          {field}
+        </>
+      );
+      const other = screen.getByLabelText('other');
+      other.focus();
+
+      const notPrevented = pressSlash();
+
+      expect(document.activeElement).toBe(other);
+      expect(notPrevented).toBe(true);
+    });
+
+    it('does nothing while a dialog is open', () => {
+      render(
+        <>
+          {tree(allRows)}
+          <dialog open />
+        </>
+      );
+
+      pressSlash();
+
+      expect(document.activeElement).not.toBe(searchBox());
+    });
   });
 
-  it('renders "warning" status for unassigned item', () => {
-    const items = [makeItem({ itemId: null, isSkipped: false })];
-    render(<HASecretList items={items} />);
-    const indicator = screen.getByTestId('status-indicator');
-    expect(indicator.getAttribute('data-status')).toBe('warning');
+  describe('empty states', () => {
+    it('explains when there are no secrets, with no list controls', () => {
+      setup([]);
+
+      expect(screen.getByText('empty.title')).toBeDefined();
+      expect(screen.getByText('empty.body')).toBeDefined();
+      expect(screen.queryByRole('searchbox')).toBeNull();
+      expect(screen.queryByRole('group', { name: 'filterLabel' })).toBeNull();
+      expect(screen.queryByRole('table')).toBeNull();
+    });
+
+    it('explains when the search matches nothing', () => {
+      setup();
+
+      typeSearch('nope');
+
+      expect(screen.getByText('noMatch')).toBeDefined();
+      expect(screen.getByText('noMatchQuery')).toBeDefined();
+      expect(screen.queryByRole('table')).toBeNull();
+    });
+
+    it('explains when the filter matches nothing', () => {
+      setup(buildSecretRows([{ id: 'wifi_password' }], []));
+
+      pressSegment('hidden');
+
+      expect(screen.getByText('noMatch')).toBeDefined();
+      expect(screen.getByText('noMatchFilter')).toBeDefined();
+    });
+
+    it('clears both the search and the filter from there', () => {
+      setup();
+      pressSegment('hidden');
+      typeSearch('nope');
+
+      fireEvent.click(screen.getByRole('button', { name: 'clearFilters' }));
+
+      expect(searchBox().value).toBe('');
+      expect(isPressed('all')).toBe(true);
+      expect(shownKeys()).toEqual(ALL_IDS);
+    });
   });
 
-  it('renders "success" status for assigned item', () => {
-    const items = [makeItem({ itemId: 'op-item-1', isSkipped: false })];
-    render(<HASecretList items={items} />);
-    const indicator = screen.getByTestId('status-indicator');
-    expect(indicator.getAttribute('data-status')).toBe('success');
+  describe('assigned rows', () => {
+    it('opens the modal from the key', () => {
+      setup();
+
+      fireEvent.click(
+        within(row('mqtt_password')).getByRole('button', {
+          name: 'mqtt_password'
+        })
+      );
+      expect(activeSecret()).toBe('mqtt_password');
+    });
+
+    it('shows the item, a copy button for the reference, and the groups', () => {
+      setup();
+
+      const cells = within(row('mqtt_password'));
+      expect(cells.getByText('Mi Home')).toBeDefined();
+      expect(cells.getByText('xiaomi')).toBeDefined();
+      expect(
+        cells.getByRole('button', {
+          name: `actions.copyReference: ${REFERENCE}`
+        })
+      ).toBeDefined();
+    });
+
+    it('offers edit, unassign and hide', () => {
+      setup();
+
+      const cells = within(row('mqtt_password'));
+      fireEvent.click(cells.getByRole('button', { name: 'changeAria' }));
+      expect(activeSecret()).toBe('mqtt_password');
+      expect(cells.getByRole('button', { name: 'unassignAria' })).toBeDefined();
+      expect(cells.getByRole('button', { name: 'hideAria' })).toBeDefined();
+    });
+
+    it('shows when it was last updated', () => {
+      setup();
+      expect(within(row('mqtt_password')).getByRole('time')).toBeDefined();
+    });
   });
 
-  it('renders "inactive" status for skipped item', () => {
-    const items = [makeItem({ isSkipped: true })];
-    render(<HASecretList items={items} />);
-    const indicator = screen.getByTestId('status-indicator');
-    expect(indicator.getAttribute('data-status')).toBe('inactive');
+  describe('unassigned rows', () => {
+    it('offers to assign, and nothing that needs a link', () => {
+      setup();
+
+      const cells = within(row('wifi_password'));
+      fireEvent.click(cells.getByRole('button', { name: 'assignAction' }));
+
+      expect(activeSecret()).toBe('wifi_password');
+      expect(cells.queryByRole('button', { name: 'changeAria' })).toBeNull();
+      expect(cells.queryByRole('button', { name: 'unassignAria' })).toBeNull();
+      expect(cells.getByRole('button', { name: 'hideAria' })).toBeDefined();
+      expect(cells.queryByRole('time')).toBeNull();
+    });
   });
 
-  it('renders reference code when item has reference', () => {
-    const items = [makeItem({ reference: 'op://vault/item/field' })];
-    render(<HASecretList items={items} />);
-    expect(screen.getByTestId('code')).toBeDefined();
-    expect(screen.getByText('op://vault/item/field')).toBeDefined();
+  describe('hidden rows', () => {
+    it('are marked as hidden', () => {
+      setup();
+
+      expect(row('old_token').className).toContain('is-hidden');
+      expect(row('mqtt_password').className).not.toContain('is-hidden');
+    });
+
+    it.each([
+      ['table', () => row('old_token')],
+      ['phone list', () => phoneRow('old_token')]
+    ])('can only be shown again in the %s', (_where, getRow) => {
+      setup();
+
+      const cells = within(getRow());
+      expect(cells.queryByRole('button', { name: 'old_token' })).toBeNull();
+      expect(cells.queryByRole('button', { name: 'changeAria' })).toBeNull();
+      expect(cells.queryByRole('button', { name: 'unassignAria' })).toBeNull();
+      expect(cells.queryByRole('button', { name: 'assignAction' })).toBeNull();
+      expect(cells.getByRole('button', { name: 'showAria' })).toBeDefined();
+      expect(cells.getByText('hiddenNotSynced')).toBeDefined();
+    });
   });
 
-  it('renders "notLinked" text when item has no reference', () => {
-    const items = [makeItem({ reference: null })];
-    render(<HASecretList items={items} />);
-    expect(screen.getByText('notLinked')).toBeDefined();
+  describe('broken rows', () => {
+    it.each([
+      ['table', () => row('gone_item')],
+      ['phone list', () => phoneRow('gone_item')]
+    ])('offer re-link instead of edit in the %s', (_where, getRow) => {
+      setup();
+
+      const cells = within(getRow());
+      fireEvent.click(cells.getByRole('button', { name: 'relink' }));
+
+      expect(activeSecret()).toBe('gone_item');
+      expect(cells.queryByRole('button', { name: 'changeAria' })).toBeNull();
+      expect(cells.getByRole('button', { name: 'unassignAria' })).toBeDefined();
+    });
+
+    it.each([
+      ['gone_field', 'field', '.iref-stale-field'],
+      ['gone_item', 'item', '.iref-stale-item']
+    ])('%s names the cause and strikes the %s', (id, cause, stale) => {
+      setup();
+
+      expect(within(row(id)).getByText(cause)).toBeDefined();
+      expect(row(id).querySelector(stale)).not.toBeNull();
+    });
+
+    it('strike nothing when the whole vault is gone', () => {
+      setup();
+
+      expect(within(row('gone_vault')).getByText('vault')).toBeDefined();
+      expect(
+        row('gone_vault').querySelector('[class*="iref-stale"]')
+      ).toBeNull();
+    });
   });
 
-  it('renders CustomTimeAgo when item has updatedAt date', () => {
-    const items = [makeItem({ updatedAt: new Date('2024-01-01') })];
-    render(<HASecretList items={items} />);
-    expect(screen.getByTestId('time-ago')).toBeDefined();
+  describe('banners', () => {
+    const banners = {
+      serviceAccountBanner: <div role="alert">service-account</div>,
+      rateLimitBanner: <div role="alert">rate-limit</div>
+    };
+    const alerts = () =>
+      screen.getAllByRole('alert').map(({ textContent }) => textContent);
+
+    it('puts the broken banner between the other two', () => {
+      setup(allRows, banners);
+
+      expect(alerts()).toEqual([
+        'service-account',
+        expect.stringContaining('banner'),
+        'rate-limit'
+      ]);
+    });
+
+    it('leaves out the broken banner when nothing is broken', () => {
+      setup(healthyRows, banners);
+      expect(alerts()).toEqual(['service-account', 'rate-limit']);
+    });
+
+    it('applies the Broken filter and clears the search', () => {
+      setup();
+      typeSearch('wifi');
+
+      fireEvent.click(screen.getByRole('button', { name: 'show' }));
+
+      expect(searchBox().value).toBe('');
+      expect(isPressed('broken')).toBe(true);
+      expect(shownKeys()).toEqual(['gone_field', 'gone_item', 'gone_vault']);
+    });
+
+    it('hides its button while the Broken filter is active', () => {
+      setup();
+
+      pressSegment('broken');
+
+      expect(screen.getByRole('heading', { name: 'banner' })).toBeDefined();
+      expect(screen.queryByRole('button', { name: 'show' })).toBeNull();
+    });
   });
 
-  it('renders dash when item has no updatedAt', () => {
-    const items = [makeItem({ updatedAt: null })];
-    render(<HASecretList items={items} />);
-    expect(screen.getByText('—')).toBeDefined();
-  });
+  it('renders every row in both the table and the phone list', () => {
+    setup();
 
-  it('renders action buttons for each item', () => {
-    const items = [makeItem()];
-    render(<HASecretList items={items} />);
-    expect(screen.getByTestId('hide-toggle')).toBeDefined();
-    expect(screen.getByTestId('item-edit')).toBeDefined();
-    expect(screen.getByTestId('secret-unassign')).toBeDefined();
-  });
-
-  it('renders group chips when item has groups', () => {
-    const items = [
-      makeItem({
-        groups: [
-          { id: 'g1', name: 'group-a' },
-          { id: 'g2', name: 'group-b' }
-        ]
-      })
-    ];
-    render(<HASecretList items={items} />);
-    const chipList = screen.getByTestId('chip-list');
-    expect(chipList.getAttribute('data-count')).toBe('2');
-  });
-
-  it('does not render chip list when item has no groups', () => {
-    const items = [makeItem({ groups: [] })];
-    render(<HASecretList items={items} />);
-    expect(screen.queryByTestId('chip-list')).toBeNull();
-  });
-
-  it('passes correct total to statistics bar', () => {
-    const items = [makeItem(), makeItem({ id: 'secret_2' })];
-    render(<HASecretList items={items} />);
-    const totalStat = screen.getByTestId('stat-statistics.total');
-    expect(totalStat.textContent).toBe('2');
+    for (const id of ALL_IDS) {
+      expect(screen.getAllByText(id)).toHaveLength(2);
+    }
   });
 });

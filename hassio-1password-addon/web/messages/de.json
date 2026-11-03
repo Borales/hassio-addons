@@ -4,62 +4,82 @@
     "groups": "Gruppen",
     "rateLimits": "Ratenbegrenzungen",
     "help": "Hilfe",
-    "github": "Projekt auf GitHub besuchen"
+    "github": "Projekt auf GitHub besuchen",
+    "main": "Hauptmenü",
+    "more": "Weitere Optionen",
+    "githubShort": "Projekt auf GitHub",
+    "rateLimitsShort": "Limits"
   },
   "home": {
     "title": "Home Assistant Geheimnisse",
     "description": "Verwalten und synchronisieren Sie Ihre Geheimnisse von 1Password zu Home Assistant",
-    "nextSync": "Nächste Synchronisation:",
+    "nextSync": "Nächste Synchronisation in <clock>{time}</clock>",
     "notSyncedYet": "Noch nicht synchronisiert",
-    "updateNow": "Jetzt synchronisieren"
+    "updateNow": "Jetzt synchronisieren",
+    "lastSynced": "Zuletzt synchronisiert <time></time>",
+    "syncing": "Synchronisiere mit 1Password…",
+    "syncingShort": "Synchronisiert",
+    "syncShort": "Sync",
+    "syncPill": "Nächste Synchronisation in {time}. Jetzt synchronisieren",
+    "notSyncedPill": "Noch nicht synchronisiert. Jetzt synchronisieren"
   },
   "serviceAccountWarning": {
-    "title": "1Password Service-Account-Token erforderlich",
-    "description": "Bitte konfigurieren Sie Ihr 1Password Service-Account-Token in der Add-on-Konfiguration, um die Geheimnis-Synchronisation zu aktivieren."
+    "title": "1Password-Dienstkonto-Token erforderlich",
+    "description": "Fügen Sie <code>OP_SERVICE_ACCOUNT_TOKEN</code> in der Add-on-Konfiguration hinzu, um die Synchronisation zu starten. Bis dahin wird nichts in <code>secrets.yaml</code> geschrieben.",
+    "setup": "Einrichtungsanleitung"
   },
   "groups": {
     "title": "Ereignisgruppen",
-    "description": "Kombinieren Sie Geheimnisse, um ein einzelnes Ereignis zu erhalten, wenn ein Geheimnis in der Gruppe aktualisiert wird",
-    "eventFormat": "Ereignisformat:",
-    "noGroupsYet": "Noch keine Gruppen erstellt",
-    "createFirstGroup": "Erste Gruppe erstellen →",
+    "description": "Fassen Sie Geheimnisse zusammen, um ein einziges Home Assistant-Ereignis zu erhalten, wenn sich ein Geheimnis der Gruppe ändert.",
+    "noGroupsYet": "Noch keine Gruppen",
     "groupCount": "{count, plural, =1 {Gruppe} other {Gruppen}}",
     "modal": {
-      "createTitle": "Neue Gruppe erstellen",
-      "editTitle": "Gruppe bearbeiten: {name}",
+      "createTitle": "Neue Ereignisgruppe",
+      "editTitle": "Gruppe bearbeiten",
       "nameLabel": "Gruppenname",
-      "namePlaceholder": "mein_dienst",
-      "nameDescription": "Nur Kleinbuchstaben, Zahlen, Unterstriche und Bindestriche. Dies wird im Ereignisnamen verwendet.",
-      "descriptionLabel": "Beschreibung",
-      "descriptionPlaceholder": "Optionale Beschreibung für diese Gruppe",
+      "nameDescription": "Kleinbuchstaben, Zahlen, Unterstriche und Bindestriche. Wird im Ereignisnamen verwendet.",
+      "descriptionLabel": "Beschreibung (optional)",
       "secretsLabel": "Geheimnisse",
-      "secretsPlaceholder": "Geheimnisse zum Einbeziehen auswählen",
-      "secretsDescription": "Wählen Sie die Geheimnisse aus, die das Ereignis dieser Gruppe bei Aktualisierung auslösen sollen.",
-      "eventNameLabel": "Ereignisname",
-      "selectedSecretsLabel": "Ausgewählt: {count, plural, =0 {keine Geheimnisse} =1 {1 Geheimnis} other {{count} Geheimnisse}}"
+      "selectedCount": "{count} ausgewählt",
+      "selectAll": "Alle auswählen",
+      "selectShown": "Angezeigte auswählen",
+      "clear": "Leeren",
+      "filterSecrets": "Geheimnisse filtern",
+      "noSecretsMatch": "Keine Geheimnisse passen zu „{query}“",
+      "duplicate": "Eine Gruppe namens „{name}“ existiert bereits",
+      "selectAtLeastOne": "Wählen Sie mindestens ein Geheimnis aus",
+      "eventHint": "Ereignis, das ausgelöst wird, wenn sich ein ausgewähltes Geheimnis ändert",
+      "copyEvent": "Ereignisnamen kopieren",
+      "createAction": "Gruppe erstellen"
     },
     "list": {
       "columns": {
-        "name": "Gruppenname",
-        "secrets": "Verknüpfte Geheimnisse",
-        "event": "Ereignisname",
+        "name": "Gruppe",
+        "secrets": "Geheimnisse",
+        "event": "Home Assistant-Ereignis",
         "actions": "Aktionen"
       },
       "noSecrets": "Keine Geheimnisse verknüpft",
-      "deleteConfirm": "Sind Sie sicher, dass Sie diese Gruppe löschen möchten?"
+      "moreSecrets": "+{count} weitere",
+      "copyEvent": "Ereignisnamen kopieren"
     },
     "actions": {
       "newGroup": "Neue Gruppe",
-      "editGroup": "Gruppe bearbeiten",
-      "deleteGroup": "Gruppe löschen"
+      "editGroup": "Bearbeiten",
+      "editAria": "{name} bearbeiten",
+      "deleteAria": "{name} löschen"
+    },
+    "emptyBody": "Eine Gruppe löst <event></event> aus, sobald sich eines ihrer Geheimnisse ändert - praktisch, um eine Integration neu zu starten, wenn ihre Zugangsdaten wechseln.",
+    "delete": {
+      "title": "Gruppe „{name}“ löschen?",
+      "body": "Automatisierungen, die auf <event></event> warten, werden nicht mehr ausgelöst. {count, plural, =1 {Das enthaltene Geheimnis ist nicht betroffen.} other {Die # enthaltenen Geheimnisse sind nicht betroffen.}}"
     }
   },
   "rateLimits": {
     "title": "1Password Ratenbegrenzungen",
     "description": "Überwachen Sie die API-Nutzung und Limits Ihres 1Password-Dienstkontos",
-    "noDataYet": "Noch keine Ratenbegrenzungsdaten verfügbar. Daten werden automatisch abgerufen.",
-    "lastUpdated": "Zuletzt aktualisiert",
-    "refreshButton": "Jetzt aktualisieren",
+    "noDataYet": "Die Nutzung wird nach der ersten erfolgreichen Synchronisation mit 1Password automatisch abgerufen.",
+    "refreshButton": "Aktualisieren",
     "daily": {
       "title": "Tägliche Anfragen",
       "description": "Gesamt-API-Anfragen pro Tag (alle Dienstkonten kombiniert)"
@@ -69,18 +89,19 @@
       "description": "Lesevorgänge pro Stunde (dieses Dienstkonto)"
     },
     "card": {
-      "usage": "Nutzung",
       "percentUsed": "{percent}% genutzt",
-      "remaining": "{count} verbleibend",
+      "remaining": "{count, number} verbleibend",
       "progressLabel": "{title} Nutzung: {percentage}%",
       "noReset": "Kein aktives Limit",
       "resetsInHours": "Zurücksetzung in {hours}h {minutes}m",
-      "resetsInMinutes": "Zurücksetzung in {minutes}m"
+      "resetsInMinutes": "Zurücksetzung in {minutes}m",
+      "high": "Hoch",
+      "nearLimit": "Fast am Limit"
     },
     "warning": {
-      "title": "1Password Ratenbegrenzungswarnung",
-      "description": "nähert sich 90% des Limits.",
-      "viewDetails": "Details anzeigen",
+      "title": "1Password-Ratenbegrenzung fast erreicht",
+      "description": "{limits}: über 90% des Limits. Die Synchronisation pausiert, wenn das Limit erreicht ist.",
+      "viewDetails": "Nutzung anzeigen",
       "labels": {
         "daily": "Tägliche Anfragen",
         "hourlyReads": "Stündliche Lesevorgänge"
@@ -90,16 +111,19 @@
       "title": "Über Ratenbegrenzungen",
       "description": "1Password setzt Ratenbegrenzungen für die API-Nutzung von Dienstkonten durch, um die Systemstabilität zu gewährleisten. Diese Limits variieren je nach Kontostufe.",
       "dailyLimit": "Tageslimit",
-      "requests": "{count} Anfragen",
+      "requests": "{count, number} Anfragen",
       "hourlyReadLimit": "Stündliches Leselimit",
-      "readOnlyNote": "Dieses Add-on liest nur Daten von 1Password."
-    }
+      "readOnlyNote": "Dieses Add-on liest nur Daten von 1Password.",
+      "account": "Konto"
+    },
+    "noDataTitle": "Noch keine Daten zu Ratenbegrenzungen",
+    "checked": "Geprüft <time></time>"
   },
   "secrets": {
     "list": {
       "columns": {
         "secretKey": "Geheimschlüssel",
-        "reference": "1Password-Referenz",
+        "reference": "1Password-Eintrag",
         "lastUpdated": "Zuletzt aktualisiert",
         "actions": "Aktionen"
       },
@@ -107,37 +131,85 @@
         "hidden": "Verborgen",
         "assigned": "Zugewiesen",
         "unassigned": "Nicht zugewiesen",
-        "notLinked": "Nicht verknüpft"
+        "broken": "Defekte Verknüpfung"
       },
-      "statistics": {
-        "total": "gesamt",
-        "assigned": "zugewiesen",
-        "unassigned": "nicht zugewiesen",
-        "hidden": "verborgen"
+      "ariaLabel": "Home Assistant Geheimnisse",
+      "filters": {
+        "all": "Alle",
+        "broken": "Defekt",
+        "assigned": "Zugewiesen",
+        "unassigned": "Nicht zugewiesen",
+        "hidden": "Ausgeblendet"
       },
-      "ariaLabel": "Home Assistant Geheimnisse"
+      "filterLabel": "Nach Status filtern",
+      "searchPlaceholder": "Schlüssel, Einträge, Gruppen suchen",
+      "searchLabel": "Geheimnisse suchen",
+      "clearSearch": "Suche löschen",
+      "assignAction": "1Password-Eintrag zuweisen",
+      "hiddenNotSynced": "Ausgeblendet · nicht synchronisiert",
+      "noMatch": "Keine passenden Geheimnisse",
+      "noMatchQuery": "Nichts passt zu „{query}“.",
+      "noMatchFilter": "Nichts passt zu diesem Filter.",
+      "clearFilters": "Suche und Filter löschen",
+      "empty": {
+        "title": "Keine Geheimnisse in secrets.yaml gefunden",
+        "body": "Fügen Sie Schlüssel zu <code>secrets.yaml</code> hinzu (z. B. <code>mqtt_password: \"\"</code>) und verweisen Sie mit <code>!secret</code> darauf. Sie erscheinen bei der nächsten Synchronisation hier, bereit zur Verknüpfung mit 1Password."
+      },
+      "actions": {
+        "change": "Eintrag ändern",
+        "hide": "Ausblenden und nicht synchronisieren",
+        "show": "Anzeigen und wieder synchronisieren",
+        "copyReference": "1Password-Referenz kopieren",
+        "unassign": "Zuweisung aufheben",
+        "changeAria": "1Password-Eintrag für {name} ändern",
+        "unassignAria": "Zuweisung von {name} aufheben",
+        "hideAria": "{name} ausblenden",
+        "showAria": "{name} anzeigen"
+      },
+      "updated": "Aktualisiert <time></time>",
+      "neverSynced": "Nie synchronisiert",
+      "fieldAria": "Feld {label}"
     },
     "modal": {
-      "title": "Zuweisen",
-      "searchLabel": "1Password-Elemente suchen",
-      "searchPlaceholder": "Zum Suchen eingeben...",
-      "loadingItems": "1Password-Elemente werden geladen...",
-      "fieldItemLabel": "1password-Feld",
-      "fieldItemPlaceholder": "Keine Felder gefunden."
+      "searchLabel": "Nach Titel, Benutzername oder Tresor suchen",
+      "loadingItems": "Felder werden geladen",
+      "fieldItemPlaceholder": "Keine Felder gefunden.",
+      "assignTitle": "1Password-Eintrag zuweisen",
+      "changeTitle": "1Password-Eintrag ändern",
+      "item": "1Password-Eintrag",
+      "field": "Feld",
+      "changeItem": "Ändern",
+      "itemCount": "{count, plural, =1 {# Eintrag} other {# Einträge}}",
+      "noItems": "Keine 1Password-Einträge passen zu „{query}“",
+      "otpHidden": "Einmalpasswort-Felder können nicht in secrets.yaml geschrieben werden und sind ausgeblendet.",
+      "preview": "In secrets.yaml synchronisiert",
+      "syncsNext": "Der Wert wird beim nächsten Lauf synchronisiert"
+    },
+    "broken": {
+      "banner": "{count, plural, =1 {1 Geheimnis hat seine 1Password-Verknüpfung verloren} other {# Geheimnisse haben ihre 1Password-Verknüpfung verloren}}",
+      "bannerBody": "<wide>1Password findet den Eintrag oder das Feld nicht, auf das sie verweisen.</wide> <code>secrets.yaml</code> behält den zuletzt synchronisierten Wert, bis Sie sie neu verknüpfen.",
+      "show": "{count, plural, =1 {Anzeigen} other {Alle anzeigen}}",
+      "field": "Feld „{field}“ existiert nicht mehr in {item}",
+      "item": "„{item}“ wurde gelöscht oder aus {vault} verschoben",
+      "vault": "Das Dienstkonto kann den Tresor {vault} nicht lesen",
+      "short": {
+        "field": "Feld nicht gefunden",
+        "item": "Eintrag nicht gefunden",
+        "vault": "Kein Tresorzugriff"
+      },
+      "relink": "Neu verknüpfen",
+      "relinkTitle": "1Password-Eintrag neu verknüpfen",
+      "was": "Vorher"
     }
   },
   "theme": {
     "switchToDark": "Zum dunklen Modus wechseln",
-    "switchToLight": "Zum hellen Modus wechseln"
+    "switchToLight": "Zum hellen Modus wechseln",
+    "lightMode": "Heller Modus",
+    "darkMode": "Dunkler Modus"
   },
   "locale": {
-    "switchLocale": "Sprache wechseln",
-    "en-us": "Englisch (USA)",
-    "en-gb": "Englisch (UK)",
-    "pl": "Polnisch",
-    "uk": "Ukrainisch",
-    "nl": "Niederländisch",
-    "de": "Deutsch"
+    "switchLocale": "Sprache wechseln"
   },
   "common": {
     "loading": "Lädt...",
@@ -151,9 +223,9 @@
       "unassign": "Zuweisung aufheben",
       "show": "Anzeigen",
       "hide": "Verbergen",
-      "refresh": "Aktualisieren"
+      "refresh": "Aktualisieren",
+      "close": "Schließen"
     },
-
     "errors": {
       "required": "Dieses Feld ist erforderlich"
     }
@@ -162,7 +234,7 @@
     "groupName": {
       "required": "Gruppenname ist erforderlich",
       "invalid": "Gruppenname darf nur Kleinbuchstaben, Zahlen, Unterstriche und Bindestriche enthalten",
-      "tooShort": "Gruppenname muss mindestens 1 Zeichen lang sein",
+      "tooShort": "Gruppenname muss mindestens 2 Zeichen lang sein",
       "tooLong": "Gruppenname darf höchstens 50 Zeichen lang sein"
     }
   },
@@ -186,14 +258,11 @@
   "events": {
     "info": {
       "title": "Home Assistant Ereignisse",
-      "description": "Dieses Add-on sendet benutzerdefinierte Ereignisse an Home Assistant, die Sie in Automatisierungen und Skripten verwenden können. Alle Ereignisse enthalten ein Zeitstempelfeld.",
-      "note": {
-        "title": "Verwendung:",
-        "description": "Erstellen Sie Automatisierungen in Home Assistant mit diesen Ereignissen als Auslöser. Greifen Sie auf Ereignisdaten mit trigger.event.data in Ihren Automatisierungsaktionen zu."
-      },
+      "description": "Dieses Add-on sendet benutzerdefinierte Ereignisse, die Sie als Auslöser für Automatisierungen verwenden können. Jedes Ereignis enthält ein Feld <code>timestamp</code>; die Nutzdaten lesen Sie mit <code>trigger.event.data</code>.",
       "examples": {
         "title": "Automatisierungsbeispiele",
-        "description": "Hier sind einige praktische Beispiele für Automationen, die auf 1Password-Geheimnisereignisse reagieren:"
+        "restartAddon": "Ein Add-on neu starten, wenn sich sein Geheimnis ändert",
+        "notifyGroup": "Benachrichtigen, wenn eine Gruppe von Geheimnissen aktualisiert wird"
       },
       "events": {
         "secretsSynced": {
@@ -215,12 +284,37 @@
           "trigger": "Wird ausgelöst, wenn ein 1Password-Element manuell aktualisiert wird und alle verknüpften Geheimnisse betrifft."
         },
         "groupUpdated": {
-          "trigger": "Wird ausgelöst, wenn ein Geheimnis in einer Gruppe aktualisiert wird. Der Platzhalter {name} wird durch Ihren Gruppennamen ersetzt."
+          "trigger": "Wird ausgelöst, wenn ein Geheimnis in einer Gruppe aktualisiert wird. {name} wird durch Ihren Gruppennamen ersetzt."
         },
         "error": {
           "trigger": "Wird ausgelöst, wenn während der Synchronisierung, bei API-Aufrufen oder Operationen ein Fehler auftritt."
         }
-      }
+      },
+      "examplePayload": "Beispiel-Nutzdaten",
+      "copyEvent": "Ereignisnamen kopieren",
+      "copyYaml": "YAML kopieren"
+    },
+    "sections": {
+      "sync": "Synchronisation",
+      "groups": "Gruppen",
+      "ui": "Änderungen in diesem Add-on",
+      "errors": "Fehler"
     }
+  },
+  "toast": {
+    "assigned": "<code>{name}</code> zugewiesen",
+    "updated": "<code>{name}</code> aktualisiert",
+    "relinked": "<code>{name}</code> neu verknüpft",
+    "unassigned": "Zuweisung von <code>{name}</code> aufgehoben",
+    "hidden": "<code>{name}</code> ausgeblendet und übersprungen",
+    "shown": "<code>{name}</code> wird wieder synchronisiert",
+    "undo": "Rückgängig",
+    "copied": "Kopiert",
+    "syncComplete": "Synchronisation abgeschlossen - {count, plural, =0 {keine Änderungen} =1 {1 Geheimnis aktualisiert} other {# Geheimnisse aktualisiert}}",
+    "syncFailed": "Synchronisation fehlgeschlagen",
+    "groupCreated": "Gruppe <code>{name}</code> erstellt",
+    "groupSaved": "Gruppe <code>{name}</code> gespeichert",
+    "groupDeleted": "Gruppe <code>{name}</code> gelöscht",
+    "undoFailed": "Rückgängig machen fehlgeschlagen"
   }
 }

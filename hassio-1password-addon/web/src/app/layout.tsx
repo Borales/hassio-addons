@@ -1,8 +1,16 @@
 import './globals.css';
 
 import { Menu } from '@/components/menu';
-import { fontSans } from '@/config/fonts';
+import { MobileTabBar } from '@/components/mobile-tab-bar';
+import { ToastProvider } from '@/components/ui/toast-provider';
+import { fontMono, fontSans } from '@/config/fonts';
 import { siteConfig } from '@/config/site';
+import {
+  getCachedNextUpdate,
+  getCachedOpItems,
+  getCachedSecrets
+} from '@/lib/cached-data';
+import { buildSecretRows, getSecretsBadge } from '@/lib/secret-status';
 import { Metadata, Viewport } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
@@ -82,24 +90,51 @@ async function I18nProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
+async function TopBar() {
+  const nextUpdate = await getCachedNextUpdate();
+
+  return <Menu nextUpdate={nextUpdate} />;
+}
+
+async function TabBar() {
+  const [secrets, [items]] = await Promise.all([
+    getCachedSecrets(),
+    getCachedOpItems({ pagination: { page: 1, limit: 1000 } })
+  ]);
+
+  return (
+    <MobileTabBar badge={getSecretsBadge(buildSecretRows(secrets, items))} />
+  );
+}
+
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    // The font variables must sit on <html>: Tailwind resolves --font-sans at :root
+    <html
+      lang="en"
+      className={`${fontSans.variable} ${fontMono.variable}`}
+      suppressHydrationWarning
+    >
       <head />
-      <body
-        className={`bg-background min-h-screen font-sans antialiased ${fontSans.variable}`}
-      >
+      <body className="min-h-screen font-sans antialiased">
         <Suspense fallback={null}>
           <I18nProvider>
             <Providers
-              themeProps={{ attribute: 'class', defaultTheme: 'dark' }}
+              themeProps={{ attribute: 'data-theme', defaultTheme: 'dark' }}
             >
-              <div className="relative flex h-screen flex-col">
-                <Menu />
-                <main className="container mx-auto max-w-7xl grow p-6">
-                  {children}
-                </main>
-              </div>
+              <ToastProvider>
+                <div className="flex min-h-screen flex-col pb-[calc(56px+env(safe-area-inset-bottom))] md:pb-0">
+                  <Suspense fallback={<Menu />}>
+                    <TopBar />
+                  </Suspense>
+                  <main className="flex w-full flex-1 flex-col">
+                    {children}
+                  </main>
+                  <Suspense fallback={<MobileTabBar />}>
+                    <TabBar />
+                  </Suspense>
+                </div>
+              </ToastProvider>
             </Providers>
           </I18nProvider>
         </Suspense>

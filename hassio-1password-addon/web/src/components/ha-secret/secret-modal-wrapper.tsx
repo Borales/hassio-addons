@@ -1,11 +1,10 @@
 'use client';
 
-import { OpItem } from '@/service/1password.service';
-import { HASecretModal } from './secret-modal';
+import { HASecretModal, ModalItem } from './secret-modal';
 import { useSecretModal } from './secret-modal-provider';
 
 type SecretModalWrapperProps = {
-  opItems: OpItem[];
+  opItems: ModalItem[];
 };
 
 export const SecretModalWrapper = ({ opItems }: SecretModalWrapperProps) => {
@@ -15,5 +14,11 @@ export const SecretModalWrapper = ({ opItems }: SecretModalWrapperProps) => {
     return null;
   }
 
-  return <HASecretModal activeSecret={activeSecret} opItems={opItems} />;
+  return (
+    <HASecretModal
+      key={activeSecret.id}
+      activeSecret={activeSecret}
+      opItems={opItems}
+    />
+  );
 };

@@ -1,108 +1,87 @@
 // @vitest-environment happy-dom
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { act, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { locale } from '../helpers/next-intl';
 
-vi.mock('next-intl', () => ({
-  useTranslations: (_ns: string) => (key: string) => key,
-  useLocale: () => 'en-us'
-}));
+const router = vi.hoisted(() => ({ refresh: vi.fn() }));
 
-vi.mock('next/navigation', () => ({
-  useRouter: () => ({ refresh: vi.fn() })
-}));
+vi.mock('next-intl', () => import('../helpers/next-intl'));
+vi.mock('next/navigation', () => ({ useRouter: () => router }));
 
-vi.mock('@heroui/react', () => ({
-  Dropdown: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="dropdown">{children}</div>
-  ),
-  DropdownTrigger: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="dropdown-trigger">{children}</div>
-  ),
-  DropdownMenu: ({
-    children,
-    onAction,
-    'aria-label': ariaLabel
-  }: {
-    children: React.ReactNode;
-    onAction?: (key: string) => void;
-    'aria-label'?: string;
-  }) => (
-    <div
-      data-testid="dropdown-menu"
-      aria-label={ariaLabel}
-      data-on-action={String(!!onAction)}
-    >
-      {typeof children === 'function' ? null : children}
-    </div>
-  ),
-  DropdownItem: ({
-    children,
-    startContent
-  }: {
-    children: React.ReactNode;
-    startContent?: React.ReactNode;
-  }) => (
-    <div data-testid="dropdown-item">
-      {startContent}
-      {children}
-    </div>
-  ),
-  Button: ({
-    children,
-    'aria-label': ariaLabel,
-    isDisabled,
-    className
-  }: {
-    children: React.ReactNode;
-    'aria-label'?: string;
-    isDisabled?: boolean;
-    className?: string;
-  }) => (
-    <button aria-label={ariaLabel} disabled={isDisabled} className={className}>
-      {children}
-    </button>
-  )
-}));
+import { LocaleSelect, LocaleSwitch } from '@/components/locale-switch';
+import { localeInfo, locales } from '@/config/locales';
 
-import { LocaleSwitch } from '@/components/locale-switch';
+const clearLocaleCookie = () => {
+  document.cookie = 'NEXT_LOCALE=; path=/; max-age=0';
+};
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  locale.mockReturnValue('pl');
+});
+
+afterEach(clearLocaleCookie);
 
 describe('LocaleSwitch', () => {
-  it('renders a button with aria-label "switchLocale"', () => {
+  it('shows the short code of the current locale', () => {
     render(<LocaleSwitch />);
-    const button = screen.getByRole('button', { name: 'switchLocale' });
-    expect(button).toBeDefined();
+
+    expect(
+      screen.getByRole('button', { name: 'switchLocale' }).textContent
+    ).toBe(localeInfo.pl.short);
   });
 
-  it('shows the flag emoji for the current locale (en-us → 🇺🇸)', () => {
+  it('lists every locale and highlights the current one', () => {
     render(<LocaleSwitch />);
-    const trigger = screen.getByTestId('dropdown-trigger');
-    expect(trigger.textContent).toContain('🇺🇸');
+
+    for (const loc of locales) {
+      const option = screen.getByText(localeInfo[loc].label).closest('button');
+      expect(option?.className.includes('menu-active')).toBe(loc === 'pl');
+    }
   });
 
-  it('renders dropdown items for all 6 locales', () => {
+  it('stores the chosen locale in a cookie and refreshes', async () => {
     render(<LocaleSwitch />);
-    const items = screen.getAllByTestId('dropdown-item');
-    expect(items.length).toBe(6);
+
+    await act(async () =>
+      fireEvent.click(screen.getByText(localeInfo.de.label))
+    );
+
+    expect(document.cookie).toContain('NEXT_LOCALE=de');
+    expect(router.refresh).toHaveBeenCalledOnce();
   });
 
-  it('each dropdown item shows the translated locale name', () => {
+  it('does nothing when choosing the current locale', async () => {
     render(<LocaleSwitch />);
-    const items = screen.getAllByTestId('dropdown-item');
-    const locales = ['en-us', 'en-gb', 'pl', 'de', 'nl', 'uk'];
-    locales.forEach((loc, i) => {
-      expect(items[i].textContent).toContain(loc);
-    });
+
+    await act(async () =>
+      fireEvent.click(screen.getByText(localeInfo.pl.label))
+    );
+
+    expect(document.cookie).not.toContain('NEXT_LOCALE');
+    expect(router.refresh).not.toHaveBeenCalled();
+  });
+});
+
+describe('LocaleSelect', () => {
+  const select = () =>
+    screen.getByRole<HTMLSelectElement>('combobox', { name: 'switchLocale' });
+
+  it('selects the current locale among every locale', () => {
+    render(<LocaleSelect />);
+
+    expect(select().value).toBe('pl');
+    expect(screen.getAllByRole('option')).toHaveLength(locales.length);
   });
 
-  it('applies custom className to the button', () => {
-    render(<LocaleSwitch className="custom-class" />);
-    const button = screen.getByRole('button', { name: 'switchLocale' });
-    expect(button.className).toContain('custom-class');
-  });
+  it('stores the chosen locale in a cookie and refreshes', async () => {
+    render(<LocaleSelect />);
 
-  it('button is not disabled initially (isPending=false)', () => {
-    render(<LocaleSwitch />);
-    const button = screen.getByRole('button', { name: 'switchLocale' });
-    expect(button.hasAttribute('disabled')).toBe(false);
+    await act(async () =>
+      fireEvent.change(select(), { target: { value: 'uk' } })
+    );
+
+    expect(document.cookie).toContain('NEXT_LOCALE=uk');
+    expect(router.refresh).toHaveBeenCalledOnce();
   });
 });

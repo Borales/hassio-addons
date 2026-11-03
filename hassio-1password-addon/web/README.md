@@ -10,7 +10,7 @@ Modern web application built with **Next.js 16** featuring the new App Router an
 
 - **Next.js 16**: App Router, Server Components, Cache Components (`'use cache'`), Server Actions
 - **Database**: SQLite with Prisma ORM (`@prisma-generated/client`)
-- **UI Framework**: HeroUI + Tailwind CSS
+- **UI Framework**: daisyUI 5 + Tailwind CSS 4
 - **i18n**: next-intl for multi-language support (EN, DE, NL, PL, UK)
 - **Container**: Standalone build (`output: 'standalone'`) for Docker
 - **Integration**: Home Assistant Supervisor API via Ingress

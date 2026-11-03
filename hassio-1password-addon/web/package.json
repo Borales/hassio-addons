@@ -24,7 +24,6 @@
   },
   "dependencies": {
     "@1password/op-js": "^0.1.13",
-    "@heroui/react": "^2.8.10",
     "@phosphor-icons/react": "^2.1.10",
     "@prisma/adapter-better-sqlite3": "^7.5.0",
     "@prisma/client": "^7.5.0",
@@ -39,23 +38,19 @@
     "prisma-extension-pagination": "^0.7.6",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "react-syntax-highlighter": "^16.1.1",
     "sharp": "^0.34.5",
     "winston": "^3.19.0",
     "yaml": "^2.8.3",
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@react-aria/ssr": "^3.9.10",
-    "@react-aria/visually-hidden": "^3.8.31",
     "@tailwindcss/postcss": "^4.2.2",
     "@testing-library/react": "^16.3.2",
     "@types/node": "^24.12.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "@types/react-syntax-highlighter": "^15.5.13",
     "@vitest/coverage-v8": "^4.1.0",
-    "clsx": "^2.1.1",
+    "daisyui": "^5.7.50",
     "eslint": "^9.39.4",
     "eslint-config-next": "^16.2.1",
     "eslint-config-prettier": "^10.1.8",
@@ -66,11 +61,10 @@
     "prettier-plugin-package": "^2.0.0",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "prisma": "^7.5.0",
-    "tailwind-merge": "^3.5.0",
-    "tailwind-variants": "^3.2.2",
     "tailwindcss": "^4.2.2",
     "typescript": "^5.9.3",
     "vitest": "^4.1.0"
   },
-  "packageManager": "pnpm@10.32.1"
+  "browserslist": "> 1%",
+  "packageManager": "pnpm@10.33.0"
 }

@@ -1,92 +1,71 @@
 // @vitest-environment happy-dom
-import { act, render, renderHook, screen } from '@testing-library/react';
-import { ReactNode } from 'react';
-import { describe, expect, it } from 'vitest';
+import { act, render, renderHook } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { makeGroup } from '../../helpers/fixtures';
 
 import {
   GroupModalProvider,
   useGroupModal
 } from '@/components/group/group-modal-provider';
 
-const wrapper = ({ children }: { children: ReactNode }) => (
-  <GroupModalProvider>{children}</GroupModalProvider>
-);
-
-const mockGroup = {
-  id: 'group-1',
-  name: 'Test Group',
-  description: null,
-  createdAt: new Date(),
-  updatedAt: new Date(),
-  secrets: []
-};
+const setup = () =>
+  renderHook(() => useGroupModal(), { wrapper: GroupModalProvider }).result;
 
 describe('GroupModalProvider', () => {
-  it('renders children', () => {
-    render(
-      <GroupModalProvider>
-        <div data-testid="child">hello</div>
-      </GroupModalProvider>
+  it('starts closed', () => {
+    const modal = setup();
+
+    expect(modal.current.mode).toBeNull();
+    expect(modal.current.activeGroup).toBeNull();
+  });
+
+  it('opens for a new group', () => {
+    const modal = setup();
+
+    act(() => modal.current.openCreateModal());
+
+    expect(modal.current.mode).toBe('create');
+    expect(modal.current.activeGroup).toBeNull();
+  });
+
+  it('opens for an existing group', () => {
+    const modal = setup();
+    const group = makeGroup('xiaomi');
+
+    act(() => modal.current.openEditModal(group));
+
+    expect(modal.current.mode).toBe('edit');
+    expect(modal.current.activeGroup).toBe(group);
+  });
+
+  it('forgets the group when switching to create or closing', () => {
+    const modal = setup();
+
+    act(() => modal.current.openEditModal(makeGroup('xiaomi')));
+    act(() => modal.current.openCreateModal());
+    expect(modal.current.activeGroup).toBeNull();
+
+    act(() => modal.current.openEditModal(makeGroup('xiaomi')));
+    act(() => modal.current.closeModal());
+    expect(modal.current.mode).toBeNull();
+    expect(modal.current.activeGroup).toBeNull();
+  });
+});
+
+describe('useGroupModal', () => {
+  it('throws outside the provider', () => {
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+    const Consumer = () => {
+      useGroupModal();
+      return null;
+    };
+
+    expect(() => render(<Consumer />)).toThrow(
+      'useGroupModal must be used within GroupModalProvider'
     );
-    expect(screen.getByTestId('child')).toBeDefined();
-  });
 
-  it('useGroupModal throws when used outside provider', () => {
-    expect(() => {
-      renderHook(() => useGroupModal());
-    }).toThrow('useGroupModal must be used within GroupModalProvider');
-  });
-
-  it('openCreateModal sets mode to create and activeGroup to null', () => {
-    const { result } = renderHook(() => useGroupModal(), { wrapper });
-
-    act(() => {
-      result.current.openCreateModal();
-    });
-
-    expect(result.current.mode).toBe('create');
-    expect(result.current.activeGroup).toBeNull();
-  });
-
-  it('openEditModal sets mode to edit and activeGroup to the provided group', () => {
-    const { result } = renderHook(() => useGroupModal(), { wrapper });
-
-    act(() => {
-      result.current.openEditModal(mockGroup);
-    });
-
-    expect(result.current.mode).toBe('edit');
-    expect(result.current.activeGroup).toBe(mockGroup);
-  });
-
-  it('closeModal resets mode to null and activeGroup to null', () => {
-    const { result } = renderHook(() => useGroupModal(), { wrapper });
-
-    act(() => {
-      result.current.openCreateModal();
-    });
-
-    act(() => {
-      result.current.closeModal();
-    });
-
-    expect(result.current.mode).toBeNull();
-    expect(result.current.activeGroup).toBeNull();
-  });
-
-  it('after openEditModal then closeModal, mode is null', () => {
-    const { result } = renderHook(() => useGroupModal(), { wrapper });
-
-    act(() => {
-      result.current.openEditModal(mockGroup);
-    });
-
-    expect(result.current.mode).toBe('edit');
-
-    act(() => {
-      result.current.closeModal();
-    });
-
-    expect(result.current.mode).toBeNull();
+    consoleError.mockRestore();
   });
 });

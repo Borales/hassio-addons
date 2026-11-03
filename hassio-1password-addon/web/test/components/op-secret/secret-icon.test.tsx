@@ -1,156 +1,69 @@
 // @vitest-environment happy-dom
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
-
-vi.mock('@heroui/react', () => ({
-  Image: ({
-    src,
-    alt,
-    width,
-    height,
-    fallbackSrc,
-    radius,
-    loading
-  }: {
-    src: string;
-    alt: string;
-    width?: number;
-    height?: number;
-    fallbackSrc?: string;
-    radius?: string;
-    loading?: string;
-  }) => (
-    <img
-      data-testid="op-icon"
-      src={src}
-      alt={alt}
-      width={width}
-      height={height}
-      data-fallback={fallbackSrc}
-      data-radius={radius}
-      data-loading={loading}
-    />
-  )
-}));
+import { fireEvent, render } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 
 import { OpSecretIcon } from '@/components/op-secret/secret-icon';
 
+// The local path comes back resolved against the test page's origin.
+const FALLBACK = expect.stringMatching(/\/op-item\.png$/);
+const richIcon = (hostname: string) =>
+  `https://c.1password.com/richicons/images/login/64/${hostname}.png`;
+
+const setup = (urls: { primary?: boolean; href: string }[], alt?: string) => {
+  const { container } = render(<OpSecretIcon urls={urls} alt={alt} />);
+  return container.querySelector('img') as HTMLImageElement;
+};
+
 describe('OpSecretIcon', () => {
-  it('renders fallback image when no URLs provided', () => {
-    render(<OpSecretIcon urls={[]} alt="test" />);
-    const img = screen.getByTestId('op-icon');
-    expect(img.getAttribute('src')).toBe('/op-item.png');
+  it('falls back to the generic icon without urls', () => {
+    expect(setup([]).getAttribute('src')).toEqual(FALLBACK);
   });
 
-  it('renders favicon URL for a valid external URL', () => {
-    render(
-      <OpSecretIcon
-        urls={[{ href: 'https://github.com', primary: true }]}
-        alt="GitHub"
-      />
-    );
-    const img = screen.getByTestId('op-icon');
-    expect(img.getAttribute('src')).toBe(
-      'https://c.1password.com/richicons/images/login/64/github.com.png'
+  it('falls back to the generic icon when the url is not parseable', () => {
+    expect(setup([{ href: 'my server' }]).getAttribute('src')).toEqual(
+      FALLBACK
     );
   });
 
-  it('uses primary URL when available', () => {
-    render(
-      <OpSecretIcon
-        urls={[
-          { href: 'https://example.com', primary: false },
-          { href: 'https://github.com', primary: true }
-        ]}
-        alt="test"
-      />
+  it('prefers the primary url', () => {
+    const img = setup([
+      { href: 'https://other.com' },
+      { primary: true, href: 'https://example.com/login' }
+    ]);
+    expect(img.getAttribute('src')).toBe(richIcon('example.com'));
+  });
+
+  it('uses the first url when none is primary', () => {
+    const img = setup([
+      { href: 'https://first.com' },
+      { href: 'https://second.com' }
+    ]);
+    expect(img.getAttribute('src')).toBe(richIcon('first.com'));
+  });
+
+  it('accepts a url without a protocol', () => {
+    expect(setup([{ href: 'example.com' }]).getAttribute('src')).toBe(
+      richIcon('example.com')
     );
-    const img = screen.getByTestId('op-icon');
-    expect(img.getAttribute('src')).toContain('github.com');
   });
 
-  it('falls back to first URL when no primary URL', () => {
-    render(
-      <OpSecretIcon
-        urls={[
-          { href: 'https://example.com', primary: false },
-          { href: 'https://github.com', primary: false }
-        ]}
-        alt="test"
-      />
-    );
-    const img = screen.getByTestId('op-icon');
-    expect(img.getAttribute('src')).toContain('example.com');
+  it.each(['http://localhost:8123', 'http://homeassistant.local:8123'])(
+    'keeps the generic icon for the local address %s',
+    (href) => {
+      expect(setup([{ href }]).getAttribute('src')).toEqual(FALLBACK);
+    }
+  );
+
+  it('switches to the generic icon when the rich icon fails to load', () => {
+    const img = setup([{ href: 'https://example.com' }]);
+
+    fireEvent.error(img);
+
+    expect(img.getAttribute('src')).toEqual(FALLBACK);
   });
 
-  it('uses fallback for localhost URLs', () => {
-    render(
-      <OpSecretIcon
-        urls={[{ href: 'http://localhost:3000', primary: true }]}
-        alt="local"
-      />
-    );
-    const img = screen.getByTestId('op-icon');
-    expect(img.getAttribute('src')).toBe('/op-item.png');
-  });
-
-  it('uses fallback for .local domain URLs', () => {
-    render(
-      <OpSecretIcon
-        urls={[{ href: 'http://homeassistant.local', primary: true }]}
-        alt="local"
-      />
-    );
-    const img = screen.getByTestId('op-icon');
-    expect(img.getAttribute('src')).toBe('/op-item.png');
-  });
-
-  it('prepends https:// when URL does not start with http', () => {
-    render(
-      <OpSecretIcon
-        urls={[{ href: 'github.com', primary: true }]}
-        alt="GitHub"
-      />
-    );
-    const img = screen.getByTestId('op-icon');
-    expect(img.getAttribute('src')).toContain('github.com');
-    expect(img.getAttribute('src')).not.toBe('/op-item.png');
-  });
-
-  it('renders with default size of 32', () => {
-    render(<OpSecretIcon urls={[]} alt="test" />);
-    const img = screen.getByTestId('op-icon');
-    expect(img.getAttribute('width')).toBe('32');
-    expect(img.getAttribute('height')).toBe('32');
-  });
-
-  it('renders with size 64 when specified', () => {
-    render(<OpSecretIcon urls={[]} alt="test" size={64} />);
-    const img = screen.getByTestId('op-icon');
-    expect(img.getAttribute('width')).toBe('64');
-    expect(img.getAttribute('height')).toBe('64');
-  });
-
-  it('passes alt text to the image', () => {
-    render(<OpSecretIcon urls={[]} alt="My Secret" />);
-    const img = screen.getByTestId('op-icon');
-    expect(img.getAttribute('alt')).toBe('My Secret');
-  });
-
-  it('sets fallbackSrc to /op-item.png', () => {
-    render(
-      <OpSecretIcon
-        urls={[{ href: 'https://github.com', primary: true }]}
-        alt="test"
-      />
-    );
-    const img = screen.getByTestId('op-icon');
-    expect(img.getAttribute('data-fallback')).toBe('/op-item.png');
-  });
-
-  it('uses lazy loading', () => {
-    render(<OpSecretIcon urls={[]} alt="test" />);
-    const img = screen.getByTestId('op-icon');
-    expect(img.getAttribute('data-loading')).toBe('lazy');
+  it('is decorative unless given alt text', () => {
+    expect(setup([]).getAttribute('alt')).toBe('');
+    expect(setup([], 'Mi Home').getAttribute('alt')).toBe('Mi Home');
   });
 });
