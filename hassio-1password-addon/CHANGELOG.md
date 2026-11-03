@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.3.0
+## 0.4.0
 
 - Redesigned the web interface on daisyUI 5, with dark and light themes and a dedicated mobile layout
 - Added a "Broken link" status with a banner, filter and re-link flow for secrets whose 1Password item, field or vault can no longer be read
@@ -8,6 +8,9 @@
 - Added undo for unassigning, hiding and deleting a group
 - Group names can now be edited, and groups can include any secret
 - A secret that can't be read from 1Password no longer aborts the whole sync
+
+## 0.3.0
+
 - Added tests for the web interface
 - Updated web dependencies and lockfile (including next-intl, vite, vitest, and form-data)
 - Updated web package manager configuration to pnpm 11.9.0 and removed deprecated .npmrc
