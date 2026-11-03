@@ -28,7 +28,7 @@ export const ChipList = ({
 
   return (
     <span
-      className={`inline-flex items-center gap-1 ${wrap ? 'flex-wrap gap-1.5' : 'shrink-0'}`}
+      className={`items-center ${wrap ? 'flex flex-wrap gap-1.5' : 'inline-flex shrink-0 gap-1'}`}
     >
       {visible.map(({ id, label, prefix }) => (
         <span key={id} className="chip-tag" title={label}>

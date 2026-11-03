@@ -21,7 +21,8 @@ type OpSecretIconProps = {
 };
 
 export const OpSecretIcon = ({ size = 32, urls, alt }: OpSecretIconProps) => {
-  const fallbackSrc = '/op-item.png';
+  // Relative: the app is served from a Home Assistant ingress sub-path.
+  const fallbackSrc = './op-item.png';
   let secretSrc = fallbackSrc;
 
   if (urls.length > 0) {

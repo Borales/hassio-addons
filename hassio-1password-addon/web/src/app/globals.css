@@ -7,11 +7,12 @@
    ========================================================================== */
 
 @import 'tailwindcss';
+/* Both themes are defined in full below. Keep the built-ins off: the bundler can
+   rewrite their selectors into a higher-specificity :is(), which then beats the
+   custom dark theme despite coming first. */
 @plugin 'daisyui' {
   logs: false;
-  themes:
-    dark --default --prefersdark,
-    light;
+  themes: false;
 }
 
 @custom-variant dark (&:is([data-theme="dark"] *));

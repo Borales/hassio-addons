@@ -1,11 +1,13 @@
 // @vitest-environment happy-dom
 import { fireEvent, render } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { OpSecretIcon } from '@/components/op-secret/secret-icon';
 
-// The local path comes back resolved against the test page's origin.
-const FALLBACK = expect.stringMatching(/\/op-item\.png$/);
+const INGRESS_ROOT = '/api/hassio_ingress/token/';
+
+// The icon must resolve under the Home Assistant ingress sub-path.
+const FALLBACK = `${window.location.origin}${INGRESS_ROOT}op-item.png`;
 const richIcon = (hostname: string) =>
   `https://c.1password.com/richicons/images/login/64/${hostname}.png`;
 
@@ -15,14 +17,16 @@ const setup = (urls: { primary?: boolean; href: string }[], alt?: string) => {
 };
 
 describe('OpSecretIcon', () => {
+  beforeEach(() => {
+    window.history.pushState({}, '', INGRESS_ROOT);
+  });
+
   it('falls back to the generic icon without urls', () => {
-    expect(setup([]).getAttribute('src')).toEqual(FALLBACK);
+    expect(setup([]).src).toBe(FALLBACK);
   });
 
   it('falls back to the generic icon when the url is not parseable', () => {
-    expect(setup([{ href: 'my server' }]).getAttribute('src')).toEqual(
-      FALLBACK
-    );
+    expect(setup([{ href: 'my server' }]).src).toBe(FALLBACK);
   });
 
   it('prefers the primary url', () => {
@@ -50,7 +54,7 @@ describe('OpSecretIcon', () => {
   it.each(['http://localhost:8123', 'http://homeassistant.local:8123'])(
     'keeps the generic icon for the local address %s',
     (href) => {
-      expect(setup([{ href }]).getAttribute('src')).toEqual(FALLBACK);
+      expect(setup([{ href }]).src).toBe(FALLBACK);
     }
   );
 
@@ -59,7 +63,7 @@ describe('OpSecretIcon', () => {
 
     fireEvent.error(img);
 
-    expect(img.getAttribute('src')).toEqual(FALLBACK);
+    expect(img.src).toBe(FALLBACK);
   });
 
   it('is decorative unless given alt text', () => {

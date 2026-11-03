@@ -260,7 +260,7 @@
       "title": "Home Assistant Events",
       "description": "This add-on fires custom events you can use as automation triggers. Every event includes a <code>timestamp</code> field; read the payload with <code>trigger.event.data</code>.",
       "examples": {
-        "title": "Automation Examples",
+        "title": "Automation examples",
         "restartAddon": "Restart an add-on when its secret changes",
         "notifyGroup": "Notify when a group of secrets is updated"
       },
