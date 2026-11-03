@@ -1,11 +1,11 @@
 'use client';
 
+import type { SecretRow } from '@/lib/secret-status';
 import { createContext, ReactNode, useContext, useState } from 'react';
-import { Item } from './secret-modal';
 
 type SecretModalContextType = {
-  activeSecret: Item | null;
-  openModal: (secret: Item) => void;
+  activeSecret: SecretRow | null;
+  openModal: (secret: SecretRow) => void;
   closeModal: () => void;
 };
 
@@ -14,9 +14,9 @@ const SecretModalContext = createContext<SecretModalContextType | undefined>(
 );
 
 export const SecretModalProvider = ({ children }: { children: ReactNode }) => {
-  const [activeSecret, setActiveSecret] = useState<Item | null>(null);
+  const [activeSecret, setActiveSecret] = useState<SecretRow | null>(null);
 
-  const openModal = (secret: Item) => {
+  const openModal = (secret: SecretRow) => {
     setActiveSecret(secret);
   };
 

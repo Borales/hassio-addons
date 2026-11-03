@@ -86,7 +86,7 @@ This project is licensed under the [MIT License](https://github.com/Borales/hass
 
 - Built with [Next.js 16](https://nextjs.org/)
 - Uses the [1Password Service Accounts](https://developer.1password.com/docs/service-accounts/) API
-- UI components from [HeroUI](https://heroui.com/)
+- UI components from [daisyUI](https://daisyui.com/)
 - Powered by [Home Assistant](https://www.home-assistant.io/)
 
 ## Links

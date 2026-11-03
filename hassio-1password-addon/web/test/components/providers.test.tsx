@@ -1,67 +1,34 @@
 // @vitest-environment happy-dom
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
-
-vi.mock('next/navigation', () => ({
-  useRouter: () => ({ push: vi.fn() })
-}));
-
-vi.mock('@heroui/react', () => ({
-  HeroUIProvider: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="heroui-provider">{children}</div>
-  )
-}));
-
-vi.mock('next-themes', () => ({
-  ThemeProvider: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="theme-provider">{children}</div>
-  )
-}));
+import { useTheme } from 'next-themes';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { Providers } from '@/components/providers';
 
+const ThemeProbe = () => <p>theme: {useTheme().theme}</p>;
+
 describe('Providers', () => {
-  it('renders children inside providers', () => {
-    render(
-      <Providers>
-        <span data-testid="child">hello</span>
-      </Providers>
-    );
-    const child = screen.getByTestId('child');
-    expect(child).toBeDefined();
-    expect(child.textContent).toBe('hello');
+  beforeEach(() => {
+    localStorage.clear();
   });
 
-  it('wraps children in HeroUIProvider', () => {
+  it('gives its children the theme context, configured by themeProps', () => {
     render(
-      <Providers>
-        <span>content</span>
+      <Providers themeProps={{ defaultTheme: 'dark', enableSystem: false }}>
+        <ThemeProbe />
       </Providers>
     );
-    const heroui = screen.getByTestId('heroui-provider');
-    expect(heroui).toBeDefined();
+
+    expect(screen.getByText('theme: dark')).toBeDefined();
   });
 
-  it('wraps children in ThemeProvider', () => {
+  it('works without themeProps', () => {
     render(
       <Providers>
-        <span>content</span>
+        <p>child</p>
       </Providers>
     );
-    const themeProvider = screen.getByTestId('theme-provider');
-    expect(themeProvider).toBeDefined();
-  });
 
-  it('passes themeProps to ThemeProvider (check that attribute is forwarded)', () => {
-    // The mock ThemeProvider doesn't forward props to DOM, but we verify
-    // that Providers renders without error when themeProps are passed
-    const { container } = render(
-      <Providers themeProps={{ attribute: 'class', defaultTheme: 'dark' }}>
-        <span data-testid="child-with-props">content</span>
-      </Providers>
-    );
-    expect(container.firstChild).toBeDefined();
-    const child = screen.getByTestId('child-with-props');
-    expect(child).toBeDefined();
+    expect(screen.getByText('child')).toBeDefined();
   });
 });

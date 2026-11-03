@@ -1,102 +1,71 @@
 // @vitest-environment happy-dom
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { renderToString } from 'react-dom/server';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('next-intl', () => ({
-  useTranslations: (_ns: string) => (key: string) => key
+const theme = vi.hoisted(() => ({
+  resolvedTheme: 'dark',
+  setTheme: vi.fn()
 }));
 
-vi.mock('next-themes', () => ({
-  useTheme: vi.fn(() => ({ theme: 'light', setTheme: vi.fn() }))
-}));
+vi.mock('next-intl', () => import('../helpers/next-intl'));
+vi.mock('next-themes', () => ({ useTheme: () => theme }));
 
-vi.mock('@react-aria/ssr', () => ({
-  useIsSSR: () => false
-}));
-
-vi.mock('@react-aria/visually-hidden', () => ({
-  VisuallyHidden: ({ children }: { children: React.ReactNode }) => (
-    <div>{children}</div>
-  )
-}));
-
-vi.mock('@heroui/switch', () => ({
-  useSwitch: vi.fn(
-    ({
-      isSelected,
-      onChange,
-      'aria-label': _ariaLabel
-    }: {
-      isSelected: boolean;
-      onChange: () => void;
-      'aria-label': string;
-    }) => ({
-      Component: 'div',
-      slots: { wrapper: ({ class: cls }: { class?: string }) => cls },
-      isSelected,
-      getBaseProps: (props: Record<string, unknown>) => props,
-      getInputProps: () => ({ type: 'checkbox', onChange }),
-      getWrapperProps: () => ({})
-    })
-  )
-}));
-
-vi.mock('@phosphor-icons/react/dist/ssr', () => ({
-  SunIcon: () => <svg data-testid="sun-icon" />,
-  MoonIcon: () => <svg data-testid="moon-icon" />
-}));
-
-vi.mock('tailwind-variants', () => ({
-  tv:
-    ({ base }: { base: string | string[] }) =>
-    ({ className }: { className?: string | string[] } = {}) =>
-      [base, className].flat().filter(Boolean).join(' ')
-}));
-
-import { ThemeSwitch } from '@/components/theme-switch';
+import { ThemeMenuItem, ThemeSwitch } from '@/components/theme-switch';
 
 describe('ThemeSwitch', () => {
-  // When theme='light': isSelected=true, so !isSelected=false → renders MoonIcon (to switch to dark)
-  it('renders MoonIcon when theme is "light" (isSelected=true)', () => {
-    render(<ThemeSwitch />);
-    const moonIcon = screen.getByTestId('moon-icon');
-    expect(moonIcon).toBeDefined();
+  beforeEach(() => {
+    vi.clearAllMocks();
+    theme.resolvedTheme = 'dark';
   });
 
-  // When theme='dark': isSelected=false, so !isSelected=true → renders SunIcon (to switch to light)
-  it('renders SunIcon when theme is "dark" (isSelected=false)', async () => {
-    const { useTheme } = await import('next-themes');
-    const { useSwitch } = await import('@heroui/switch');
-
-    vi.mocked(useTheme).mockReturnValue({
-      theme: 'dark',
-      setTheme: vi.fn()
-    } as unknown as ReturnType<typeof useTheme>);
-
-    vi.mocked(useSwitch).mockReturnValue({
-      Component: 'div' as unknown as ReturnType<typeof useSwitch>['Component'],
-      slots: { wrapper: ({ class: cls }: { class?: string }) => cls ?? '' },
-      isSelected: false,
-      getBaseProps: (props: Record<string, unknown>) => props,
-      getInputProps: () => ({ type: 'checkbox', onChange: vi.fn() }),
-      getWrapperProps: () => ({})
-    } as unknown as ReturnType<typeof useSwitch>);
-
+  it('offers light mode when dark', () => {
     render(<ThemeSwitch />);
-    const sunIcon = screen.getByTestId('sun-icon');
-    expect(sunIcon).toBeDefined();
+
+    fireEvent.click(screen.getByRole('button', { name: 'switchToLight' }));
+
+    expect(theme.setTheme).toHaveBeenCalledWith('light');
   });
 
-  it('renders a hidden input element', () => {
+  it('offers dark mode when light', () => {
+    theme.resolvedTheme = 'light';
     render(<ThemeSwitch />);
-    const input = document.querySelector('input[type="checkbox"]');
-    expect(input).toBeDefined();
+
+    fireEvent.click(screen.getByRole('button', { name: 'switchToDark' }));
+
+    expect(theme.setTheme).toHaveBeenCalledWith('dark');
   });
 
-  it('applies custom className', () => {
-    const { container } = render(<ThemeSwitch className="my-custom-class" />);
-    const wrapper = container.firstChild as HTMLElement;
-    expect(wrapper).toBeDefined();
-    expect(wrapper.className).toContain('my-custom-class');
+  it('renders the default on the server, whatever the theme is', () => {
+    theme.resolvedTheme = 'light';
+    expect(renderToString(<ThemeSwitch />)).toContain('switchToLight');
+  });
+});
+
+describe('ThemeMenuItem', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    theme.resolvedTheme = 'dark';
+  });
+
+  it.each([
+    ['dark', 'lightMode', 'light'],
+    ['light', 'darkMode', 'dark']
+  ])('in %s mode offers %s', (current, label, next) => {
+    theme.resolvedTheme = current;
+    render(<ThemeMenuItem />);
+
+    fireEvent.click(screen.getByRole('button', { name: label }));
+
+    expect(theme.setTheme).toHaveBeenCalledWith(next);
+  });
+
+  it('notifies the menu so it can close', () => {
+    const onToggle = vi.fn();
+    render(<ThemeMenuItem onToggle={onToggle} />);
+
+    fireEvent.click(screen.getByRole('button'));
+
+    expect(onToggle).toHaveBeenCalledOnce();
   });
 });

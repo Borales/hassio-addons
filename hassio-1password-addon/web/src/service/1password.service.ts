@@ -189,8 +189,19 @@ export class OnePasswordService {
     const result: Record<string, string> = {};
 
     items.forEach((item) => {
-      const secret = this.client.readItemByReference(item.reference as string);
-      result[item.id] = secret;
+      // A reference that no longer resolves must not abort the whole sync:
+      // secrets.yaml keeps its last value until the secret is re-linked.
+      try {
+        result[item.id] = this.client.readItemByReference(
+          item.reference as string
+        );
+      } catch (error) {
+        this.logger.error(
+          'Failed to read the reference of secret %s: %o',
+          item.id,
+          error
+        );
+      }
     });
 
     return result;
@@ -218,6 +229,21 @@ export class OnePasswordService {
     });
 
     return nextUpdate?.value ?? null;
+  }
+
+  /**
+   * Get the time of the last completed sync, derived from the next scheduled one.
+   */
+  async getLastSync(): Promise<string | null> {
+    const nextUpdate = await this.getNextUpdate();
+
+    if (!nextUpdate) {
+      return null;
+    }
+
+    return new Date(
+      new Date(nextUpdate).getTime() - (this.ttr || 1) * 60000
+    ).toISOString();
   }
 
   /**

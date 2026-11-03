@@ -1,123 +1,106 @@
 // @vitest-environment happy-dom
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { siteConfig } from '@/config/site';
+import { render, screen, within } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('next-intl', () => ({
-  useTranslations: (_ns: string) => (key: string) => key
+const navigation = vi.hoisted(() => ({
+  pathname: '/',
+  router: { refresh: vi.fn() }
 }));
 
+vi.mock('next-intl', () => import('../helpers/next-intl'));
+vi.mock('next-themes', () => ({
+  useTheme: () => ({ resolvedTheme: 'dark', setTheme: vi.fn() })
+}));
 vi.mock('next/navigation', () => ({
-  usePathname: () => '/'
+  usePathname: () => navigation.pathname,
+  useRouter: () => navigation.router
 }));
-
-vi.mock('next/image', () => ({
-  default: ({
-    src,
-    alt,
-    width,
-    height
-  }: {
-    src: string;
-    alt: string;
-    width: number;
-    height: number;
-  }) => <img src={src} alt={alt} width={width} height={height} />
-}));
-
-vi.mock('next/link', () => ({
-  default: ({
-    children,
-    href,
-    className,
-    title
-  }: {
-    children: React.ReactNode;
-    href: string;
-    className?: string;
-    title?: string;
-  }) => (
-    <a href={href} className={className} title={title}>
-      {children}
-    </a>
-  )
-}));
-
-vi.mock('@heroui/react', () => ({
-  Avatar: ({ title }: { title?: string }) => (
-    <div data-testid="avatar" title={title} />
-  )
-}));
-
-vi.mock('@phosphor-icons/react', () => ({
-  GithubLogoIcon: () => <svg data-testid="github-icon" />
-}));
-
-vi.mock('tailwind-variants', () => ({
-  tv:
-    (config: { base: string; variants: { active: { true: string } } }) =>
-    (variants?: { active?: boolean }) =>
-      variants?.active ? config.variants.active.true : config.base
-}));
-
-vi.mock('@/components/locale-switch', () => ({
-  LocaleSwitch: () => <div data-testid="locale-switch" />
-}));
-
-vi.mock('@/components/theme-switch', () => ({
-  ThemeSwitch: () => <div data-testid="theme-switch" />
-}));
+vi.mock('@/actions/force-update', () => ({ forceUpdateNow: vi.fn() }));
 
 import { Menu } from '@/components/menu';
-import { siteConfig } from '@/config/site';
+import { ToastProvider } from '@/components/ui/toast-provider';
+
+const setup = (nextUpdate?: string | null) =>
+  render(
+    <ToastProvider>
+      <Menu nextUpdate={nextUpdate} />
+    </ToastProvider>
+  );
+
+const nav = () => within(screen.getByRole('navigation', { name: 'main' }));
 
 describe('Menu', () => {
-  it('renders a header element', () => {
-    render(<Menu />);
-    const header = document.querySelector('header');
-    expect(header).toBeDefined();
+  beforeEach(() => {
+    navigation.pathname = '/';
   });
 
-  it('renders the logo image with correct alt text (siteConfig.name)', () => {
-    render(<Menu />);
-    const logo = screen.getByAltText(siteConfig.name);
-    expect(logo).toBeDefined();
+  it('links the logo home, naming the app and version', () => {
+    setup();
+
+    const home = screen.getByRole('link', {
+      name: `${siteConfig.name}, version ${siteConfig.version}`
+    });
+    expect(home.getAttribute('href')).toBe('./');
+    expect(home.textContent).toContain(`v${siteConfig.version}`);
   });
 
-  it('renders navigation links: Secrets, Groups, Rate Limits, Help', () => {
-    render(<Menu />);
-    expect(screen.getByText('secrets')).toBeDefined();
-    expect(screen.getByText('groups')).toBeDefined();
-    expect(screen.getByText('rateLimits')).toBeDefined();
-    expect(screen.getByText('help')).toBeDefined();
+  it('links every page with relative hrefs, for the ingress sub-path', () => {
+    setup();
+
+    expect(
+      nav()
+        .getAllByRole('link')
+        .map((link) => link.getAttribute('href'))
+    ).toEqual(['./', './groups', './rate-limits', './help']);
   });
 
-  it('renders the GitHub link', () => {
-    render(<Menu />);
-    const githubLink = document.querySelector(
-      'a[href="https://github.com/Borales/hassio-addons"]'
-    );
-    expect(githubLink).toBeDefined();
+  it.each([
+    ['/', 'secrets'],
+    ['/groups', 'groups'],
+    ['/rate-limits', 'rateLimits'],
+    ['/help', 'help']
+  ])('marks the current page on %s', (pathname, active) => {
+    navigation.pathname = pathname;
+    setup();
+
+    const current = nav()
+      .getAllByRole('link')
+      .filter((link) => link.getAttribute('aria-current') === 'page');
+
+    expect(current).toEqual([nav().getByRole('link', { name: active })]);
   });
 
-  it('renders LocaleSwitch component', () => {
-    render(<Menu />);
-    const localeSwitch = screen.getByTestId('locale-switch');
-    expect(localeSwitch).toBeDefined();
+  it('links to the repository in a new tab', () => {
+    setup();
+
+    const github = screen.getByRole('link', { name: 'github' });
+    expect(github.getAttribute('href')).toBe(siteConfig.repo);
+    expect(github.getAttribute('target')).toBe('_blank');
   });
 
-  it('renders ThemeSwitch component', () => {
-    render(<Menu />);
-    const themeSwitch = screen.getByTestId('theme-switch');
-    expect(themeSwitch).toBeDefined();
+  it('holds back the sync pill until the status has loaded', () => {
+    setup();
+    expect(screen.queryByRole('button', { name: 'notSyncedPill' })).toBeNull();
   });
 
-  it('active link (pathname ends with "/") gets active class applied', () => {
-    render(<Menu />);
-    // The secrets link points to "./" and pathname is "/", which ends with "/"
-    // The tv mock returns config.variants.active.true when active=true
-    const secretsLink = screen.getByText('secrets').closest('a');
-    expect(secretsLink).toBeDefined();
-    // Active class from the tv mock is the variants.active.true value
-    expect(secretsLink!.className).toContain('bg-default-100');
+  it('shows the sync pill once loaded, even when never synced', () => {
+    setup(null);
+    expect(screen.getByRole('button', { name: 'notSyncedPill' })).toBeDefined();
+  });
+
+  it('holds the theme, locale and repo links in the mobile "more" menu', () => {
+    setup();
+
+    const more = screen.getByRole('button', { name: 'more' }).parentElement!;
+    expect(
+      within(more).getByRole('button', { name: 'lightMode' })
+    ).toBeDefined();
+    expect(within(more).getByRole('combobox')).toBeDefined();
+    expect(
+      within(more)
+        .getByRole('link', { name: 'githubShort' })
+        .getAttribute('href')
+    ).toBe(siteConfig.repo);
   });
 });

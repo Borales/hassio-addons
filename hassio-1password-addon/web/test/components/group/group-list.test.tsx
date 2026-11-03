@@ -1,242 +1,234 @@
 // @vitest-environment happy-dom
-import { render, screen } from '@testing-library/react';
-import React from 'react';
-import { describe, expect, it, vi } from 'vitest';
+import { buildSecretRows } from '@/lib/secret-status';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { makeGroup } from '../../helpers/fixtures';
+import { t } from '../../helpers/next-intl';
 
-vi.mock('next-intl', () => ({
-  useTranslations: (_ns: string) => (key: string) => key
-}));
+vi.mock('next-intl', () => import('../../helpers/next-intl'));
+vi.mock('@/actions/group-create', () => ({ createGroup: vi.fn() }));
+vi.mock('@/actions/group-delete', () => ({ deleteGroup: vi.fn() }));
 
-vi.mock('@/actions/group-delete', () => ({
-  deleteGroup: vi.fn()
-}));
-
-vi.mock('@/components/group/group-modal-provider', () => ({
-  useGroupModal: vi.fn(() => ({
-    openEditModal: vi.fn(),
-    closeModal: vi.fn()
-  }))
-}));
-
-vi.mock('@/components/ui/action-buttons', () => ({
-  ActionButtons: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="action-buttons">{children}</div>
-  )
-}));
-
-vi.mock('@/components/ui/chip-list', () => ({
-  ChipList: ({
-    items,
-    emptyMessage
-  }: {
-    items: Array<{ id: string; label: string }>;
-    emptyMessage?: string;
-  }) => (
-    <div data-testid="chip-list" data-count={items.length}>
-      {items.length === 0 ? emptyMessage : items.map((i) => i.label).join(', ')}
-    </div>
-  )
-}));
-
-vi.mock('@/components/ui/confirm-dialog', () => ({
-  ConfirmDialog: ({
-    trigger,
-    message
-  }: {
-    trigger: (onOpen: () => void) => React.ReactElement;
-    message: string;
-  }) => (
-    <div data-testid="confirm-dialog" data-message={message}>
-      {trigger(vi.fn())}
-    </div>
-  )
-}));
-
-vi.mock('@heroui/react', () => ({
-  Button: ({
-    children,
-    'aria-label': ariaLabel,
-    onPress,
-    onClick,
-    isLoading,
-    isIconOnly,
-    color,
-    size,
-    variant
-  }: {
-    children?: React.ReactNode;
-    'aria-label'?: string;
-    onPress?: () => void;
-    onClick?: () => void;
-    isLoading?: boolean;
-    isIconOnly?: boolean;
-    color?: string;
-    size?: string;
-    variant?: string;
-  }) => (
-    <button
-      aria-label={ariaLabel}
-      onClick={onPress || onClick}
-      data-loading={String(isLoading)}
-      data-color={color}
-      data-size={size}
-      data-variant={variant}
-    >
-      {children}
-    </button>
-  ),
-  Chip: ({ children }: { children: React.ReactNode }) => (
-    <span data-testid="chip">{children}</span>
-  ),
-  Code: ({ children }: { children: React.ReactNode }) => (
-    <code data-testid="code">{children}</code>
-  ),
-  Table: ({
-    children,
-    'aria-label': ariaLabel
-  }: {
-    children: React.ReactNode;
-    'aria-label'?: string;
-  }) => <table aria-label={ariaLabel}>{children}</table>,
-  TableHeader: ({
-    children,
-    columns
-  }: {
-    children: (col: { key: string; label: string }) => React.ReactElement;
-    columns: Array<{ key: string; label: string }>;
-  }) => (
-    <thead>
-      <tr>{columns.map(children)}</tr>
-    </thead>
-  ),
-  TableColumn: ({ children }: { children: React.ReactNode }) => (
-    <th>{children}</th>
-  ),
-  TableBody: ({
-    children,
-    items
-  }: {
-    children: (item: unknown) => React.ReactElement;
-    items: unknown[];
-  }) => <tbody>{items.map(children)}</tbody>,
-  TableRow: ({
-    children
-  }: {
-    children: (key: string) => React.ReactElement;
-  }) => (
-    <tr>
-      {['name', 'secrets', 'event', 'actions'].map((key) => (
-        <React.Fragment key={key}>{children(key)}</React.Fragment>
-      ))}
-    </tr>
-  ),
-  TableCell: ({ children }: { children: React.ReactNode }) => (
-    <td>{children}</td>
-  ),
-  Tooltip: ({
-    children,
-    content
-  }: {
-    children: React.ReactNode;
-    content: string;
-  }) => (
-    <div data-testid="tooltip" data-content={content}>
-      {children}
-    </div>
-  )
-}));
-
-vi.mock('@phosphor-icons/react', () => ({
-  PencilSimpleIcon: () => <svg data-testid="pencil-icon" />,
-  TrashIcon: () => <svg data-testid="trash-icon" />
-}));
-
+import { createGroup } from '@/actions/group-create';
+import { deleteGroup } from '@/actions/group-delete';
 import { GroupList } from '@/components/group/group-list';
+import {
+  GroupModalProvider,
+  useGroupModal
+} from '@/components/group/group-modal-provider';
+import { ToastProvider } from '@/components/ui/toast-provider';
 
-import type { GroupWithSecrets } from '@/service/group.service';
+const xiaomi = makeGroup('xiaomi', ['free_key', 'missing_key'], {
+  description: 'Devices'
+});
+const empty = makeGroup('empty_group');
 
-const makeGroup = (overrides: Record<string, unknown> = {}): GroupWithSecrets =>
-  ({
-    id: 'group-1',
-    name: 'my-group',
-    description: null,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    secrets: [],
-    ...overrides
-  }) as unknown as GroupWithSecrets;
+const secrets = buildSecretRows([{ id: 'free_key' }], []);
+
+const ModalProbe = () => {
+  const { mode, activeGroup } = useGroupModal();
+  return (
+    <output>
+      {mode ?? 'closed'}:{activeGroup?.name}
+    </output>
+  );
+};
+
+const setup = (groups = [xiaomi, empty]) =>
+  render(
+    <ToastProvider>
+      <GroupModalProvider>
+        <GroupList groups={groups} secrets={secrets} />
+        <ModalProbe />
+      </GroupModalProvider>
+    </ToastProvider>
+  );
+
+const table = () => within(screen.getByRole('table'));
+const row = (name: string) =>
+  table().getByRole('button', { name }).closest('tr') as HTMLElement;
+
+/** Opens the delete confirmation of the group's row in the table. */
+const askToDelete = (name: string) =>
+  fireEvent.click(
+    within(row(name)).getByRole('button', { name: 'actions.deleteAria' })
+  );
+
+const confirmDelete = () =>
+  act(async () =>
+    fireEvent.click(
+      within(screen.getByRole('dialog')).getByRole('button', {
+        name: 'delete'
+      })
+    )
+  );
 
 describe('GroupList', () => {
-  it('renders a table with column headers', () => {
-    render(<GroupList groups={[]} />);
-    expect(screen.getByText('name')).toBeDefined();
-    expect(screen.getByText('secrets')).toBeDefined();
-    expect(screen.getByText('event')).toBeDefined();
-    expect(screen.getByText('actions')).toBeDefined();
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(deleteGroup).mockResolvedValue({ success: true });
+    vi.mocked(createGroup).mockResolvedValue({ success: true });
   });
 
-  it('renders a row for each group', () => {
-    const groups = [
-      makeGroup({ id: 'g1', name: 'alpha' }),
-      makeGroup({ id: 'g2', name: 'beta' })
-    ];
-    render(<GroupList groups={groups} />);
-    expect(screen.getByText('alpha')).toBeDefined();
-    expect(screen.getByText('beta')).toBeDefined();
+  it('renders each group in both the desktop table and the phone list', () => {
+    setup([xiaomi]);
+
+    expect(table().getByRole('button', { name: 'xiaomi' })).toBeDefined();
+    expect(
+      within(screen.getByRole('list', { name: 'title' })).getByRole('listitem')
+        .textContent
+    ).toContain('xiaomi');
   });
 
-  it('renders the event name code for each group', () => {
-    const groups = [makeGroup({ name: 'my-group' })];
-    render(<GroupList groups={groups} />);
-    const codes = screen.getAllByTestId('code');
-    const eventCode = codes.find((c) =>
-      c.textContent?.includes('onepassword_group_my-group_updated')
+  it('shows the description, event name and how many groups there are', () => {
+    const { container } = setup();
+
+    const cells = within(row('xiaomi'));
+    expect(cells.getByText('Devices')).toBeDefined();
+    expect(row('xiaomi').textContent).toContain(
+      'onepassword_group_xiaomi_updated'
     );
-    expect(eventCode).toBeDefined();
-  });
-
-  it('renders ChipList for secrets column', () => {
-    const groups = [
-      makeGroup({
-        secrets: [{ secretId: 'secret-1' }, { secretId: 'secret-2' }]
+    expect(
+      cells.getByRole('button', {
+        name: 'copyEvent: onepassword_group_xiaomi_updated'
       })
-    ];
-    render(<GroupList groups={groups} />);
-    const chipList = screen.getByTestId('chip-list');
-    expect(chipList.getAttribute('data-count')).toBe('2');
+    ).toBeDefined();
+    expect(t).toHaveBeenCalledWith('groupCount', { count: 2 });
+    expect(container.textContent).toContain('2 groupCount');
   });
 
-  it('renders empty ChipList when group has no secrets', () => {
-    const groups = [makeGroup({ secrets: [] })];
-    render(<GroupList groups={groups} />);
-    const chipList = screen.getByTestId('chip-list');
-    expect(chipList.getAttribute('data-count')).toBe('0');
-    expect(chipList.textContent).toBe('noSecrets');
+  it('shows a placeholder for a group without secrets', () => {
+    setup();
+    expect(within(row('empty_group')).getByText('noSecrets')).toBeDefined();
   });
 
-  it('renders edit and delete action buttons', () => {
-    const groups = [makeGroup()];
-    render(<GroupList groups={groups} />);
-    expect(screen.getByTestId('pencil-icon')).toBeDefined();
-    expect(screen.getByTestId('trash-icon')).toBeDefined();
+  it('shows linked secrets with their status, treating unknown ones as hidden', () => {
+    setup();
+
+    const chip = (id: string) => within(row('xiaomi')).getByText(id);
+    expect(chip('free_key').querySelector('.dot-unassigned')).not.toBeNull();
+    expect(chip('missing_key').querySelector('.dot-hidden')).not.toBeNull();
   });
 
-  it('renders a tooltip with description when group has description', () => {
-    const groups = [makeGroup({ description: 'My description' })];
-    render(<GroupList groups={groups} />);
-    const tooltip = screen.getByTestId('tooltip');
-    expect(tooltip.getAttribute('data-content')).toBe('My description');
+  it('folds secrets beyond the third into an overflow chip', () => {
+    setup([makeGroup('many', ['a', 'b', 'c', 'd', 'e'])]);
+
+    expect(within(row('many')).queryByText('d')).toBeNull();
+    expect(within(row('many')).getByText('moreSecrets')).toBeDefined();
+    expect(t).toHaveBeenCalledWith('moreSecrets', { count: 2 });
   });
 
-  it('does not render tooltip when group has no description', () => {
-    const groups = [makeGroup({ description: null })];
-    render(<GroupList groups={groups} />);
-    expect(screen.queryByTestId('tooltip')).toBeNull();
+  it.each([
+    ['the name', 'xiaomi'],
+    ['the edit button', 'actions.editAria']
+  ])('opens the edit modal from %s', (_from, name) => {
+    setup();
+
+    fireEvent.click(within(row('xiaomi')).getByRole('button', { name }));
+
+    expect(screen.getByRole('status').textContent).toBe('edit:xiaomi');
   });
 
-  it('renders a ConfirmDialog for delete action', () => {
-    const groups = [makeGroup()];
-    render(<GroupList groups={groups} />);
-    expect(screen.getByTestId('confirm-dialog')).toBeDefined();
+  describe('deleting', () => {
+    it('asks first', () => {
+      setup();
+
+      askToDelete('xiaomi');
+
+      expect(
+        screen.getByRole('dialog', { name: 'delete.title' }).textContent
+      ).toContain('onepassword_group_xiaomi_updated');
+      expect(t).toHaveBeenCalledWith('delete.title', { name: 'xiaomi' });
+      expect(deleteGroup).not.toHaveBeenCalled();
+    });
+
+    it('does nothing when cancelled', () => {
+      setup();
+      askToDelete('xiaomi');
+
+      fireEvent.click(screen.getByRole('button', { name: 'cancel' }));
+
+      expect(screen.queryByRole('dialog')).toBeNull();
+      expect(deleteGroup).not.toHaveBeenCalled();
+    });
+
+    it('deletes by id once confirmed, and offers undo', async () => {
+      setup();
+      askToDelete('xiaomi');
+
+      await confirmDelete();
+
+      expect(vi.mocked(deleteGroup).mock.calls[0][0].get('groupId')).toBe(
+        xiaomi.id
+      );
+      expect(screen.queryByRole('dialog')).toBeNull();
+      expect(
+        screen
+          .getAllByRole('status')
+          .some(({ textContent }) => textContent?.includes('groupDeleted'))
+      ).toBe(true);
+      expect(createGroup).not.toHaveBeenCalled();
+      expect(screen.getByRole('button', { name: 'undo' })).toBeDefined();
+    });
+
+    it('shows an error when the undo fails', async () => {
+      setup();
+      askToDelete('xiaomi');
+      await confirmDelete();
+      vi.mocked(createGroup).mockResolvedValue({ success: false });
+
+      await act(async () =>
+        fireEvent.click(screen.getByRole('button', { name: 'undo' }))
+      );
+
+      expect(screen.getByText('undoFailed')).toBeDefined();
+    });
+
+    it('undo recreates the group with the same name, description and secrets', async () => {
+      setup();
+      askToDelete('xiaomi');
+      await confirmDelete();
+
+      await act(async () =>
+        fireEvent.click(screen.getByRole('button', { name: 'undo' }))
+      );
+
+      const formData = vi.mocked(createGroup).mock.calls[0][0];
+      expect(formData.get('name')).toBe('xiaomi');
+      expect(formData.get('description')).toBe('Devices');
+      expect(formData.getAll('secretIds')).toEqual(['free_key', 'missing_key']);
+    });
+
+    it('undo sends an empty description when the group had none', async () => {
+      setup();
+      askToDelete('empty_group');
+      await confirmDelete();
+
+      await act(async () =>
+        fireEvent.click(screen.getByRole('button', { name: 'undo' }))
+      );
+
+      const formData = vi.mocked(createGroup).mock.calls[0][0];
+      expect(formData.get('description')).toBe('');
+      expect(formData.getAll('secretIds')).toEqual([]);
+    });
+
+    it.each([
+      ['the error', 'locked', 'locked'],
+      ['a fallback', undefined, 'deleteGroupFailed']
+    ])('shows %s with no undo when it fails', async (_case, error, text) => {
+      vi.mocked(deleteGroup).mockResolvedValue({ success: false, error });
+      setup();
+      askToDelete('xiaomi');
+
+      await confirmDelete();
+
+      expect(
+        screen
+          .getAllByRole('status')
+          .some(({ textContent }) => textContent === text)
+      ).toBe(true);
+      expect(screen.queryByRole('button', { name: 'undo' })).toBeNull();
+    });
   });
 });

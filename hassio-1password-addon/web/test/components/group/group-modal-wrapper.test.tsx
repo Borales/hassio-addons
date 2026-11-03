@@ -1,104 +1,75 @@
 // @vitest-environment happy-dom
-vi.mock('@/components/group/group-modal-provider', () => ({
-  useGroupModal: vi.fn()
-}));
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { makeGroup } from '../../helpers/fixtures';
 
 vi.mock('@/components/group/group-modal', () => ({
   GroupModal: ({
     group,
-    secrets,
-    isNew
+    isNew,
+    groupNames
   }: {
-    group: any;
-    secrets: any[];
+    group: { name: string } | null;
     isNew: boolean;
+    groupNames: string[];
   }) => (
-    <div
-      data-testid="group-modal"
-      data-is-new={String(isNew)}
-      data-secrets-count={secrets?.length}
-      data-group-id={group?.id ?? 'null'}
-    />
+    <div role="dialog">
+      {group?.name ?? 'no-group'}|{isNew ? 'new' : 'existing'}|
+      {groupNames.join(',')}
+    </div>
   )
 }));
 
-vi.mock('@prisma-generated/client', () => ({}));
-
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
-
-import { useGroupModal } from '@/components/group/group-modal-provider';
+import {
+  GroupModalProvider,
+  useGroupModal
+} from '@/components/group/group-modal-provider';
 import { GroupModalWrapper } from '@/components/group/group-modal-wrapper';
 
-const mockSecrets = [
-  { id: 'secret-1', name: 'Secret 1' },
-  { id: 'secret-2', name: 'Secret 2' }
-] as any[];
+const Controls = () => {
+  const { openCreateModal, openEditModal, closeModal } = useGroupModal();
+  return (
+    <>
+      <button onClick={openCreateModal}>create</button>
+      <button onClick={() => openEditModal(makeGroup('xiaomi'))}>edit</button>
+      <button onClick={closeModal}>close</button>
+    </>
+  );
+};
 
-const mockGroup = {
-  id: 'group-1',
-  name: 'Test Group',
-  description: null,
-  createdAt: new Date(),
-  updatedAt: new Date(),
-  secrets: []
-} as any;
+const click = (name: string) =>
+  fireEvent.click(screen.getByRole('button', { name }));
 
 describe('GroupModalWrapper', () => {
-  it('renders null when mode is null', () => {
-    vi.mocked(useGroupModal).mockReturnValue({
-      activeGroup: null,
-      mode: null,
-      openCreateModal: vi.fn(),
-      openEditModal: vi.fn(),
-      closeModal: vi.fn()
-    });
+  const setup = () =>
+    render(
+      <GroupModalProvider>
+        <Controls />
+        <GroupModalWrapper secrets={[]} groupNames={['a', 'b']} />
+      </GroupModalProvider>
+    );
 
-    const { container } = render(<GroupModalWrapper secrets={mockSecrets} />);
-    expect(container.firstChild).toBeNull();
+  it('renders nothing while closed', () => {
+    setup();
+    expect(screen.queryByRole('dialog')).toBeNull();
   });
 
-  it('renders GroupModal when mode is create with isNew=true', () => {
-    vi.mocked(useGroupModal).mockReturnValue({
-      activeGroup: null,
-      mode: 'create',
-      openCreateModal: vi.fn(),
-      openEditModal: vi.fn(),
-      closeModal: vi.fn()
-    });
-
-    render(<GroupModalWrapper secrets={mockSecrets} />);
-    const modal = screen.getByTestId('group-modal');
-    expect(modal).toBeDefined();
-    expect(modal.getAttribute('data-is-new')).toBe('true');
+  it('opens an empty modal in create mode', () => {
+    setup();
+    click('create');
+    expect(screen.getByRole('dialog').textContent).toBe('no-group|new|a,b');
   });
 
-  it('renders GroupModal when mode is edit with isNew=false', () => {
-    vi.mocked(useGroupModal).mockReturnValue({
-      activeGroup: mockGroup,
-      mode: 'edit',
-      openCreateModal: vi.fn(),
-      openEditModal: vi.fn(),
-      closeModal: vi.fn()
-    });
-
-    render(<GroupModalWrapper secrets={mockSecrets} />);
-    const modal = screen.getByTestId('group-modal');
-    expect(modal).toBeDefined();
-    expect(modal.getAttribute('data-is-new')).toBe('false');
+  it('opens the active group in edit mode', () => {
+    setup();
+    click('edit');
+    expect(screen.getByRole('dialog').textContent).toBe('xiaomi|existing|a,b');
   });
 
-  it('passes secrets to GroupModal', () => {
-    vi.mocked(useGroupModal).mockReturnValue({
-      activeGroup: null,
-      mode: 'create',
-      openCreateModal: vi.fn(),
-      openEditModal: vi.fn(),
-      closeModal: vi.fn()
-    });
-
-    render(<GroupModalWrapper secrets={mockSecrets} />);
-    const modal = screen.getByTestId('group-modal');
-    expect(modal.getAttribute('data-secrets-count')).toBe('2');
+  it('unmounts on close', () => {
+    setup();
+    click('create');
+    click('close');
+    expect(screen.queryByRole('dialog')).toBeNull();
   });
 });

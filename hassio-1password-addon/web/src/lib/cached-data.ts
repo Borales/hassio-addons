@@ -110,6 +110,19 @@ export async function getCachedNextUpdate() {
 }
 
 /**
+ * Get the time of the last scheduled sync with caching
+ * Tags: 'op-metadata'
+ * Lifetime: ~60 seconds (minutes profile)
+ */
+export async function getCachedLastSync() {
+  cacheTag('op-metadata');
+  cacheLife('minutes');
+
+  const lastSync = await onePasswordService.getLastSync();
+  return serialize(lastSync);
+}
+
+/**
  * Get rate limit data with caching
  * Tags: 'rate-limits'
  * Lifetime: ~60 seconds (minutes profile)

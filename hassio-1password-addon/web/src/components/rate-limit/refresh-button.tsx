@@ -1,7 +1,6 @@
 'use client';
 
 import { refreshRateLimits } from '@/actions/refresh-ratelimits';
-import { Button } from '@heroui/react';
 import { ArrowsClockwiseIcon } from '@phosphor-icons/react';
 import { useTranslations } from 'next-intl';
 import { useFormStatus } from 'react-dom';
@@ -11,16 +10,17 @@ const Submit = () => {
   const t = useTranslations('rateLimits');
 
   return (
-    <Button
-      isLoading={pending}
-      size="sm"
-      variant="flat"
+    <button
       type="submit"
-      startContent={!pending && <ArrowsClockwiseIcon size={14} />}
-      className="bg-default-100 dark:bg-default-200 text-foreground"
+      className="btn btn-sm btn-ghost hairline gap-1.5 border"
+      disabled={pending}
     >
+      <ArrowsClockwiseIcon
+        size={14}
+        className={pending ? 'animate-spin' : ''}
+      />
       {t('refreshButton')}
-    </Button>
+    </button>
   );
 };
 

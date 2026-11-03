@@ -16,8 +16,7 @@ export default defineConfig({
         'src/app/**',
         'src/config/**',
         'src/i18n/**',
-        'src/proxy.ts',
-        'src/hero.ts'
+        'src/proxy.ts'
       ]
     }
   },

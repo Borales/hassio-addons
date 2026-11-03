@@ -1,304 +1,367 @@
 // @vitest-environment happy-dom
-
-vi.mock('next-intl', () => ({
-  useTranslations:
-    (_ns: string) => (key: string, params?: Record<string, unknown>) =>
-      params ? `${key}(${JSON.stringify(params)})` : key
-}));
-
-vi.mock('@/actions/group-create', () => ({
-  createGroup: vi.fn()
-}));
-
-vi.mock('@/actions/group-update', () => ({
-  updateGroup: vi.fn()
-}));
-
-vi.mock('@/lib/group-validation', () => ({
-  createTranslatedGroupNameSchema: vi.fn(() => ({
-    safeParse: (_v: unknown) => ({ success: true })
-  }))
-}));
-
-vi.mock('@/service/group.service', () => ({}));
-
-vi.mock('@prisma-generated/client', () => ({}));
-
-vi.mock('react', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('react')>();
-  return {
-    ...actual,
-    useActionState: vi.fn().mockReturnValue([null, vi.fn(), false])
-  };
-});
-
-vi.mock('@/components/group/group-modal-provider', () => ({
-  useGroupModal: vi.fn(() => ({ closeModal: vi.fn() }))
-}));
-
-vi.mock('@heroui/react', () => ({
-  Modal: ({
-    children,
-    isOpen,
-    onClose
-  }: {
-    children: React.ReactNode;
-    isOpen: boolean;
-    onClose: () => void;
-  }) => (isOpen ? <div data-testid="modal">{children}</div> : null),
-  ModalContent: ({
-    children
-  }: {
-    children: React.ReactNode | ((onClose: () => void) => React.ReactNode);
-  }) => (
-    <div data-testid="modal-content">
-      {typeof children === 'function' ? children(vi.fn()) : children}
-    </div>
-  ),
-  ModalHeader: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="modal-header">{children}</div>
-  ),
-  ModalBody: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="modal-body">{children}</div>
-  ),
-  ModalFooter: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="modal-footer">{children}</div>
-  ),
-  Button: ({
-    children,
-    onPress,
-    onClick,
-    isDisabled,
-    isLoading,
-    color,
-    type
-  }: {
-    children: React.ReactNode;
-    onPress?: () => void;
-    onClick?: () => void;
-    isDisabled?: boolean;
-    isLoading?: boolean;
-    color?: string;
-    type?: string;
-  }) => (
-    <button
-      onClick={onPress || onClick}
-      disabled={isDisabled}
-      data-loading={String(isLoading)}
-      data-color={color}
-      type={type as 'button' | 'submit' | 'reset' | undefined}
-    >
-      {children}
-    </button>
-  ),
-  Input: ({
-    label,
-    value,
-    onValueChange,
-    isInvalid,
-    errorMessage,
-    isDisabled
-  }: {
-    label: string;
-    value?: string;
-    onValueChange?: (v: string) => void;
-    isInvalid?: boolean;
-    errorMessage?: string;
-    isDisabled?: boolean;
-  }) => (
-    <div>
-      <label>{label}</label>
-      <input
-        value={value}
-        onChange={(e) => onValueChange?.(e.target.value)}
-        data-invalid={String(isInvalid)}
-        disabled={isDisabled}
-      />
-      {isInvalid && errorMessage && (
-        <span data-testid="error">{errorMessage}</span>
-      )}
-    </div>
-  ),
-  Textarea: ({
-    label,
-    value,
-    onValueChange
-  }: {
-    label: string;
-    value?: string;
-    onValueChange?: (v: string) => void;
-  }) => (
-    <div>
-      <label>{label}</label>
-      <textarea
-        value={value}
-        onChange={(e) => onValueChange?.(e.target.value)}
-      />
-    </div>
-  ),
-  Select: ({
-    children,
-    label
-  }: {
-    children: React.ReactNode;
-    label: string;
-  }) => (
-    <div data-testid="select">
-      <label>{label}</label>
-      {children}
-    </div>
-  ),
-  SelectItem: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="select-item">{children}</div>
-  ),
-  Chip: ({
-    children,
-    onClose
-  }: {
-    children: React.ReactNode;
-    onClose?: () => void;
-  }) => (
-    <div data-testid="chip">
-      {children}
-      <button onClick={onClose} data-testid="chip-close">
-        x
-      </button>
-    </div>
-  )
-}));
-
-import { GroupModal } from '@/components/group/group-modal';
+import { buildSecretRows } from '@/lib/secret-status';
 import type { GroupWithSecrets } from '@/service/group.service';
-import type { Secret as HaSecretItem } from '@prisma-generated/client';
-import { render, screen } from '@testing-library/react';
-import React, { useActionState } from 'react';
-import { describe, expect, it, vi } from 'vitest';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { makeGroup, makeItem } from '../../helpers/fixtures';
+import { t } from '../../helpers/next-intl';
 
-const mockGroup: GroupWithSecrets = {
-  id: 'group-1',
-  name: 'TestGroup',
-  description: 'A test group',
-  secrets: [
-    { secretId: 'secret-1' },
-    { secretId: 'secret-2' }
-  ] as GroupWithSecrets['secrets'],
-  createdAt: new Date(),
-  updatedAt: new Date()
+vi.mock('next-intl', () => import('../../helpers/next-intl'));
+vi.mock('@/actions/group-create', () => ({ createGroup: vi.fn() }));
+vi.mock('@/actions/group-update', () => ({ updateGroup: vi.fn() }));
+
+import { createGroup } from '@/actions/group-create';
+import { updateGroup } from '@/actions/group-update';
+import {
+  GroupModalProvider,
+  useGroupModal
+} from '@/components/group/group-modal-provider';
+import { GroupModalWrapper } from '@/components/group/group-modal-wrapper';
+import { ToastProvider } from '@/components/ui/toast-provider';
+
+const SECRET_IDS = ['alpha_key', 'beta_key', 'gamma_other'];
+
+const secrets = buildSecretRows(
+  [
+    {
+      id: 'alpha_key',
+      reference: 'op://Smart Home/Mi Home/password',
+      itemId: 'item-1'
+    },
+    { id: 'beta_key' },
+    { id: 'gamma_other' }
+  ],
+  [makeItem()]
+);
+
+const Opener = ({ group }: { group?: GroupWithSecrets }) => {
+  const { openCreateModal, openEditModal } = useGroupModal();
+  return (
+    <button onClick={() => (group ? openEditModal(group) : openCreateModal())}>
+      open-modal
+    </button>
+  );
 };
 
-const mockSecrets: HaSecretItem[] = [
-  { id: 'secret-1', isSkipped: false, itemId: 'item-1' } as HaSecretItem,
-  { id: 'secret-2', isSkipped: false, itemId: 'item-2' } as HaSecretItem,
-  { id: 'secret-3', isSkipped: true, itemId: 'item-3' } as HaSecretItem,
-  { id: 'secret-4', isSkipped: false, itemId: null } as HaSecretItem
-];
+const setup = (group?: GroupWithSecrets, groupNames = ['taken']) => {
+  render(
+    <ToastProvider>
+      <GroupModalProvider>
+        <Opener group={group} />
+        <GroupModalWrapper secrets={secrets} groupNames={groupNames} />
+      </GroupModalProvider>
+    </ToastProvider>
+  );
+  fireEvent.click(screen.getByRole('button', { name: 'open-modal' }));
+};
+
+const nameInput = () =>
+  screen.getByRole<HTMLInputElement>('textbox', { name: 'nameLabel' });
+const typeName = (value: string) =>
+  fireEvent.change(nameInput(), { target: { value } });
+const button = (name: string) =>
+  screen.getByRole<HTMLButtonElement>('button', { name });
+const checkbox = (id: string) =>
+  screen
+    .getByText(id)
+    .closest('label')
+    ?.querySelector<HTMLInputElement>('input') as HTMLInputElement;
+const selected = () => SECRET_IDS.filter((id) => checkbox(id).checked);
+const filter = (value: string) =>
+  fireEvent.change(screen.getByRole('textbox', { name: 'filterSecrets' }), {
+    target: { value }
+  });
+const dialogText = () => screen.getByRole('dialog').textContent;
 
 describe('GroupModal', () => {
-  it('renders modal with "createTitle" header when isNew=true', () => {
-    render(<GroupModal group={null} secrets={[]} isNew={true} />);
-    const header = screen.getByTestId('modal-header');
-    expect(header).toBeDefined();
-    expect(header.textContent).toContain('createTitle');
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(createGroup).mockResolvedValue({ success: true });
+    vi.mocked(updateGroup).mockResolvedValue({ success: true });
   });
 
-  it('renders modal with "editTitle" header when isNew=false', () => {
-    render(<GroupModal group={mockGroup} secrets={[]} isNew={false} />);
-    const header = screen.getByTestId('modal-header');
-    expect(header).toBeDefined();
-    expect(header.textContent).toContain('editTitle');
+  describe('name', () => {
+    it.each([
+      ['My Service', 'my_service'],
+      ['A  B', 'a_b'],
+      ['UPPER', 'upper']
+    ])('normalises %s to %s as you type', (typed, value) => {
+      setup();
+      typeName(typed);
+      expect(nameInput().value).toBe(value);
+    });
+
+    it('stays quiet until touched', () => {
+      setup();
+
+      expect(screen.getByText('nameDescription')).toBeDefined();
+      expect(nameInput().className).not.toContain('input-error');
+      expect(nameInput().getAttribute('aria-invalid')).toBe('false');
+    });
+
+    it('requires a name once left empty', () => {
+      setup();
+
+      fireEvent.blur(nameInput());
+
+      expect(screen.getByText('required')).toBeDefined();
+      expect(nameInput().className).toContain('input-error');
+      expect(nameInput().getAttribute('aria-invalid')).toBe('true');
+    });
+
+    it.each([
+      ['bad!name', 'invalid'],
+      ['x', 'tooShort'],
+      ['x'.repeat(51), 'tooLong'],
+      ['taken', 'duplicate']
+    ])('rejects %s as %s', (name, error) => {
+      setup();
+
+      typeName(name);
+
+      expect(screen.getByText(error)).toBeDefined();
+      expect(nameInput().className).toContain('input-error');
+    });
+
+    it('clears the error once valid', () => {
+      setup();
+
+      typeName('bad!name');
+      typeName('good_name');
+
+      expect(screen.getByText('nameDescription')).toBeDefined();
+      expect(nameInput().className).not.toContain('input-error');
+    });
+
+    it('accepts the name the group already has', () => {
+      setup(makeGroup('taken', ['beta_key']));
+
+      typeName('taken');
+
+      expect(nameInput().className).not.toContain('input-error');
+      expect(button('save').disabled).toBe(false);
+    });
   });
 
-  it('does NOT render groupId hidden input when isNew=true', () => {
-    const { container } = render(
-      <GroupModal group={null} secrets={[]} isNew={true} />
-    );
-    const hiddenInput = container.querySelector('input[name="groupId"]');
-    expect(hiddenInput).toBeNull();
+  describe('submit button', () => {
+    it('is disabled with no secret selected, saying why', () => {
+      setup();
+      typeName('valid');
+
+      expect(button('createAction').disabled).toBe(true);
+      expect(button('createAction').parentElement?.dataset.tip).toBe(
+        'selectAtLeastOne'
+      );
+    });
+
+    it('is disabled with an invalid name, saying why', () => {
+      setup();
+      fireEvent.click(checkbox('beta_key'));
+      typeName('bad!name');
+
+      expect(button('createAction').disabled).toBe(true);
+      expect(button('createAction').parentElement?.dataset.tip).toBe('invalid');
+    });
+
+    it('is enabled with a valid name and a secret', () => {
+      setup();
+      typeName('valid');
+      fireEvent.click(checkbox('beta_key'));
+
+      expect(button('createAction').disabled).toBe(false);
+    });
   });
 
-  it('renders groupId hidden input when isNew=false', () => {
-    const { container } = render(
-      <GroupModal group={mockGroup} secrets={[]} isNew={false} />
-    );
-    const hiddenInput = container.querySelector('input[name="groupId"]');
-    expect(hiddenInput).toBeDefined();
+  describe('secret selection', () => {
+    it('toggles a secret', () => {
+      setup();
+
+      fireEvent.click(checkbox('beta_key'));
+      expect(selected()).toEqual(['beta_key']);
+
+      fireEvent.click(checkbox('beta_key'));
+      expect(selected()).toEqual([]);
+    });
+
+    it('selects all without a filter', () => {
+      setup();
+
+      fireEvent.click(button('selectAll'));
+
+      expect(selected()).toEqual(SECRET_IDS);
+    });
+
+    it('selects only the shown secrets with a filter, adding to the selection', () => {
+      setup();
+      fireEvent.click(checkbox('gamma_other'));
+
+      filter('KEY');
+      expect(screen.queryByText('gamma_other')).toBeNull();
+      fireEvent.click(button('selectShown'));
+
+      filter('');
+      expect(selected()).toEqual(SECRET_IDS);
+    });
+
+    it('clears the selection, and only offers that when something is selected', () => {
+      setup();
+      expect(screen.queryByRole('button', { name: 'clear' })).toBeNull();
+
+      fireEvent.click(button('selectAll'));
+      fireEvent.click(button('clear'));
+
+      expect(selected()).toEqual([]);
+      expect(screen.queryByRole('button', { name: 'clear' })).toBeNull();
+    });
+
+    it('says when the filter matches nothing', () => {
+      setup();
+
+      filter('nope');
+
+      expect(screen.getByText('noSecretsMatch')).toBeDefined();
+      expect(t).toHaveBeenCalledWith('noSecretsMatch', { query: 'nope' });
+    });
+
+    it('does not submit when pressing Enter in the filter', () => {
+      setup();
+
+      const notPrevented = fireEvent.keyDown(
+        screen.getByRole('textbox', { name: 'filterSecrets' }),
+        { key: 'Enter' }
+      );
+
+      expect(notPrevented).toBe(false);
+    });
+
+    it('shows the item of assigned secrets and the status of the others', () => {
+      setup();
+
+      const row = (id: string) =>
+        within(screen.getByText(id).closest('label') as HTMLElement);
+
+      expect(row('alpha_key').getByText('Mi Home')).toBeDefined();
+      expect(row('beta_key').getByText('status.unassigned')).toBeDefined();
+    });
   });
 
-  it('renders cancel button', () => {
-    render(<GroupModal group={null} secrets={[]} isNew={true} />);
-    const cancelButton = screen.getByText('cancel');
-    expect(cancelButton).toBeDefined();
+  describe('event name', () => {
+    it('shows the placeholder, with nothing to copy, until the name is valid', () => {
+      setup();
+
+      expect(dialogText()).toContain('onepassword_group_{name}_updated');
+      expect(screen.queryByRole('button', { name: /^copyEvent/ })).toBeNull();
+
+      typeName('bad!name');
+      expect(dialogText()).toContain('onepassword_group_{name}_updated');
+    });
+
+    it('follows the name live, and can be copied', () => {
+      setup();
+
+      typeName('My Service');
+
+      const event = 'onepassword_group_my_service_updated';
+      expect(dialogText()).toContain(event);
+      expect(button(`copyEvent: ${event}`)).toBeDefined();
+    });
   });
 
-  it('renders create button when isNew=true', () => {
-    render(<GroupModal group={null} secrets={[]} isNew={true} />);
-    const createButton = screen.getByText('create');
-    expect(createButton).toBeDefined();
+  describe('creating', () => {
+    const fillAndSubmit = () => {
+      typeName('New Group');
+      fireEvent.change(
+        screen.getByRole('textbox', { name: 'descriptionLabel' }),
+        { target: { value: 'Details' } }
+      );
+      fireEvent.click(checkbox('alpha_key'));
+      fireEvent.click(checkbox('beta_key'));
+      return act(async () => fireEvent.click(button('createAction')));
+    };
+
+    it('opens empty, titled for creation', () => {
+      setup();
+
+      expect(screen.getByRole('dialog', { name: 'createTitle' })).toBeDefined();
+      expect(nameInput().value).toBe('');
+      expect(selected()).toEqual([]);
+    });
+
+    it('focuses the name field', () => {
+      setup();
+      expect(document.activeElement).toBe(nameInput());
+    });
+
+    it('submits the form, toasts and closes', async () => {
+      setup();
+
+      await fillAndSubmit();
+
+      const formData = vi.mocked(createGroup).mock.calls[0][0];
+      expect(formData.get('name')).toBe('new_group');
+      expect(formData.get('description')).toBe('Details');
+      expect(formData.getAll('secretIds')).toEqual(['alpha_key', 'beta_key']);
+      expect(formData.has('groupId')).toBe(false);
+      expect(updateGroup).not.toHaveBeenCalled();
+
+      expect(screen.getByRole('status').textContent).toContain('groupCreated');
+      expect(screen.queryByRole('dialog')).toBeNull();
+    });
+
+    it('keeps the dialog open and shows the error when it fails', async () => {
+      vi.mocked(createGroup).mockResolvedValue({
+        success: false,
+        error: 'db is locked'
+      });
+      setup();
+
+      await fillAndSubmit();
+
+      expect(screen.getByRole('alert').textContent).toBe('db is locked');
+      expect(screen.getByRole('dialog')).toBeDefined();
+      expect(screen.queryByRole('status')).toBeNull();
+    });
   });
 
-  it('renders save button when isNew=false', () => {
-    render(<GroupModal group={mockGroup} secrets={[]} isNew={false} />);
-    const saveButton = screen.getByText('save');
-    expect(saveButton).toBeDefined();
+  describe('editing', () => {
+    const group = makeGroup('xiaomi', ['beta_key'], {
+      description: 'Devices'
+    });
+
+    it('opens with the group loaded', () => {
+      setup(group);
+
+      expect(screen.getByRole('dialog', { name: 'editTitle' })).toBeDefined();
+      expect(nameInput().value).toBe('xiaomi');
+      expect(
+        screen.getByRole<HTMLTextAreaElement>('textbox', {
+          name: 'descriptionLabel'
+        }).value
+      ).toBe('Devices');
+      expect(selected()).toEqual(['beta_key']);
+    });
+
+    it('updates by id, toasts and closes', async () => {
+      setup(group);
+
+      await act(async () => fireEvent.click(button('save')));
+
+      const formData = vi.mocked(updateGroup).mock.calls[0][0];
+      expect(formData.get('groupId')).toBe(group.id);
+      expect(formData.get('name')).toBe('xiaomi');
+      expect(createGroup).not.toHaveBeenCalled();
+
+      expect(screen.getByRole('status').textContent).toContain('groupSaved');
+      expect(screen.queryByRole('dialog')).toBeNull();
+    });
   });
 
-  it('submit button is disabled when name is empty', () => {
-    render(<GroupModal group={null} secrets={[]} isNew={true} />);
-    const submitButton = screen.getByText('create').closest('button');
-    expect(submitButton).toBeDefined();
-    expect(submitButton!.disabled).toBe(true);
-  });
+  it('cancel closes without saving', () => {
+    setup();
 
-  it('renders name input with label "nameLabel"', () => {
-    render(<GroupModal group={null} secrets={[]} isNew={true} />);
-    const nameLabel = screen.getByText('nameLabel');
-    expect(nameLabel).toBeDefined();
-  });
+    fireEvent.click(button('cancel'));
 
-  it('renders description textarea with label "descriptionLabel"', () => {
-    render(<GroupModal group={null} secrets={[]} isNew={true} />);
-    const descLabel = screen.getByText('descriptionLabel');
-    expect(descLabel).toBeDefined();
-  });
-
-  it('renders secrets select with label "secretsLabel"', () => {
-    render(<GroupModal group={null} secrets={[]} isNew={true} />);
-    const selectLabel = screen.getByText('secretsLabel');
-    expect(selectLabel).toBeDefined();
-  });
-
-  it('only shows non-skipped, assigned secrets in the select', () => {
-    render(<GroupModal group={null} secrets={mockSecrets} isNew={true} />);
-    const selectItems = screen.getAllByTestId('select-item');
-    // secret-1 and secret-2 are non-skipped with itemId; secret-3 is skipped; secret-4 has no itemId
-    expect(selectItems).toHaveLength(2);
-    expect(selectItems[0].textContent).toContain('secret-1');
-    expect(selectItems[1].textContent).toContain('secret-2');
-  });
-
-  it('shows error message when state has error', () => {
-    vi.mocked(useActionState).mockReturnValue([
-      { error: 'Failed' },
-      vi.fn(),
-      false
-    ] as unknown as ReturnType<typeof useActionState>);
-    render(<GroupModal group={null} secrets={[]} isNew={true} />);
-    const errorDiv = screen.getByText('Failed');
-    expect(errorDiv).toBeDefined();
-    // Reset mock
-    vi.mocked(useActionState).mockReturnValue([
-      null,
-      vi.fn(),
-      false
-    ] as unknown as ReturnType<typeof useActionState>);
-  });
-
-  it('shows event name preview when name is valid (no nameError)', () => {
-    render(<GroupModal group={mockGroup} secrets={[]} isNew={false} />);
-    const body = screen.getByTestId('modal-body');
-    expect(body.textContent).toContain('eventNameLabel');
-    expect(body.textContent).toContain(
-      `onepassword_group_${mockGroup.name}_updated`
-    );
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(createGroup).not.toHaveBeenCalled();
   });
 });

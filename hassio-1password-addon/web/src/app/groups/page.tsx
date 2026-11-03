@@ -1,52 +1,55 @@
-import { CreateFirstGroupLink } from '@/components/group/create-first-group-link';
 import { CreateGroupButton } from '@/components/group/create-group-button';
 import { GroupList } from '@/components/group/group-list';
 import { GroupModalProvider } from '@/components/group/group-modal-provider';
 import { GroupModalWrapper } from '@/components/group/group-modal-wrapper';
-import { getCachedGroups, getCachedSecrets } from '@/lib/cached-data';
+import { GroupsEmpty } from '@/components/group/groups-empty';
+import { PageContainer, PageHeader } from '@/components/ui/page';
+import {
+  getCachedGroups,
+  getCachedOpItems,
+  getCachedSecrets
+} from '@/lib/cached-data';
+import { buildSecretRows } from '@/lib/secret-status';
+import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('menu');
+  return { title: t('groups') };
+}
 
 export default async function GroupsPage() {
   const t = await getTranslations('groups');
 
-  // Fetch groups and secrets in parallel for optimal performance
-  const [groups, secrets] = await Promise.all([
+  // Fetch everything in parallel for optimal performance
+  const [groups, secrets, [items]] = await Promise.all([
     getCachedGroups(),
-    getCachedSecrets()
+    getCachedSecrets(),
+    getCachedOpItems({ pagination: { page: 1, limit: 1000 } })
   ]);
+
+  const rows = buildSecretRows(secrets, items);
 
   return (
     <GroupModalProvider>
-      <GroupModalWrapper secrets={secrets} />
+      <GroupModalWrapper
+        secrets={rows}
+        groupNames={groups.map(({ name }) => name)}
+      />
 
-      {/* Page header */}
-      <div className="mb-6 flex items-start justify-between">
-        <div>
-          <h1 className="text-foreground text-xl font-semibold">
-            {t('title')}
-          </h1>
-          <p className="text-default-500 mt-1 text-sm">{t('description')}</p>
-        </div>
-        <CreateGroupButton />
-      </div>
+      <PageContainer>
+        <PageHeader
+          title={t('title')}
+          description={t('description')}
+          actions={groups.length > 0 && <CreateGroupButton />}
+        />
 
-      {groups.length === 0 ? (
-        <div className="border-divider rounded-lg border border-dashed py-16 text-center">
-          <p className="text-default-400 text-sm">{t('noGroupsYet')}</p>
-          <p className="mt-2">
-            <CreateFirstGroupLink />
-          </p>
-        </div>
-      ) : (
-        <>
-          {/* Summary */}
-          <div className="text-default-500 mb-4 text-sm">
-            <span className="text-foreground font-medium">{groups.length}</span>{' '}
-            {t('groupCount', { count: groups.length })}
-          </div>
-          <GroupList groups={groups} />
-        </>
-      )}
+        {groups.length === 0 ? (
+          <GroupsEmpty />
+        ) : (
+          <GroupList groups={groups} secrets={rows} />
+        )}
+      </PageContainer>
     </GroupModalProvider>
   );
 }

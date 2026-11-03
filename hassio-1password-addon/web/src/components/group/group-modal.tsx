@@ -3,195 +3,293 @@
 import { createGroup } from '@/actions/group-create';
 import { updateGroup } from '@/actions/group-update';
 import { createTranslatedGroupNameSchema } from '@/lib/group-validation';
+import { eventForGroup, SecretRow } from '@/lib/secret-status';
 import { GroupWithSecrets } from '@/service/group.service';
 import {
-  Button,
-  Chip,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  Select,
-  SelectItem,
-  Textarea
-} from '@heroui/react';
-import { Secret as HaSecretItem } from '@prisma-generated/client';
+  CheckIcon,
+  LightningIcon,
+  MagnifyingGlassIcon
+} from '@phosphor-icons/react';
 import { useTranslations } from 'next-intl';
-import { useActionState, useEffect, useMemo, useState } from 'react';
+import { useActionState, useId, useMemo, useState } from 'react';
+import { CopyButton } from '../ui/copy-button';
+import { Dialog, DialogFooter, DialogHeader } from '../ui/dialog';
+import { EventName } from '../ui/event-name';
+import { StatusDot } from '../ui/status-dot';
+import { mono, useToast } from '../ui/toast-provider';
 import { useGroupModal } from './group-modal-provider';
 
 type GroupModalProps = {
   group: GroupWithSecrets | null;
-  secrets: HaSecretItem[];
+  secrets: SecretRow[];
+  /** Names of every existing group, for the duplicate-name check. */
+  groupNames: string[];
   isNew: boolean;
 };
 
-export const GroupModal = ({ group, secrets, isNew }: GroupModalProps) => {
+/** Normalised as you type: lowercase, spaces become underscores. */
+const normalizeName = (value: string) =>
+  value.toLowerCase().replace(/\s+/g, '_');
+
+export const GroupModal = ({
+  group,
+  secrets,
+  groupNames,
+  isNew
+}: GroupModalProps) => {
   const t = useTranslations('groups.modal');
   const tCommon = useTranslations('common.actions');
+  const tList = useTranslations('secrets.list');
   const tValidation = useTranslations('validation.groupName');
+  const tToast = useTranslations('toast');
+  const toast = useToast();
   const { closeModal } = useGroupModal();
-  const [name, setName] = useState(group?.name || '');
-  const [description, setDescription] = useState(group?.description || '');
-  const [selectedSecrets, setSelectedSecrets] = useState<Set<string>>(
-    new Set(group?.secrets.map((s) => s.secretId) || [])
-  );
+  const titleId = useId();
+  const nameHelpId = useId();
 
-  const action = isNew ? createGroup : updateGroup;
+  const [name, setName] = useState(group?.name || '');
+  const [touched, setTouched] = useState(false);
+  const [description, setDescription] = useState(group?.description || '');
+  const [selected, setSelected] = useState<Set<string>>(
+    new Set(group?.secrets.map(({ secretId }) => secretId) || [])
+  );
+  const [query, setQuery] = useState('');
+
   const [state, formAction, isPending] = useActionState(
     async (_prevState: unknown, formData: FormData) => {
-      return action(formData);
+      const result = await (isNew ? createGroup : updateGroup)(formData);
+      if (result.success) {
+        toast({
+          text: tToast.rich(isNew ? 'groupCreated' : 'groupSaved', {
+            name,
+            code: mono
+          })
+        });
+        closeModal();
+      }
+      return result;
     },
     null
   );
 
-  // Create schema with translated messages
-  const groupNameSchema = useMemo(
+  const schema = useMemo(
     () => createTranslatedGroupNameSchema(tValidation),
     [tValidation]
   );
 
-  // Validate name (computed synchronously during render)
-  const nameError = useMemo(() => {
-    if (!name) return null;
-    const result = groupNameSchema.safeParse(name);
-    return result.success ? null : result.error.issues[0].message;
-  }, [name, groupNameSchema]);
+  const nameError = !name
+    ? tValidation('required')
+    : (schema.safeParse(name).error?.issues[0].message ??
+      (groupNames.includes(name) && name !== group?.name
+        ? t('duplicate', { name })
+        : null));
+  const showNameError = touched && !!nameError;
 
-  // Close modal on success
-  useEffect(() => {
-    if (state?.success) {
-      closeModal();
+  const needle = query.toLowerCase();
+  const shown = secrets.filter(({ id }) => id.toLowerCase().includes(needle));
+
+  const toggle = (id: string) => {
+    const next = new Set(selected);
+    if (next.has(id)) {
+      next.delete(id);
+    } else {
+      next.add(id);
     }
-  }, [state, closeModal]);
+    setSelected(next);
+  };
+
+  const saveBlockedBy =
+    nameError ?? (selected.size === 0 ? t('selectAtLeastOne') : null);
+  const event = eventForGroup(nameError ? null : name);
 
   return (
-    <Modal backdrop="blur" size="xl" isOpen={true} onClose={closeModal}>
-      <ModalContent>
-        {(onClose) => (
-          <form action={formAction}>
-            {!isNew && <input type="hidden" name="groupId" value={group?.id} />}
-            {!isNew && <input type="hidden" name="name" value={name} />}
+    <Dialog onClose={closeModal} labelledBy={titleId} width="sm:max-w-[580px]">
+      <DialogHeader
+        id={titleId}
+        title={isNew ? t('createTitle') : t('editTitle')}
+        subtitle={group?.name}
+        onClose={closeModal}
+      />
 
-            <ModalHeader>
-              {isNew
-                ? t('createTitle')
-                : t('editTitle', { name: group?.name || '' })}
-            </ModalHeader>
+      <form action={formAction} className="flex min-h-0 flex-col">
+        {!isNew && <input type="hidden" name="groupId" value={group?.id} />}
+        {Array.from(selected).map((secretId) => (
+          <input
+            key={secretId}
+            type="hidden"
+            name="secretIds"
+            value={secretId}
+          />
+        ))}
 
-            <ModalBody>
-              {state?.error && (
-                <div className="bg-danger-50 text-danger mb-4 rounded-lg p-3 text-sm">
-                  {state.error}
-                </div>
-              )}
+        <div className="space-y-4 overflow-y-auto px-5 pt-2 pb-5 sm:px-6">
+          {state && !state.success && state.error && (
+            <div role="alert" className="alert alert-error alert-soft">
+              {state.error}
+            </div>
+          )}
 
-              <Input
-                name={isNew ? 'name' : undefined}
-                label={t('nameLabel')}
-                placeholder={t('namePlaceholder')}
-                description={t('nameDescription')}
+          <div>
+            <label className="floating-label">
+              <span>{t('nameLabel')}</span>
+              <input
+                name="name"
+                autoComplete="off"
                 value={name}
-                onValueChange={setName}
-                isInvalid={!!nameError}
-                errorMessage={nameError}
-                isRequired
-                isReadOnly={!isNew}
-                isDisabled={!isNew}
+                onChange={(e) => {
+                  setName(normalizeName(e.target.value));
+                  setTouched(true);
+                }}
+                onBlur={() => setTouched(true)}
+                placeholder={t('nameLabel')}
+                maxLength={60}
+                className={`input w-full font-mono ${showNameError ? 'input-error' : ''}`}
+                aria-invalid={showNameError}
+                aria-describedby={nameHelpId}
+                data-autofocus={isNew ? true : undefined}
               />
+            </label>
+            <p
+              id={nameHelpId}
+              className={`mt-1.5 text-[12px] ${showNameError ? 'text-error' : 'text-muted'}`}
+            >
+              {showNameError ? nameError : t('nameDescription')}
+            </p>
+          </div>
 
-              <Textarea
-                name="description"
-                label={t('descriptionLabel')}
-                placeholder={t('descriptionPlaceholder')}
-                value={description}
-                onValueChange={setDescription}
-                className="mt-4"
-              />
+          <label className="floating-label block">
+            <span>{t('descriptionLabel')}</span>
+            <textarea
+              name="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={2}
+              placeholder={t('descriptionLabel')}
+              className="textarea w-full resize-none"
+            />
+          </label>
 
-              <Select
-                label={t('secretsLabel')}
-                placeholder={t('secretsPlaceholder')}
-                selectionMode="multiple"
-                selectedKeys={selectedSecrets}
-                onSelectionChange={(keys) =>
-                  setSelectedSecrets(keys as Set<string>)
-                }
-                className="mt-4"
-                description={t('secretsDescription')}
-              >
-                {secrets
-                  .filter((s) => !s.isSkipped && s.itemId)
-                  .map((secret) => (
-                    <SelectItem key={secret.id}>{secret.id}</SelectItem>
-                  ))}
-              </Select>
+          <div>
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-[12.5px] font-medium">
+                {t('secretsLabel')}{' '}
+                <span className="text-muted ml-1 font-normal tabular-nums">
+                  {t('selectedCount', { count: selected.size })}
+                </span>
+              </span>
+              <span className="flex gap-3 text-[12px]">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setSelected(
+                      new Set([...selected, ...shown.map(({ id }) => id)])
+                    )
+                  }
+                  className="link link-hover text-primary"
+                >
+                  {query ? t('selectShown') : t('selectAll')}
+                </button>
+                {selected.size > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setSelected(new Set())}
+                    className="link link-hover text-muted"
+                  >
+                    {t('clear')}
+                  </button>
+                )}
+              </span>
+            </div>
 
-              {/* Hidden inputs for selected secrets */}
-              {Array.from(selectedSecrets).map((secretId) => (
+            <div className="rounded-field hairline overflow-hidden border">
+              <label className="hairline surface flex h-9 items-center gap-2 border-b px-3">
+                <MagnifyingGlassIcon size={13} className="opacity-55" />
                 <input
-                  key={secretId}
-                  type="hidden"
-                  name="secretIds"
-                  value={secretId}
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
+                  placeholder={t('filterSecrets')}
+                  aria-label={t('filterSecrets')}
+                  className="min-w-0 flex-1 border-0 bg-transparent p-0 text-[13px] outline-none"
                 />
-              ))}
-
-              {selectedSecrets.size > 0 && (
-                <div className="mt-4">
-                  <p className="text-default-500 mb-2 text-sm">
-                    {t('selectedSecretsLabel', { count: selectedSecrets.size })}
-                  </p>
-                  <div className="flex flex-wrap gap-1">
-                    {Array.from(selectedSecrets).map((secretId) => (
-                      <Chip
-                        key={secretId}
-                        size="sm"
-                        variant="flat"
-                        onClose={() => {
-                          const newSet = new Set(selectedSecrets);
-                          newSet.delete(secretId);
-                          setSelectedSecrets(newSet);
-                        }}
-                        classNames={{ content: 'font-mono text-xs' }}
-                      >
-                        {secretId}
-                      </Chip>
-                    ))}
+              </label>
+              <div className="divide-base-content/8 max-h-56 divide-y overflow-y-auto">
+                {shown.map((secret) => (
+                  <label
+                    key={secret.id}
+                    className="hover:bg-base-content/4 flex cursor-pointer items-center gap-3 px-3 py-2"
+                  >
+                    <input
+                      type="checkbox"
+                      className="checkbox checkbox-sm checkbox-primary"
+                      checked={selected.has(secret.id)}
+                      onChange={() => toggle(secret.id)}
+                    />
+                    <StatusDot status={secret.status} />
+                    <span className="flex-1 truncate font-mono text-[13px]">
+                      {secret.id}
+                    </span>
+                    <span
+                      className={`text-[11.5px] ${secret.status === 'broken' ? 'text-error' : 'text-muted'}`}
+                    >
+                      {secret.status === 'assigned'
+                        ? secret.ref?.item
+                        : tList(`status.${secret.status}`)}
+                    </span>
+                  </label>
+                ))}
+                {shown.length === 0 && (
+                  <div className="text-muted px-3 py-6 text-center text-[12.5px]">
+                    {t('noSecretsMatch', { query })}
                   </div>
-                </div>
-              )}
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
 
-              {name && !nameError && (
-                <div className="bg-default-100 mt-4 rounded-lg p-3">
-                  <p className="text-default-600 text-sm">
-                    {t('eventNameLabel')}:{' '}
-                    <code className="text-primary font-mono">
-                      onepassword_group_{name}_updated
-                    </code>
-                  </p>
-                </div>
-              )}
-            </ModalBody>
-
-            <ModalFooter>
-              <Button variant="light" onPress={onClose}>
-                {tCommon('cancel')}
-              </Button>
-              <Button
-                color="primary"
-                type="submit"
-                isLoading={isPending}
-                isDisabled={!!nameError || !name}
+        <DialogFooter
+          left={
+            <div className="flex min-w-0 items-center gap-0.5">
+              <span
+                className="inline-flex min-w-0 items-center gap-1.5"
+                title={t('eventHint')}
               >
-                {isNew ? tCommon('create') : tCommon('save')}
-              </Button>
-            </ModalFooter>
-          </form>
-        )}
-      </ModalContent>
-    </Modal>
+                <LightningIcon size={12} className="text-muted shrink-0" />
+                <EventName name={event} className="truncate" />
+              </span>
+              {!nameError && (
+                <CopyButton text={event} label={t('copyEvent')} size={12} />
+              )}
+            </div>
+          }
+        >
+          <button
+            type="button"
+            onClick={closeModal}
+            className="btn btn-sm btn-ghost"
+          >
+            {tCommon('cancel')}
+          </button>
+          <span
+            className={saveBlockedBy ? 'tooltip tooltip-left' : ''}
+            data-tip={saveBlockedBy ?? undefined}
+          >
+            <button
+              type="submit"
+              disabled={isPending || !!saveBlockedBy}
+              className="btn btn-sm btn-primary gap-1.5"
+            >
+              {isPending ? (
+                <span className="loading loading-spinner loading-xs" />
+              ) : (
+                <CheckIcon size={14} />
+              )}
+              {isNew ? t('createAction') : tCommon('save')}
+            </button>
+          </span>
+        </DialogFooter>
+      </form>
+    </Dialog>
   );
 };

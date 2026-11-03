@@ -1,146 +1,155 @@
 // @vitest-environment happy-dom
-import { act, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import { renderToString } from 'react-dom/server';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { t } from '../../helpers/next-intl';
 
-vi.mock('next-intl', () => ({
-  useTranslations:
-    (_ns: string) => (key: string, params?: Record<string, unknown>) =>
-      params ? `${key}(${JSON.stringify(params)})` : key
-}));
-
-vi.mock('@heroui/react', () => ({
-  Card: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="card">{children}</div>
-  ),
-  CardBody: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="card-body">{children}</div>
-  ),
-  Progress: ({
-    value,
-    color,
-    'aria-label': ariaLabel
-  }: {
-    value: number;
-    color: string;
-    'aria-label': string;
-  }) => (
-    <div
-      data-testid="progress"
-      data-value={value}
-      data-color={color}
-      aria-label={ariaLabel}
-    />
-  )
-}));
-
-vi.mock('tailwind-variants', () => ({
-  tv:
-    () =>
-    ({ usage }: { usage: string }) =>
-      usage
-}));
+vi.mock('next-intl', () => import('../../helpers/next-intl'));
 
 import { UsageCard } from '@/components/rate-limit/usage-card';
 
+const NOW = new Date('2026-01-01T12:00:00.000Z').getTime();
+
+const inMinutes = (minutes: number) =>
+  new Date(NOW + minutes * 60_000).toISOString();
+
+const card = (used: number, limit = 100, reset = inMinutes(90)) => (
+  <UsageCard
+    title="Daily"
+    description="Per day"
+    used={used}
+    limit={limit}
+    reset={reset}
+  />
+);
+
+const progress = () => screen.getByRole<HTMLProgressElement>('progressbar');
+
 describe('UsageCard', () => {
   beforeEach(() => {
+    vi.clearAllMocks();
     vi.useFakeTimers();
-    vi.setSystemTime(new Date('2026-02-22T12:00:00.000Z'));
+    vi.setSystemTime(NOW);
   });
 
   afterEach(() => {
     vi.useRealTimers();
   });
 
-  const defaultProps = {
-    title: 'API Requests',
-    description: 'Monthly API request limit',
-    used: 50,
-    limit: 100,
-    reset: '2020-01-01T00:00:00.000Z' // past date so no countdown shown
-  };
+  it('shows the usage against the limit in a labelled section', () => {
+    render(card(25));
 
-  it('renders the title', () => {
-    render(<UsageCard {...defaultProps} />);
-    expect(screen.getByText('API Requests')).toBeDefined();
-  });
-
-  it('renders the description', () => {
-    render(<UsageCard {...defaultProps} />);
-    expect(screen.getByText('Monthly API request limit')).toBeDefined();
-  });
-
-  it('renders used count', () => {
-    render(<UsageCard {...defaultProps} />);
-    expect(screen.getByText('50')).toBeDefined();
-  });
-
-  it('renders limit count', () => {
-    render(<UsageCard {...defaultProps} />);
-    expect(screen.getByText(/\/ 100/)).toBeDefined();
-  });
-
-  it('renders progress bar with correct percentage value (50/100 = 50%)', () => {
-    render(<UsageCard {...defaultProps} used={50} limit={100} />);
-    const progress = screen.getByTestId('progress');
-    expect(progress.getAttribute('data-value')).toBe('50');
-  });
-
-  it("renders progress bar with 'low' color when usage < 50%", () => {
-    render(<UsageCard {...defaultProps} used={40} limit={100} />);
-    const progress = screen.getByTestId('progress');
-    expect(progress.getAttribute('data-color')).toBe('low');
-  });
-
-  it("renders progress bar with 'medium' color when usage >= 50% and < 75%", () => {
-    render(<UsageCard {...defaultProps} used={60} limit={100} />);
-    const progress = screen.getByTestId('progress');
-    expect(progress.getAttribute('data-color')).toBe('medium');
-  });
-
-  it("renders progress bar with 'high' color when usage >= 75% and < 90%", () => {
-    render(<UsageCard {...defaultProps} used={80} limit={100} />);
-    const progress = screen.getByTestId('progress');
-    expect(progress.getAttribute('data-color')).toBe('high');
-  });
-
-  it("renders progress bar with 'critical' color when usage >= 90%", () => {
-    render(<UsageCard {...defaultProps} used={95} limit={100} />);
-    const progress = screen.getByTestId('progress');
-    expect(progress.getAttribute('data-color')).toBe('critical');
-  });
-
-  it('percentage is capped at 100 when used > limit', () => {
-    render(<UsageCard {...defaultProps} used={150} limit={100} />);
-    const progress = screen.getByTestId('progress');
-    expect(progress.getAttribute('data-value')).toBe('100');
-  });
-
-  it('percentage is 0 when limit is 0', () => {
-    render(<UsageCard {...defaultProps} used={50} limit={0} />);
-    const progress = screen.getByTestId('progress');
-    expect(progress.getAttribute('data-value')).toBe('0');
-  });
-
-  it('reset countdown is NOT shown when reset is in the past (secondsUntilReset = 0)', () => {
-    const { container } = render(
-      <UsageCard {...defaultProps} reset="2020-01-01T00:00:00.000Z" />
+    expect(screen.getByRole('region', { name: 'Daily' }).textContent).toContain(
+      '25 / 100'
     );
-    // The countdown div only renders when secondsUntilReset > 0
-    const resetDiv = container.querySelector('.border-divider');
-    expect(resetDiv).toBeNull();
+    expect(screen.getByText('Per day')).toBeDefined();
+    expect(t).toHaveBeenCalledWith('percentUsed', { percent: '25.0' });
+    expect(t).toHaveBeenCalledWith('remaining', { count: 75 });
   });
 
-  it('reset countdown IS shown when reset is in the future', () => {
-    act(() => {
-      render(
-        <UsageCard
-          {...defaultProps}
-          reset="2026-02-22T14:00:00.000Z" // 2 hours in the future from mocked now
-        />
-      );
+  it('never reports a negative remaining count', () => {
+    render(
+      <UsageCard
+        title="Daily"
+        description="Per day"
+        used={150}
+        limit={100}
+        reset=""
+      />
+    );
+
+    expect(t).toHaveBeenCalledWith('remaining', { count: 0 });
+  });
+
+  describe('thresholds', () => {
+    it.each([0, 50, 74])('stays calm at %i%%', (used) => {
+      render(card(used));
+
+      expect(progress().className).not.toContain('progress-warning');
+      expect(progress().className).not.toContain('progress-error');
+      expect(screen.queryByText('high')).toBeNull();
+      expect(screen.queryByText('nearLimit')).toBeNull();
     });
-    const resetDiv = screen.getByText(/resetsInHours/);
-    expect(resetDiv).toBeDefined();
+
+    it.each([75, 89])('warns at %i%%', (used) => {
+      render(card(used));
+
+      expect(progress().className).toContain('progress-warning');
+      expect(progress().className).not.toContain('progress-error');
+      expect(screen.getByText('high')).toBeDefined();
+      expect(screen.queryByText('nearLimit')).toBeNull();
+    });
+
+    it.each([90, 100])('is critical at %i%%', (used) => {
+      render(card(used));
+
+      expect(progress().className).toContain('progress-error');
+      expect(progress().className).not.toContain('progress-warning');
+      expect(screen.getByText('nearLimit')).toBeDefined();
+      expect(screen.queryByText('high')).toBeNull();
+    });
+  });
+
+  describe('progress', () => {
+    it('reports the percentage', () => {
+      render(card(25));
+
+      expect(progress().value).toBe(25);
+      expect(t).toHaveBeenCalledWith('progressLabel', {
+        title: 'Daily',
+        percentage: '25.0'
+      });
+    });
+
+    it('caps at 100%', () => {
+      render(card(150));
+      expect(progress().value).toBe(100);
+    });
+
+    it('is empty when there is no limit', () => {
+      render(card(5, 0));
+
+      expect(progress().value).toBe(0);
+      expect(progress().className).not.toContain('progress-error');
+    });
+  });
+
+  describe('reset', () => {
+    it('shows hours and minutes', () => {
+      render(card(1, 100, inMinutes(90)));
+
+      expect(screen.getByText('resetsInHours')).toBeDefined();
+      expect(t).toHaveBeenCalledWith('resetsInHours', {
+        hours: 1,
+        minutes: 30
+      });
+    });
+
+    it('shows minutes under an hour', () => {
+      render(card(1, 100, inMinutes(30)));
+
+      expect(screen.getByText('resetsInMinutes')).toBeDefined();
+      expect(t).toHaveBeenCalledWith('resetsInMinutes', { minutes: 30 });
+    });
+
+    it('rounds up to one minute under a minute', () => {
+      render(card(1, 100, inMinutes(0.5)));
+      expect(t).toHaveBeenCalledWith('resetsInMinutes', { minutes: 1 });
+    });
+
+    it.each([
+      ['no reset time', ''],
+      ['a reset time in the past', inMinutes(-5)]
+    ])('shows the no-reset text with %s', (_case, reset) => {
+      render(card(1, 100, reset));
+      expect(screen.getByText('noReset')).toBeDefined();
+    });
+
+    it('is left out of the server markup', () => {
+      const html = renderToString(card(1));
+
+      expect(html).not.toContain('resetsIn');
+      expect(html).not.toContain('noReset');
+    });
   });
 });

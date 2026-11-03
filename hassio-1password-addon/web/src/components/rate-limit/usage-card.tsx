@@ -1,28 +1,30 @@
 'use client';
 
-import { Card, CardBody, Progress, ProgressProps } from '@heroui/react';
-import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
-import { tv } from 'tailwind-variants';
+import { useNow } from '@/hooks/use-now';
+import { ClockIcon } from '@phosphor-icons/react';
+import { useFormatter, useTranslations } from 'next-intl';
 
-const progressColor = tv({
-  variants: {
-    usage: {
-      low: 'success',
-      medium: 'primary',
-      high: 'warning',
-      critical: 'danger'
-    }
-  }
-});
+const usageStyles = {
+  // Calm until it needs attention: color only appears from 75%.
+  low: { progress: 'text-base-content/45', badge: '' },
+  high: { progress: 'progress-warning', badge: 'badge-warning' },
+  critical: { progress: 'progress-error', badge: 'badge-error' }
+} as const;
 
-interface UsageCardProps {
+const getUsageLevel = (percentage: number): keyof typeof usageStyles => {
+  if (percentage >= 90) return 'critical';
+  return percentage >= 75 ? 'high' : 'low';
+};
+
+type UsageCardProps = {
   title: string;
   description: string;
   used: number;
   limit: number;
   reset: string; // ISO timestamp when limit resets
-}
+};
+
+const MINUTE_MS = 60_000;
 
 export const UsageCard = ({
   title,
@@ -32,105 +34,75 @@ export const UsageCard = ({
   reset
 }: UsageCardProps) => {
   const t = useTranslations('rateLimits.card');
-  const [secondsUntilReset, setSecondsUntilReset] = useState<number>(0);
+  const format = useFormatter();
+  const now = useNow(MINUTE_MS);
 
   const rawPercentage = limit > 0 ? (used / limit) * 100 : 0;
   const percentage = Math.min(100, Math.max(0, rawPercentage));
+  const level = getUsageLevel(percentage);
 
-  const usageLevel =
-    percentage >= 90
-      ? 'critical'
-      : percentage >= 75
-        ? 'high'
-        : percentage >= 50
-          ? 'medium'
-          : 'low';
-
-  const color = progressColor({ usage: usageLevel }) as ProgressProps['color'];
-
-  // Update countdown every minute
-  useEffect(() => {
-    const calculateSecondsUntilReset = (): number => {
-      if (!reset) return 0;
-      const resetTime = new Date(reset).getTime();
-      const now = Date.now();
-      return Math.max(0, Math.floor((resetTime - now) / 1000));
-    };
-
-    const updateCountdown = () => {
-      setSecondsUntilReset(calculateSecondsUntilReset());
-    };
-
-    // Initial calculation
-    updateCountdown();
-
-    // Update every 60 seconds
-    const interval = setInterval(updateCountdown, 60000);
-
-    return () => clearInterval(interval);
-  }, [reset]);
-
-  // Format reset time
-  const formatResetTime = (seconds: number): string => {
+  const resetLabel = () => {
+    const seconds = reset
+      ? Math.max(0, Math.floor((new Date(reset).getTime() - (now ?? 0)) / 1000))
+      : 0;
     if (seconds === 0) return t('noReset');
 
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
 
-    if (hours > 0) {
-      return t('resetsInHours', { hours, minutes });
-    }
-    return t('resetsInMinutes', { minutes: Math.max(1, minutes) });
+    return hours > 0
+      ? t('resetsInHours', { hours, minutes })
+      : t('resetsInMinutes', { minutes: Math.max(1, minutes) });
   };
 
   return (
-    <Card>
-      <CardBody className="gap-4">
-        <div>
-          <h3 className="text-foreground text-lg font-semibold">{title}</h3>
-          <p className="text-default-500 text-sm">{description}</p>
-        </div>
-
-        <div className="space-y-2">
-          <div className="flex items-baseline justify-between">
-            <span className="text-default-500 text-sm">{t('usage')}</span>
-            <span className="text-foreground text-2xl font-bold">
-              {used.toLocaleString()}
-              <span className="text-default-400 ml-1 text-base font-normal">
-                / {limit.toLocaleString()}
+    <section
+      className="rounded-box hairline surface border p-5"
+      aria-label={title}
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <h2 className="flex items-center gap-2 text-[15px] font-semibold">
+            {title}
+            {level !== 'low' && (
+              <span
+                className={`badge badge-sm badge-soft ${usageStyles[level].badge}`}
+              >
+                {level === 'critical' ? t('nearLimit') : t('high')}
               </span>
-            </span>
-          </div>
-
-          <Progress
-            value={percentage}
-            color={color}
-            size="md"
-            className="w-full"
-            aria-label={t('progressLabel', {
-              title,
-              percentage: percentage.toFixed(1)
-            })}
-          />
-
-          <div className="flex items-center justify-between">
-            <span className="text-default-400 text-xs">
-              {t('percentUsed', { percent: percentage.toFixed(1) })}
-            </span>
-            <span className="text-default-400 text-xs">
-              {t('remaining', { count: limit - used })}
-            </span>
-          </div>
-
-          {secondsUntilReset > 0 && (
-            <div className="border-divider bg-default-50 dark:bg-default-100/20 rounded-md border px-3 py-2">
-              <p className="text-default-500 text-xs">
-                {formatResetTime(secondsUntilReset)}
-              </p>
-            </div>
-          )}
+            )}
+          </h2>
+          <p className="text-muted mt-0.5 text-[12.5px]">{description}</p>
         </div>
-      </CardBody>
-    </Card>
+        <div className="text-right text-[24px] leading-none font-semibold whitespace-nowrap tabular-nums">
+          {format.number(used)}
+          <span className="text-muted text-[14px] font-normal">
+            {' '}
+            / {format.number(limit)}
+          </span>
+        </div>
+      </div>
+
+      <progress
+        className={`progress mt-5 h-2 w-full ${usageStyles[level].progress}`}
+        value={percentage}
+        max={100}
+        aria-label={t('progressLabel', {
+          title,
+          percentage: percentage.toFixed(1)
+        })}
+      />
+
+      <div className="text-muted mt-2 flex items-center justify-between text-[12px] tabular-nums">
+        <span>{t('percentUsed', { percent: percentage.toFixed(1) })}</span>
+        <span>{t('remaining', { count: Math.max(0, limit - used) })}</span>
+      </div>
+
+      <div className="hairline text-muted mt-4 flex items-center gap-1.5 border-t pt-3 text-[12px]">
+        <ClockIcon size={12} />
+        {/* The countdown is client-only so server and client markup agree */}
+        {now === null ? ' ' : resetLabel()}
+      </div>
+    </section>
   );
 };

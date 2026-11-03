@@ -1,6 +1,5 @@
 'use client';
 
-import { Button } from '@heroui/react';
 import { PlusIcon } from '@phosphor-icons/react';
 import { useTranslations } from 'next-intl';
 import { useGroupModal } from './group-modal-provider';
@@ -10,14 +9,13 @@ export const CreateGroupButton = () => {
   const { openCreateModal } = useGroupModal();
 
   return (
-    <Button
-      size="sm"
-      variant="flat"
-      startContent={<PlusIcon weight="bold" size={14} />}
-      className="bg-default-100 dark:bg-default-200 text-foreground"
-      onPress={openCreateModal}
+    <button
+      type="button"
+      className="btn btn-sm btn-primary gap-1.5"
+      onClick={openCreateModal}
     >
+      <PlusIcon size={14} />
       {t('newGroup')}
-    </Button>
+    </button>
   );
 };

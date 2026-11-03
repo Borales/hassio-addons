@@ -1,73 +1,49 @@
-import { Chip, Tooltip } from '@heroui/react';
 import { ReactNode } from 'react';
 
-interface ChipItem {
+type ChipItem = {
   id: string;
   label: string;
-}
+  /** Rendered in front of the label, e.g. a status dot. */
+  prefix?: ReactNode;
+};
 
-interface ChipListProps {
+type ChipListProps = {
   items: ChipItem[];
   maxVisible?: number;
-  emptyMessage?: string;
-  chipClassName?: string;
-  overflowChipClassName?: string;
-  renderChip?: (item: ChipItem) => ReactNode;
-}
+  /** Builds the overflow chip's text from the number of hidden items. */
+  overflowLabel?: (count: number) => string;
+  wrap?: boolean;
+};
 
 export const ChipList = ({
   items,
-  maxVisible = 4,
-  emptyMessage = 'No items',
-  chipClassName = 'h-5 bg-default-100 dark:bg-default-200',
-  overflowChipClassName = 'h-5 bg-default-200 dark:bg-default-300',
-  renderChip
+  maxVisible = 2,
+  overflowLabel = (count) => `+${count}`,
+  wrap = false
 }: ChipListProps) => {
-  if (items.length === 0) {
-    return (
-      <span className="text-default-300 dark:text-default-500 text-sm italic">
-        {emptyMessage}
-      </span>
-    );
-  }
+  if (items.length === 0) return null;
 
-  const visibleItems = items.slice(0, maxVisible);
-  const remainingItems = items.slice(maxVisible);
-  const hasOverflow = remainingItems.length > 0;
-
-  const defaultChipRenderer = (item: ChipItem) => (
-    <Chip
-      key={item.id}
-      size="sm"
-      variant="flat"
-      classNames={{
-        base: chipClassName,
-        content: 'text-[10px] font-medium text-default-600 px-1.5'
-      }}
-    >
-      {item.label}
-    </Chip>
-  );
-
-  const chipRenderer = renderChip || defaultChipRenderer;
+  const visible = items.slice(0, maxVisible);
+  const hidden = items.slice(maxVisible);
 
   return (
-    <div className="flex min-w-0 items-center gap-1.5 overflow-hidden">
-      {visibleItems.map(chipRenderer)}
-      {hasOverflow && (
-        <Tooltip content={remainingItems.map((item) => item.label).join(', ')}>
-          <Chip
-            size="sm"
-            variant="flat"
-            classNames={{
-              base: overflowChipClassName,
-              content: 'text-[10px] font-medium text-default-600 px-1.5'
-            }}
-          >
-            +{remainingItems.length}
-          </Chip>
-        </Tooltip>
+    <span
+      className={`items-center ${wrap ? 'flex flex-wrap gap-1.5' : 'inline-flex shrink-0 gap-1'}`}
+    >
+      {visible.map(({ id, label, prefix }) => (
+        <span key={id} className="chip-tag" title={label}>
+          {prefix}
+          {label}
+        </span>
+      ))}
+      {hidden.length > 0 && (
+        <span
+          className="tooltip"
+          data-tip={hidden.map(({ label }) => label).join(', ')}
+        >
+          <span className="chip-tag">{overflowLabel(hidden.length)}</span>
+        </span>
       )}
-    </div>
+    </span>
   );
 };
