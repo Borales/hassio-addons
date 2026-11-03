@@ -44,6 +44,7 @@ export const locale = vi.fn(() => 'en-us');
  */
 export const useTranslations = () => t;
 export const useLocale = () => locale();
+export const useNow = () => new Date();
 export const useFormatter = () => ({
   number: (value: number) => String(value),
   dateTime: () => 'formatted-date',

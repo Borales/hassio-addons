@@ -6,7 +6,8 @@ vi.mock('next-intl', () => ({
   useFormatter: () => ({
     relativeTime: vi.fn(() => '2 hours ago'),
     dateTime: vi.fn(() => 'Jan 1, 24')
-  })
+  }),
+  useNow: () => new Date()
 }));
 
 import { CustomTimeAgo } from '@/components/date-formatter';

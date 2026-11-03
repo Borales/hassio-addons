@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.3.0
 
 - Redesigned the web interface on daisyUI 5, with dark and light themes and a dedicated mobile layout
 - Added a "Broken link" status with a banner, filter and re-link flow for secrets whose 1Password item, field or vault can no longer be read
@@ -9,6 +9,11 @@
 - Group names can now be edited, and groups can include any secret
 - A secret that can't be read from 1Password no longer aborts the whole sync
 - Added tests for the web interface
+- Updated web dependencies and lockfile (including next-intl, vite, vitest, and form-data)
+- Updated web package manager configuration to pnpm 11.9.0 and removed deprecated .npmrc
+- Fixed Next.js dev/prod asset path handling in web config (assetPrefix and image path)
+- Updated HA secrets sync to drop DB secrets that are no longer referenced in any YAML files (including `secrets.yaml`)
+- Removed stale/unneeded HA secrets from the web UI list after sync by deleting unreferenced records from the DB
 
 ## 0.2.1
 

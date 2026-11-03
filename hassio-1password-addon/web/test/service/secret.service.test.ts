@@ -34,7 +34,8 @@ function createMockDb() {
       findUnique: vi.fn(),
       findMany: vi.fn(),
       update: vi.fn(),
-      upsert: vi.fn()
+      upsert: vi.fn(),
+      deleteMany: vi.fn()
     }
   } as any;
 }
@@ -60,6 +61,7 @@ describe('HASecretService', () => {
         'db_password',
         'api_key'
       ]);
+      mockDb.secret.findMany.mockResolvedValue([]);
       mockDb.secret.upsert.mockResolvedValue({});
 
       await service.syncSecrets();
@@ -75,10 +77,54 @@ describe('HASecretService', () => {
 
     it('does nothing when there are no secrets to sync', async () => {
       vi.mocked(mockSecretHelper.scanForSecrets).mockResolvedValue([]);
+      mockDb.secret.findMany.mockResolvedValue([]);
 
       await service.syncSecrets();
 
       expect(mockDb.secret.upsert).not.toHaveBeenCalled();
+      expect(mockDb.secret.deleteMany).not.toHaveBeenCalled();
+    });
+
+    it('deletes secrets that are no longer referenced in YAML files', async () => {
+      vi.mocked(mockSecretHelper.scanForSecrets).mockResolvedValue([
+        'db_password'
+      ]);
+      mockDb.secret.findMany.mockResolvedValue([
+        { id: 'db_password' },
+        { id: 'old_api_key' }
+      ]);
+      mockDb.secret.upsert.mockResolvedValue({});
+      mockDb.secret.deleteMany.mockResolvedValue({ count: 1 });
+
+      await service.syncSecrets();
+
+      expect(mockDb.secret.deleteMany).toHaveBeenCalledWith({
+        where: {
+          id: {
+            in: ['old_api_key']
+          }
+        }
+      });
+    });
+
+    it('deletes all db secrets when no references are found anywhere', async () => {
+      vi.mocked(mockSecretHelper.scanForSecrets).mockResolvedValue([]);
+      mockDb.secret.findMany.mockResolvedValue([
+        { id: 'stale_1' },
+        { id: 'stale_2' }
+      ]);
+      mockDb.secret.deleteMany.mockResolvedValue({ count: 2 });
+
+      await service.syncSecrets();
+
+      expect(mockDb.secret.upsert).not.toHaveBeenCalled();
+      expect(mockDb.secret.deleteMany).toHaveBeenCalledWith({
+        where: {
+          id: {
+            in: ['stale_1', 'stale_2']
+          }
+        }
+      });
     });
   });
 

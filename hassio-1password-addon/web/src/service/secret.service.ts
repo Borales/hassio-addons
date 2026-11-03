@@ -22,7 +22,10 @@ export class HASecretService {
    * Sync secrets from the secret helper to the database
    */
   async syncSecrets() {
-    const secrets = await this.secretHelper.scanForSecrets();
+    const [secrets, existingSecrets] = await Promise.all([
+      this.secretHelper.scanForSecrets(),
+      this.db.secret.findMany({ select: { id: true } })
+    ]);
 
     await Promise.all(
       secrets.map(async (secret) => {
@@ -33,6 +36,21 @@ export class HASecretService {
         });
       })
     );
+
+    const referencedSecretIds = new Set(secrets);
+    const staleSecretIds = existingSecrets
+      .map((secret) => secret.id)
+      .filter((id) => !referencedSecretIds.has(id));
+
+    if (staleSecretIds.length > 0) {
+      await this.db.secret.deleteMany({
+        where: {
+          id: {
+            in: staleSecretIds
+          }
+        }
+      });
+    }
   }
 
   /**

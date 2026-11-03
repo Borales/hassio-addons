@@ -1,10 +1,10 @@
 ARG BUILD_FROM
 
-FROM node:24.14.0-alpine AS node
-FROM 1password/op:2.33.1 AS onepassword
+FROM node:24.22.2-alpine AS node
+FROM 1password/op:2.41.1 AS onepassword
 
 # Builder stage - build Next.js app with native modules for Alpine
-FROM node:24.14.0-alpine AS builder
+FROM node:24.22.2-alpine AS builder
 
 RUN apk add --no-cache libc6-compat python3 make g++
 RUN corepack enable pnpm
@@ -12,7 +12,7 @@ RUN corepack enable pnpm
 WORKDIR /build
 
 # Copy web app source
-COPY web/package.json web/.npmrc web/pnpm-lock.yaml web/pnpm-workspace.yaml web/next.config.ts ./
+COPY web/package.json web/pnpm-lock.yaml web/pnpm-workspace.yaml web/next.config.ts ./
 COPY web/prisma ./prisma
 COPY web/prisma.config.ts ./prisma.config.ts
 

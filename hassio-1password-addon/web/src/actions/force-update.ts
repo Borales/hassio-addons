@@ -6,8 +6,7 @@ import { getTranslations } from 'next-intl/server';
 import { updateTag } from 'next/cache';
 
 export type ForceUpdateResult =
-  | { success: true; changedCount: number }
-  | { success: false; error?: string };
+  { success: true; changedCount: number } | { success: false; error?: string };
 
 export const forceUpdateNow = async (): Promise<ForceUpdateResult> => {
   const t = await getTranslations('toast');

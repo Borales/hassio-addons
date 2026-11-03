@@ -1,10 +1,10 @@
-import { PrismaType, prisma } from './client/db';
+import { prisma, PrismaType } from './client/db';
 import { Logger, logger } from './client/logger';
 import {
   AccountInfo,
   RateLimitClient,
-  RateLimitData,
-  rateLimitClient
+  rateLimitClient,
+  RateLimitData
 } from './client/ratelimit';
 
 const RATE_LIMITS_KEY = 'rateLimits';

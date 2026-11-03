@@ -1,4 +1,4 @@
-import { Logger, createLogger, format, transports } from 'winston';
+import { createLogger, format, Logger, transports } from 'winston';
 
 export type { Logger };
 
