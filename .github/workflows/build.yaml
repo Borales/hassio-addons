@@ -22,10 +22,13 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@v6.1.0
+        with:
+          # A push can hold several commits, so reach back to the previous head.
+          fetch-depth: 0
 
       - name: Get changed files
         id: changed_files
-        uses: tj-actions/changed-files@v46
+        uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
 
       - name: Find add-on directories
         id: addons
