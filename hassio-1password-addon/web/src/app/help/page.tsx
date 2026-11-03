@@ -184,18 +184,17 @@ const EventItem = memo(function EventItem({
   trigger: string;
   example: Record<string, unknown>;
 }) {
-    return (
-      <div className="border-divider flex flex-col gap-2 border-b pb-3 last:border-0 last:pb-0">
-        <div className="flex items-center gap-2">
-          <Chip size="md" variant="flat" color="primary" className="font-mono">
-            {name}
-          </Chip>
-        </div>
-        <p className="text-default-600 text-sm">{trigger}</p>
-        <Code size="sm" className="text-xs leading-relaxed">
-          <pre>{JSON.stringify(example, null, 2)}</pre>
-        </Code>
+  return (
+    <div className="border-divider flex flex-col gap-2 border-b pb-3 last:border-0 last:pb-0">
+      <div className="flex items-center gap-2">
+        <Chip size="md" variant="flat" color="primary" className="font-mono">
+          {name}
+        </Chip>
       </div>
-    );
-  }
-);
+      <p className="text-default-600 text-sm">{trigger}</p>
+      <Code size="sm" className="text-xs leading-relaxed">
+        <pre>{JSON.stringify(example, null, 2)}</pre>
+      </Code>
+    </div>
+  );
+});

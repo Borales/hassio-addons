@@ -18,11 +18,7 @@ const statusIndicatorStyles = tv({
 });
 
 type StatusIndicatorStatus =
-  | 'success'
-  | 'warning'
-  | 'inactive'
-  | 'info'
-  | 'danger';
+  'success' | 'warning' | 'inactive' | 'info' | 'danger';
 
 interface StatusIndicatorProps {
   status: StatusIndicatorStatus;

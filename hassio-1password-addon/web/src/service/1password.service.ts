@@ -2,14 +2,14 @@ import { Field, URL } from '@1password/op-js';
 import { Prisma } from '@prisma-generated/client';
 import {
   OnePasswordClient,
-  OpClientItem,
-  onePasswordClient
+  onePasswordClient,
+  OpClientItem
 } from './client/1password';
 import {
   HaSecret,
+  prisma,
   OpItem as PrismaOpItem,
-  PrismaType,
-  prisma
+  PrismaType
 } from './client/db';
 import { Logger, logger } from './client/logger';
 
@@ -120,8 +120,7 @@ export class OnePasswordService {
           let itemData;
           if (assignedItemIds.has(item.id)) {
             const fullItem = this.client.getItem(item.id, item.vault.id) as
-              | OpClientItem
-              | undefined;
+              OpClientItem | undefined;
             itemData = fullItem
               ? this.convertOpToDbSecret(fullItem)
               : this.convertOpToDbSecret(item);
