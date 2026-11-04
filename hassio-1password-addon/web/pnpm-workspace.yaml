@@ -12,5 +12,7 @@ allowBuilds:
   prisma: true
   sharp: true
   unrs-resolver: true
+
 minimumReleaseAgeExclude:
-  - postcss@8.5.16
+  - next
+  - '@next/*'
