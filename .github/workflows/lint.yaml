@@ -35,20 +35,13 @@ jobs:
       - name: Check out code from GitHub
         uses: actions/checkout@v7.0.1
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v7
+      - name: Set up pnpm, Node.js and dependencies
+        uses: pnpm/setup@v3
         with:
-          node-version-file: "./${{ matrix.path }}/web/.nvmrc"
-
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v6
-        with:
-          package_json_file: "./${{ matrix.path }}/web/package.json"
-          run_install: false
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-        working-directory: "./${{ matrix.path }}/web"
+          working-directory: "./${{ matrix.path }}/web"
+          node-version-file: .nvmrc
+          require-lockfile: true
+          cache: true
 
       - name: Run lint
         run: pnpm lint
