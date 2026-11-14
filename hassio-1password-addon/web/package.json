@@ -51,7 +51,7 @@
     "@types/react-dom": "^19.3.0",
     "@types/react": "^19.3.0",
     "@vitest/coverage-v8": "^5.1.0",
-    "daisyui": "^5.7.50",
+    "daisyui": "^5.8.0",
     "happy-dom": "^21.0.4",
     "oxlint": "^1.93.0",
     "postcss": "^8.5.32",
