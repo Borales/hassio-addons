@@ -30,7 +30,7 @@
     "axios": "^1.21.1",
     "better-sqlite3": "^12.11.1",
     "dotenv": "^17.4.2",
-    "glob": "^14.0.4",
+    "glob": "^14.0.6",
     "home-assistant-js-websocket": "^9.8.1",
     "next": "^16.4.6",
     "next-intl": "^4.14.9",
