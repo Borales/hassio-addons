@@ -54,7 +54,7 @@
     "daisyui": "^5.8.0",
     "happy-dom": "^21.0.4",
     "oxlint": "^1.93.0",
-    "postcss": "^8.5.32",
+    "postcss": "^8.5.33",
     "prettier-plugin-package": "^2.0.0",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "prettier": "^3.10.1",
